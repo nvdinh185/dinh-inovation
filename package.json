@@ -1,0 +1,18 @@
+{
+  "name": "m-inovation",
+  "version": "1.0.0",
+  "description": "Inovation (Idea) Managerment Sofware from cuong.dq",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://token:12345@c3.mobifone.vn/git-server/m-inovation.git"
+  },
+  "keywords": [
+    "m-inovation"
+  ],
+  "author": "Doan Quoc Cuong",
+  "license": "ISC"
+}
