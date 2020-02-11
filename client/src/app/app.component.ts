@@ -143,5 +143,13 @@ export class AppComponent {
   onClickUser(){
 
   }
+
+
+  /**
+   * Thay đổi ảnh đại diện
+   */
+  onClickUserImage(type: string){
+
+  }
   
 }
