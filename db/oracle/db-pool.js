@@ -8,9 +8,9 @@
 const OracleDAO = require("./oracle-dao");
 
 const dbConfig = {
-    poolAlias: 'JOB_OWNER_Pool-cty3',     //ten cua pool
-    user: 'job_owner',                    //username to oracle
-    password: 'job',                      //password to oracle
+    poolAlias: 'Ideas_Pool-cty3',          //ten cua pool
+    user: 'idea_owner',                    //username to oracle
+    password: 'Idea@Cty3',                 //password to oracle
     // connection String to oracle = tnsname 
     // chuỗi nối máy 14 để select dữ liệu thông báo cước 
     connectString: 
@@ -24,17 +24,13 @@ const dbConfig = {
         )
       )`, */
     `(DESCRIPTION=
-        (ADDRESS_LIST=
-            (ADDRESS=
-                (PROTOCOL=TCP)
-                (HOST=10.151.59.91)
-                (PORT=1521))
-                (ADDRESS=(PROTOCOL=TCP)
-                (HOST=10.151.59.92)
-                (PORT=1521)))
-                (LOAD_BALANCE=yes)
-                (CONNECT_DATA=(SERVER=dedicated)
-                (SERVICE_NAME=BUSINESS)))`,
+      (ADDRESS_LIST=
+          (ADDRESS=(PROTOCOL=TCP)(HOST=10.151.59.58)(PORT=1521))
+          (ADDRESS=(PROTOCOL=TCP)(HOST=10.151.59.59)(PORT=1521))
+      )
+            (LOAD_BALANCE=yes)
+            (CONNECT_DATA=(SERVER=dedicated)(SERVICE_NAME=SERV))
+      )`,
     poolMax: 10,            // so luong pool max default = 4
     poolMin: 2,             // so luong pool min default = 0
     poolIncrement: 2,       // so luong pool tang len neu co default la 1

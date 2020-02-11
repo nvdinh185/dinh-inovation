@@ -33,19 +33,17 @@ function main(isHttp, isHttps) {
   app.use(require('./handlers/cors-handler').cors);
   
   // Máy chủ xác thực cho phép user login và xác thực cấp token cho client
-  app.use('/ebill/api/auth', ldap_auth);
+  // Đây là máy chủ xác thực ldap của mobifone
+  app.use('/m-inovation/api/auth', ldap_auth);
   
   // Máy chủ api giao tiếp giành cho admin phát hành thông báo cước
-  app.use('/ebill/api', require('./routes/bill/bill-route-run'));
-
-  // Máy chủ in file pdf thông báo cước cho khách hàng
-  app.use('/ebill/mf3', require('./routes/bill/bill-pdf-route'));
+  app.use('/m-inovation/api', require('./routes/ideas'));
 
   //ham tra loi cac dia chi khong co
   //The 404 Route (ALWAYS Keep this as the last route)
   app.all('*', (req, res) => {
     // redirect về trang chủ cho trường hợp đây là web client giao tiếp khách hàng nhé
-    res.redirect('/ebill')
+    res.redirect('/m-inovation')
     //gui trang thai bao noi dung tra ve
     // res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
     // res.end('<h1>Xin lỗi trang bạn muốn tìm không tồn tại!</h1>Địa chỉ ip của bạn là : ' + req.clientIp);
@@ -117,7 +115,7 @@ function main(isHttp, isHttps) {
 
 
 //=false or port number >1000
-var port = process.env.PORT || 9221;
+var port = process.env.PORT || 9223;
 
 let type = 'http';
 let parms = process.argv.slice(2);

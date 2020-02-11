@@ -14,5 +14,9 @@
     "m-inovation"
   ],
   "author": "Doan Quoc Cuong",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "oracledb": "^4.2.0",
+    "xlsx-to-json-lc": "^0.5.0"
+  }
 }
