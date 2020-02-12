@@ -35,7 +35,7 @@ function main(isHttp, isHttps) {
   
   // Máy chủ xác thực cho phép user login và xác thực cấp token cho client
   // Đây là máy chủ xác thực ldap của mobifone
-  // app.use('/m-inovation/api/auth', ldap_auth);
+  app.use('/m-inovation/api/auth', ldap_auth);
   
   // Máy chủ api giao tiếp giành cho admin phát hành thông báo cước
   // app.use('/m-inovation/api', require('./routes/ideas'));

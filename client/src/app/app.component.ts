@@ -4,6 +4,7 @@ import { Platform, MenuController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
+import { AuthService } from 'ngxi4-dynamic-service';
 
 @Component({
   selector: 'app-root',
@@ -70,12 +71,14 @@ export class AppComponent {
     private statusBar: StatusBar,
     private menuCtrl: MenuController,
     private router: Router,
+    private apiAuth: AuthService,
     private navCtrl: NavController
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
+
     this.platform.ready().then(() => {
 
       this.onResize(); // lấy kích thước màn hình để xem
@@ -83,10 +86,20 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
+      this.init();
+      
       // gọi tổ chức menu tùy vào login hay chưa
       this.refresh();
 
     });
+  }
+
+  /**
+   * Khởi tạo các biến đầu tiên
+   */
+  init() {
+    this.apiAuth.serviceUrls.AUTH_SERVER = 'http://localhost:9223/m-inovation/api/auth';
+    this.apiAuth.serviceUrls.RESOURCE_SERVER = 'http://localhost:9223/m-inovation/api';
   }
 
   /**
@@ -109,7 +122,7 @@ export class AppComponent {
    * @param event 
    */
   onClickItem(event) {
-    
+
     //console.log('emit trả về dữ liệu này', event.item.options);
     this.menuCtrl.close();
 
@@ -134,7 +147,7 @@ export class AppComponent {
   /**
    * Bấm gọi trang login
    */
-  onClickLogin(){
+  onClickLogin() {
     this.menuCtrl.close();
     this.router.navigate(['/login']);
   }
@@ -142,7 +155,7 @@ export class AppComponent {
   /**
    * Bam goi user
    */
-  onClickUser(){
+  onClickUser() {
 
   }
 
@@ -150,8 +163,8 @@ export class AppComponent {
   /**
    * Thay đổi ảnh đại diện
    */
-  onClickUserImage(type: string){
+  onClickUserImage(type: string) {
 
   }
-  
+
 }

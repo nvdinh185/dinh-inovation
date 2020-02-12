@@ -32,29 +32,34 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
     // thực hiện kiểm tra ldap trong 2 giây
     setTimeout(() => {
         // thực hiện bind -- nếu thành công thì login thành công
-        // console.log('trace', email);
-        // nếu ko thành công thì login fail
-        client.bind(email, password, function (err) {
-            if (err) {
-                console.log('Bind failed with error: ', err.lde_message);
-                rj(new Error('Email or password invalid!'))
-            } else {
-                console.log('Bind ok with ', usernameOremail);
-                rs({
-                    usernameOremail
-                })
-            }
-
-            // trả lại phiên kết nối cổng ldap
-            client.unbind(function (err) {
+        try{
+            // nếu ko thành công thì login fail
+            client.bind(email, password, function (err) {
                 if (err) {
-                    console.log('UnBind failed with error: ', err.lde_message);
-                    return;
+                    console.log('Bind failed with error: ', err.lde_message);
+                    rj(new Error('Email or password invalid!'))
+                } else {
+                    // console.log('Bind ok with ', usernameOremail);
+                    rs({
+                        usernameOremail
+                    })
                 }
-                console.log('UnBind finish!');
+    
+                // trả lại phiên kết nối cổng ldap
+                client.unbind(function (err) {
+                    if (err) {
+                        console.log('UnBind failed with error: ', err.lde_message);
+                        return;
+                    }
+                    // console.log('UnBind finish!');
+                })
+                
             })
+        } catch (e){
+            console.log('Can not ping to LDAP server', e);
+            rj(new Error('Can not ping to LDAP server'))
+        }
 
-        })
     }, 2000);
 
 })

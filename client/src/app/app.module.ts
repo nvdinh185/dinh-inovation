@@ -9,6 +9,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TreeMenu } from './trees/tree-menu';
+import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service'
 
 @NgModule({
   declarations: [
@@ -18,7 +19,12 @@ import { TreeMenu } from './trees/tree-menu';
   entryComponents: [
     TreeMenu
   ],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    Ngxi4DynamicServiceModule.forRoot(),
+    AppRoutingModule
+  ],
   providers: [
     StatusBar,
     SplashScreen,
