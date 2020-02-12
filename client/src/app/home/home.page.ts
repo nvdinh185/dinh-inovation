@@ -10,7 +10,7 @@ export class HomePage {
   homeForm: any = {
     title: 'Home',
     card: {
-      image: '/assets/imgs/icon.png',
+      image: '/assets/imgs/background-idea.jpg',
       title: 'Chương trình quản lý ý tưởng',
       subtitle: 'M.INOVATION',
       content: `Chương trình hỗ trợ quản lý ý tưởng.`

@@ -33,8 +33,8 @@ export class AppComponent {
     ,
     {
       name: 'Login/Logout',
-      type: 'route',     //bấm chuyển trang
-      url: '/login',     //bấm chuyển trang khai phần tử quản lý
+      type: 'route',     // bấm chuyển trang theo routing
+      url: '/login',     // bấm chuyển trang khai phần tử quản lý
       icon: 'log-in'
     }
   ];
@@ -92,7 +92,7 @@ export class AppComponent {
   /**
    * Làm mới menu sau khi login hoặc thay đổi tham số gì đó
    */
-  async refresh() {
+  refresh() {
 
     let sampleMenu = []; // các menu mẫu nếu có
     // Khai báo menu Mặt định
@@ -109,8 +109,10 @@ export class AppComponent {
    * @param event 
    */
   onClickItem(event) {
+    
     //console.log('emit trả về dữ liệu này', event.item.options);
     this.menuCtrl.close();
+
     if (event && event.item && event.item.url) {
 
       if (event.item.options) {
@@ -130,12 +132,12 @@ export class AppComponent {
   }
 
   /**
-   * Bam goi login
+   * Bấm gọi trang login
    */
   onClickLogin(){
-
+    this.menuCtrl.close();
+    this.router.navigate(['/login']);
   }
-
 
   /**
    * Bam goi user
