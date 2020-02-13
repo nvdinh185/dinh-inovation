@@ -1,10 +1,11 @@
 import { Component, HostListener } from '@angular/core';
 
-import { Platform, MenuController, NavController } from '@ionic/angular';
+import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
-import { AuthService } from 'ngxi4-dynamic-service';
+import { AuthService, CommonsService } from 'ngxi4-dynamic-service';
+import { MainService } from './services/main.service';
 
 @Component({
   selector: 'app-root',
@@ -56,8 +57,6 @@ export class AppComponent {
 
   //Thông tin người dùng login vào chương trình
   userInfo: any;
-  //thông tin token (khóa phiên làm việc của người dùng sau khi login)
-  token: any;
 
   //Cặp khóa riêng của thiết bị sử dụng để mã hóa dữ liệu riêng hoặc ký thông tin riêng
   keyPair: any;
@@ -72,7 +71,8 @@ export class AppComponent {
     private menuCtrl: MenuController,
     private router: Router,
     private apiAuth: AuthService,
-    private navCtrl: NavController
+    private apiCommons: CommonsService,
+    private mainService: MainService
   ) {
     this.initializeApp();
   }
@@ -100,14 +100,27 @@ export class AppComponent {
   init() {
     this.apiAuth.serviceUrls.AUTH_SERVER = 'http://localhost:9223/m-inovation/api/auth';
     this.apiAuth.serviceUrls.RESOURCE_SERVER = 'http://localhost:9223/m-inovation/api';
+
+    this.apiCommons.subscribe('event-login-ok', (userInfo)=>{
+      this.userInfo = userInfo
+    })
+    
+    this.apiCommons.subscribe('event-logout-ok', ()=>{
+      this.userInfo = null
+    })
+
+    this.mainService.getTokenInfo()
+      .then(userInfo => {
+        this.userInfo = userInfo;
+      })
+      .catch(err => {})
+
   }
 
   /**
    * Làm mới menu sau khi login hoặc thay đổi tham số gì đó
    */
   refresh() {
-
-    let sampleMenu = []; // các menu mẫu nếu có
     // Khai báo menu Mặt định
     this.treeMenu = this.defaultMenu;
 

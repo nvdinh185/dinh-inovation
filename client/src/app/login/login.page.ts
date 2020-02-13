@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, CommonsService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
+import { MainService } from '../services/main.service';
 
 @Component({
   selector: 'app-login',
@@ -12,15 +13,81 @@ export class LoginPage implements OnInit {
     title: `Login`
   }
 
+  userInfo: any;
 
   constructor(
     private apiCommons: CommonsService
     , private apiAuth: AuthService
+    , private mainService: MainService
   ) { }
 
   ngOnInit() {
+    this.mainService.getTokenInfo()
+      .then(userInfo => {
+        if (userInfo) {
+          this.userInfo = userInfo;
+          this.showUserInfo();
+        }
+      })
+      .catch(err => {
+        this.showUserInfo();
+      })
+  }
 
-    this.login();
+  /**
+   * xử lý nút bấm
+   * @param btn 
+   */
+  onClick(btn){
+
+    // lệnh login
+    if (btn.command==='LOGIN'){
+      this.login()
+    }
+
+    // lệnh logout
+    if (btn.command === 'LOGOUT') {
+      this.mainService.logout()
+      this.userInfo = null
+      this.showUserInfo();
+    }
+
+    // sửa thông tin user
+    if (btn.command === 'EDIT' && this.userInfo) {
+      this.editUser();
+    }
+
+
+  }
+
+  /**
+   * xử lý upload ảnh mới
+   * @param evt 
+   */
+  imageUploadEvent(evt, item){
+
+  }
+
+  /**
+   * xử lý cắt ảnh
+   * @param item 
+   */
+  cropImage(item){
+
+  }
+
+
+  /** mở webcam trên máy */
+  openCamera(item){
+
+  }
+
+  /**
+   * Hiển thị ảnh thật
+   * @param item 
+   */
+  showImage(item){
+
   }
 
   /**
@@ -40,7 +107,7 @@ export class LoginPage implements OnInit {
         // form login gồm nhập số điện thoại username và pass
         {
           type: 'text'              // input text
-          , key: 'email'         // json_key + value input ==> {username:value}
+          , key: 'username'         // json_key + value input ==> {username:value}
           , value: ''               // default value
           , name: 'Tên đăng nhập:'
           , hint: 'Sử dụng user của email'
@@ -76,22 +143,204 @@ export class LoginPage implements OnInit {
 
   }
 
+
+
+  /**
+   * 5. Hiển thị thông tin sau khi đăng nhập thành công
+   *  hiển thị dữ liệu cho chính form login này
+   */
+  showUserInfo() {
+
+    if (this.userInfo)
+      this.formLogin = {
+        title: "ĐÃ ĐĂNG NHẬP"
+        , color: 'primary'
+        , items: [
+          /* {
+            type: 'qrcode',
+            value: JSON.stringify(
+              {
+                title: 'ĐÃ ĐĂNG NHẬP'
+                , buttons: [
+                  { icon: 'barcode', command: 'CODE-SCANER' }
+                  , { icon: 'qr-code', command: 'CODE-SCANER-FORM' }
+                ]
+                , items: [
+                  {
+                    type: 'text'
+                  }
+                ]
+              }, null, 2)
+          }
+          , */
+          {
+            type: 'barcode',
+            value: this.userInfo.username
+          }
+          ,
+          {
+            type: "details",
+            details: [
+              {
+                name: "Username(*)",
+                value: this.userInfo.username
+              },
+              {
+                name: "Họ và tên(*)",
+                value: this.userInfo.fullname
+              },
+              {
+                name: "Nickname(*)",
+                value: this.userInfo.nickname
+              },
+              {
+                name: "Địa chỉ(*)",
+                value: this.userInfo.address
+              },
+              {
+                name: "Điện thoại(*)",
+                value: this.userInfo.phone
+              },
+              {
+                name: "Email(*)",
+                value: this.userInfo.email
+              }
+            ]
+          },
+          { id: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.image ? this.userInfo.image : "assets/imgs/avatar.jpg" }
+          ,
+          { id: "background", type: "image", name: "ẢNH NỀN", value: this.userInfo.background ? this.userInfo.background : "assets/imgs/background-idea.jpg" }
+          ,
+          {
+            type: "button"
+            , options: [
+              { name: "Sửa (*)", command: "EDIT" }
+              , { name: "Logout", command: "LOGOUT" }
+            ]
+          }
+        ]
+      }
+    else
+      this.formLogin = {
+        title: "LOGIN"
+        , color: 'primary'
+        , items: [
+          {
+            type: "button"
+            , options: [
+              { name: "Đăng nhập", command: "LOGIN" }
+            ]
+          }
+        ]
+      }
+  }
+
+  /**
+   * Lưu trữ token và userInfo
+   * @param token 
+   * @param userInfo 
+   */
+  saveToken(token, userInfo) {
+    // console.log(token, userInfo);
+    this.userInfo = userInfo;
+    this.mainService.saveToken(token, userInfo);
+    this.showUserInfo();
+  }
+
+  /**
+   * Sửa thông tin cá nhân
+   */
+  editUser(){
+    let form = {
+      title: "SỬA THÔNG TIN CÁ NHÂN"
+      , buttons:[
+        { color: 'danger', icon: 'close', next: 'CLOSE' }
+      ]
+      , items: [
+        { name: "Cập nhập các thông tin sau", type: "title" }
+        , { key: "nickname", value: this.userInfo.nickname, name: "Biệt danh", hint: "Nickname", type: "text", input_type: "text", icon: "heart", validators: [{ required: true, min: 1 }] }
+        , { key: "fullname", value: this.userInfo.fullname, name: "Họ và tên", hint: "Họ và tên đầy đủ", type: "text", input_type: "text", icon: "person", validators: [{ required: true, min: 5 }] }
+        , { key: "address", value: this.userInfo.address, name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 5 }] }
+        , { key: "phone", value: this.userInfo.phone, name: "Điện thoại liên hệ", hint: "Yêu cầu định dạng số điện thoại nhé", type: "text", input_type: "tel", icon: "call", validators: [{ pattern: "^[0-9]*$" }] }
+        , { key: "email", value: this.userInfo.email, name: "email", hint: "Yêu cầu định dạng email nhé", type: "text", input_type: "email", icon: "mail", validators: [{ pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" }] }
+        , {
+          type: "button"
+          , options: [
+            { name: "Bỏ qua", next: "CLOSE" }
+            ,
+            { name: "Cập nhập", command: "EDIT-USER", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/edit-user", token: true, next: "CALLBACK" }
+          ]
+        }
+      ]
+    }
+
+    // call popup window for form login
+    this.apiCommons.openModal(DynamicFormMobilePage,
+      {
+        parent: this,                 // for dismiss child component
+        callback: this.callbackLogin, // function for callback process result of form
+        form: form                    // form dynamic 
+      }
+    );
+  }
+
+  /**
+   * Tạo user mới
+   * @param token 
+   */
+  createNewUser(username, token) {
+
+    let form = {
+      title: "TẠO THÔNG TIN CÁ NHÂN"
+      //khong cho nut hom
+      , items: [
+        { name: "Điền đầy đủ thông tin sau", type: "title" }
+        , { key: "nickname", name: "Biệt danh", hint: "Nickname", type: "text", input_type: "text", icon: "heart", validators: [{ required: true, min: 1 }] }
+        , { key: "fullname", name: "Họ và tên", hint: "Họ và tên đầy đủ", type: "text", input_type: "text", icon: "person", validators: [{ required: true, min: 5 }] }
+        , { key: "address", name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 5 }] }
+        , { key: "phone", name: "Điện thoại liên hệ", hint: "Yêu cầu định dạng số điện thoại nhé", type: "text", input_type: "tel", icon: "call", validators: [{ pattern: "^[0-9]*$" }] }
+        , { key: "email", value: username + "@mobifone.vn", name: "email", hint: "Yêu cầu định dạng email nhé", type: "text", input_type: "email", icon: "mail", validators: [{ pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" }] }
+        , {
+          type: "button"
+          , options: [
+            { name: "Tạo mới", command: "CREATE-USER", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/create-user", token: token, next: "CALLBACK" }
+          ]
+        }
+      ]
+    }
+
+    // call popup window for form login
+    this.apiCommons.openModal(DynamicFormMobilePage,
+      {
+        parent: this,                 // for dismiss child component
+        callback: this.callbackLogin, // function for callback process result of form
+        form: form                    // form dynamic 
+      }
+    );
+  }
+
+
+  /**
+   * Hàm gọi lại cho form popup
+   */
   callbackLogin = function (res) {
     // allway return Promise for callback
     return new Promise<any>((resolve, reject) => {
-      // console.log('res',res)
       if (res.error) {
-        this.apiCommons.presentAlert('Error:<br>' + res.error.message ? res.error.message : (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
-      } else if (res.ajax) {
+        // console.log('res', res.error.message , res.message,'Error:<br>' + (res.error.message!=undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))))
+        this.apiCommons.presentAlert('Error:<br>' + (res.error.message != undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))));
       } else if (res.response_data) {
         if (res.button.command === "LOGIN") {
-          // login thành công, kiểm tra quyền truy cập đã cấp chưa? (lấy thông tin user đó)
           this.checkRight(res.response_data);
         }
-      } else if (res.json_data) {
-      } else {
-        // 
-
+        if (res.button.command === "CREATE-USER") {
+          this.saveToken(res.button.token, res.response_data.data);
+        }
+        if (res.button.command === "EDIT-USER") {
+           this.userInfo = res.response_data.data
+           this.mainService.saveUserInfo(this.userInfo)
+           this.showUserInfo()
+        }
       }
 
       // close form
@@ -100,17 +349,29 @@ export class LoginPage implements OnInit {
     });
   }.bind(this);
 
+  /**
+   * Kiểm tra quyền truy cập
+   * @param resData 
+   */
   checkRight(resData) {
-    console.log(resData.token);
-    this.apiCommons.showToast('Login thành công. Đợi kiểm tra truy cập!', 3000);
     // nếu user chưa có hoặc cần khai báo thông tin cá nhân để đăng nhập
-    // trường hợp đã có thành công thì ok
-    this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.AUTH_SERVER + '/verify-token', { token: resData.token }, resData.token)
-      .then(data => {
-        console.log('Data: ', data);
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', resData.token)
+      .then(result => {
+        // console.log('result: ', result);
+        if (result && result.status === 'OK') {
+          if (result.data) {
+            // login thanh cong
+            this.apiCommons.showToast('Login thành công', 3000);
+            this.saveToken(resData.token, result.data);
+          } else {
+            // Chưa có user cần khai báo
+            this.createNewUser(resData.username, resData.token);
+          }
+        }
       })
       .catch(err => {
         console.log('Lỗi: ', err);
+        this.apiCommons.showToast('Lỗi login!', 3000);
       });
   }
 

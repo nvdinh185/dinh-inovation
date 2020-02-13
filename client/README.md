@@ -4,7 +4,8 @@
 ``` sh
 # Lưu ý nếu muốn thay đổi đường dẫn gốc thì thay ở file index.html `/` bằng `/m-inovation/` trước khi dịch
 ionic build browser --prod base-href=/m-inovation/
-ionic build --prod --service-worker – --base-href /m-inovation/
+# or
+ionic build --prod --service-worker --base-href /m-inovation/
 ```
 
 # Để chạy test thử trên máy local port 8100-->
