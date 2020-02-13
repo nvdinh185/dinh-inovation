@@ -38,7 +38,7 @@ function main(isHttp, isHttps) {
   app.use('/m-inovation/api/auth', ldap_auth);
   
   // Máy chủ api giao tiếp giành cho admin phát hành thông báo cước
-  // app.use('/m-inovation/api', require('./routes/ideas'));
+  app.use('/m-inovation/api', require('./routes/idea/idea-route-sqlite3'));
 
   //ham tra loi cac dia chi khong co
   //The 404 Route (ALWAYS Keep this as the last route)

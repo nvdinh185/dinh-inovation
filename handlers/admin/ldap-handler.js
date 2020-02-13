@@ -32,7 +32,7 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
     // thực hiện kiểm tra ldap trong 2 giây
     setTimeout(() => {
         // thực hiện bind -- nếu thành công thì login thành công
-        try{
+        try {
             // nếu ko thành công thì login fail
             client.bind(email, password, function (err) {
                 if (err) {
@@ -44,7 +44,7 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
                         usernameOremail
                     })
                 }
-    
+
                 // trả lại phiên kết nối cổng ldap
                 client.unbind(function (err) {
                     if (err) {
@@ -53,9 +53,9 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
                     }
                     // console.log('UnBind finish!');
                 })
-                
+
             })
-        } catch (e){
+        } catch (e) {
             console.log('Can not ping to LDAP server', e);
             rj(new Error('Can not ping to LDAP server'))
         }
@@ -90,15 +90,16 @@ class LDAPHandler {
      */
     async  login(req, res, next) {
         // thay dữ liệu đã parse body thành json bằng công cụ ở utils by cuongdq
-        const { email, password } = req.json_data   // req.body
-        // fakeLoginLdap(email, password)
-        loginLdapMobifone(email, password)
+        const { username, password } = req.json_data   // req.body
+        fakeLoginLdap(username, password)
+            // loginLdapMobifone(username, password)
             .then(user => {
                 res.status(200).send({
                     status: 200,
                     message: 'success',
+                    username: username.toLowerCase(),
                     token: jwtToken({
-                        email: email.toLowerCase()
+                        username: username.toLowerCase()
                     })
                 })
             })

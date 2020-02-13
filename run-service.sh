@@ -1,7 +1,7 @@
 #! /bin/bash
-WORK_DIR=/NODEJS/bill-report-server
-LOG_FILE=$WORK_DIR/logs/bill-report-server
-CLASSPATH=$WORK_DIR/server-run.js
+WORK_DIR=/NODEJS/m-inovation
+LOG_FILE=$WORK_DIR/logs/m-inovation
+CLASSPATH=$WORK_DIR/server.js
 pid_file=$WORK_DIR/service.pid
 TIMESTAMP=`date '+%Y%m%d_%H%M'`
 
