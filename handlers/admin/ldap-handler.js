@@ -1,8 +1,8 @@
 /**
  * Class Ldap kết nối ldap server, xác thực và trả về token
  * User test thử 
- * var email = 'mbill3@mobifone.vn'  hoặc nhập mbill3 không có @mobifone.vn
- * var password = 'Admin@12345'
+ * var email = 'm-bill.c3@mobifone.vn'  hoặc nhập m-bill3 không có @mobifone.vn
+ * var password = 'Abcxyz@12345'
  */
 const arrObj = require('../../utils/array-object');
 const secUtil = require('../../utils/secret-util');
