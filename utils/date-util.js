@@ -10,7 +10,6 @@ const isValidMonth = (month) => {
 const toOracleInputDate = (isoDate) => {
     const dateString = toLocaleDateString(isoDate).slice(0, 10)
     return `__$to_date('${dateString}', 'dd/mm/yyyy')`
-    // return "__$to_date('" + dateString + "', 'dd/mm/yyyy')"
 }
 
 module.exports = {

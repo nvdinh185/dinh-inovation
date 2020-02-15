@@ -2,13 +2,14 @@ const jwt = require("jsonwebtoken");
 
 const config = {
   SESSION: {
-    jwtSecret: 'mobifone-ebil-scret-key'
+    jwtSecret: 'Mobifone3-m-Inovation-2020-02-15',
+    expiresIn: '120d'
   }
 }
 
 const jwtToken = (data = {}) => {
     try {
-        return jwt.sign(data, config.SESSION.jwtSecret);
+        return jwt.sign(data, config.SESSION.jwtSecret, {expiresIn:config.SESSION.expiresIn});
     } catch {
         return null;
     }

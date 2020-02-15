@@ -31,8 +31,7 @@ const sendSms = (phone, sms) => {
                 // console.log(new Date().toUTCString(), 'KQ gui sms: ', body);
                 let msg;
                 try {
-                    msg = JSON.parse(body);
-                    msg = JSON.parse(msg);
+                    msg = JSON.parse(JSON.parse(body));
                 } catch (e) {
                     msg = body;
                 }
