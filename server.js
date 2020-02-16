@@ -22,7 +22,7 @@ const { ldap_auth } = require('./routes/auth');
 function main(isHttp, isHttps) {
 
   // Đường dẫn web tĩnh dành cho client 
-  // app.use(express.static(__dirname + '/client/www'));
+  app.use(express.static(__dirname + '/client/www'));
   app.use("/m-inovation", express.static(__dirname + '/client/www'));
 
   // Công cụ ngăn chặn DDOS dò tìm api và quét liên tục resource server

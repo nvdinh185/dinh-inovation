@@ -8,7 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { TreeMenu } from './components/trees/tree-menu';
+import { TreeMenu } from './components/tree-menu/tree-menu';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service'
 
 @NgModule({

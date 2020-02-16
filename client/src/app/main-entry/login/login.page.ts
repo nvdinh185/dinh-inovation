@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, CommonsService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
-import { MainService } from '../services/main.service';
+import { MainService } from '../../services/main.service';
 
 @Component({
   selector: 'app-login',

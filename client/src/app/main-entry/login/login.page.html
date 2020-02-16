@@ -163,22 +163,6 @@
       </ion-textarea>
     </ion-item>
 
-    <!-- input password -->
-    <ion-item *ngIf="it?.type == 'password'" class="background-none background-round form-input-item">
-      <ion-icon *ngIf="it.icon" slot="start" color="{{it.color?it.color:'primary'}}" name="{{it.icon}}"></ion-icon>
-
-      <ion-label *ngIf="it.invalid" position="floating" color="danger" class="ion-text-wrap"
-        style="text-align: justify;">
-        {{it.hint}}(*)
-      </ion-label>
-
-      <ion-input [type]="password_type" placeholder={{it.name?it.name:it.hint}} [(ngModel)]="it.value">
-      </ion-input>
-
-      <ion-icon slot="icon-only" slot="end" color="{{(password_type === 'text'?'secondary':'danger')}}" name="{{eye}}"
-        (click)="togglePasswordMode()"></ion-icon>
-    </ion-item>
-
     <!-- check box -->
     <ion-item *ngIf="it?.type === 'check'" class="background-none background-round form-input-item">
       <ion-icon *ngIf="it.icon" slot="start" color="{{it.color?it.color:'primary'}}" name="{{it.icon}}"></ion-icon>
@@ -204,20 +188,6 @@
 
       </ion-radio-group>
     </ion-list>
-
-    <!-- single select -->
-    <ion-item *ngIf="it?.type === 'select'" class="background-none background-round form-input-item">
-      <ion-icon *ngIf="it.icon" slot="start" color="{{it.color?it.color:'primary'}}" name="{{it.icon}}"></ion-icon>
-      <ion-label color="{{(it.invalid&&!it.value?'danger':'primary')}}" class="ion-text-wrap"
-        style="text-align: justify;">
-        {{it.invalid&&!it.value?it.hint+'(*)':it.name}}</ion-label>
-      <ion-select [(ngModel)]="it.value"
-        style="background-color: rgb(0, 190, 73); color:whitesmoke; border-radius: 1em;"
-        (ionChange)="onChangeSelect(it)">
-        <ion-select-option *ngFor="let mySet of it.options" value="{{mySet.value}}">{{mySet.name}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
 
     <!-- multiple select -->
     <ion-item *ngIf="it?.type === 'select_multiple'" class="background-none background-round form-input-item">
@@ -273,7 +243,7 @@
     </ion-item>
 
     <!-- button action -->
-    <ion-grid class="ion-no-padding" *ngIf="it?.type == 'button' && !isEditingObjects">
+    <ion-grid class="ion-no-padding" *ngIf="it?.type == 'button'">
       <ion-row>
         <ion-col *ngFor="let myBtn of it.options" style="text-align: center;">
           <ion-button class="form-button-item" color="{{it.color?it.color:''}}" shape="round" (click)="onClick(myBtn)">

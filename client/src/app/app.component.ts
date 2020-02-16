@@ -34,6 +34,14 @@ export class AppComponent {
     }
     ,
     {
+      name: 'Ý tưởng',
+      size: '1.1em',
+      type: 'route',     // chuyển trang theo routing
+      url: '/idea',      // chuyển trang theo routing
+      icon: 'md-alarm'
+    }
+    ,
+    {
       name: 'Login/Logout',
       type: 'route',     // bấm chuyển trang theo routing
       url: '/login',     // bấm chuyển trang khai phần tử quản lý

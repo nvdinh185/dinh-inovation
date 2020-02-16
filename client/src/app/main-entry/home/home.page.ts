@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class HomePage {
 
   homeForm: any = {
-    title: 'Home',
+    title: 'Tổng quan sáng tạo',
     card: {
       image: 'assets/imgs/background-idea.jpg',
       title: 'Chương trình quản lý ý tưởng',

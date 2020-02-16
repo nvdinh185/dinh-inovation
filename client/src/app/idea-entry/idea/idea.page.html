@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>{{(formIdea?.title?formIdea.title:'')}}</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <card-dynamic-form *ngIf="isCardNewShow" [dynamicFormInput]="dynamicFormInput" [dynamicFormValue]="dynamicFormValue"
+    [dynamicCallback]="dynamicCallback" (onSelectedFinish)="onSelectedFinish($event)"></card-dynamic-form>
+</ion-content>
