@@ -8,7 +8,7 @@
 const excel_db = require('./db/sqlite3/excel-2-sqlite');
 
 const excelFilename = "./db/excel/sqlite-inovation-manager-ver-1.0.xlsx"; //ten file excel cau hinh
-const dbFilename = "./db/database/inovation-manager.v1.db";     //ten database muon tao
+const dbFilename = "./db/database/inovation-manager.v2.db";     //ten database muon tao
 
 //xoa file csdl cu neu co
 const fs = require('fs');

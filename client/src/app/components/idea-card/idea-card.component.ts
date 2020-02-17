@@ -73,8 +73,27 @@ export class IdeaCardComponent implements OnInit {
    * @param item 
    */
   onClickCommand(item) {
-      if (this.callback) this.callback(item);
-      this.onClickSub.emit(item);
+    //   if (this.callback) this.callback(item);
+      this.onClickSub.emit({
+        idea: item,
+        command: 'VIEW' 
+      });
+  }
+
+  onClickLike(item) {
+    //   if (this.callback) this.callback(item);
+      this.onClickSub.emit({
+        idea: item,
+        command: 'LIKE' 
+      });
+  }
+
+  onClickComment(item) {
+    //   if (this.callback) this.callback(item);
+      this.onClickSub.emit({
+        idea: item,
+        command: 'COMMENT' 
+      });
   }
 
 }

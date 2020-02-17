@@ -91,8 +91,8 @@ class LDAPHandler {
     async  login(req, res, next) {
         // thay dữ liệu đã parse body thành json bằng công cụ ở utils by cuongdq
         const { username, password } = req.json_data   // req.body
-        fakeLoginLdap(username, password)
-            // loginLdapMobifone(username, password)
+        // fakeLoginLdap(username, password)
+        loginLdapMobifone(username, password)
             .then(user => {
                 res.status(200).send({
                     status: 200,

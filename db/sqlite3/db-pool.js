@@ -5,6 +5,6 @@
  * const db = require('../../db/sqlite3/db-pool');
  */
 const SQLiteDAO = require('./sqlite-dao');
-const dbFile = './db/database/inovation-manager.v1.db';
+const dbFile = './db/database/inovation-manager.v2.db';
 
 module.exports = new SQLiteDAO(dbFile);
