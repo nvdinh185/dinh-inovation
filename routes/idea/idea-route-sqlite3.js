@@ -62,6 +62,7 @@ router.get('/get-ideas'
 // tạo ý tưởng mới
 router.post('/create-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , userHandler.getUserId         // trả về req.user.id và req.user.username
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
     , ideaHandler.createIdea        // tạo idea mới
     , ideaHandler.getIdeas       // trả thông tin idea mới
@@ -70,9 +71,27 @@ router.post('/create-idea'
 // sửa ý tưởng -- cập nhập trạng thái ...
 router.post('/edit-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
-    , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
+    , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
     , ideaHandler.editIdea          // sửa idea mới
     , ideaHandler.getIdeas       // trả thông tin idea
+)
+
+// like ý tưởng
+router.post('/like-idea'
+    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , userHandler.getUserId         // trả về req.user.id và req.user.username
+    , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
+    , ideaHandler.likeIdea          // like idea trả về req.ideaId
+    , ideaHandler.getIdea           // trả thông tin idea
+)
+
+// comment ý tưởng
+router.post('/comment-idea'
+    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , userHandler.getUserId         // trả về req.user.id và req.user.username
+    , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
+    , ideaHandler.commentIdea       // comment idea
+    , ideaHandler.getIdea           // trả thông tin idea
 )
 
 module.exports = router;

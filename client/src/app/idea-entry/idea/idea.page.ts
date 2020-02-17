@@ -178,11 +178,11 @@ export class IdeaPage implements OnInit {
             },
             {
               name: "Số người thích:",
-              value: item.count_likes
+              value: item.voted_count
             },
             {
               name: "Số ý kiến phản biện:",
-              value: item.count_comments
+              value: item.commented_count
             }
           ]
         }
@@ -205,7 +205,10 @@ export class IdeaPage implements OnInit {
   likeIdea(item) {
     // id và token chứa user like id này
     this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/like-idea', { id: item.id }, true)
-      .then(data => console.log(data))
+      .then(newIdea => {
+        console.log(newIdea);
+        
+      })
       .catch(err => console.log(err))
   }
 
@@ -219,7 +222,7 @@ export class IdeaPage implements OnInit {
         { color: 'danger', icon: 'close', next: 'CLOSE' }
       ]
       , items: [
-        { name: item.title, type: "title" }
+        { name: item.title, type: "title", key: "id", value: item.id }
         , {
           type: "details",
           details: [
@@ -259,14 +262,14 @@ export class IdeaPage implements OnInit {
             }
           ]
         }
-        , { type: "text_area", key: "comment", name: "Nội dung góp ý", hint: "Nhập góp ý", input_type: "text", icon: "md-information-circle", validators: [{ required: true}] }
+        , { type: "text_area", key: "content", name: "Nội dung góp ý", hint: "Nhập góp ý", input_type: "text", validators: [{ required: true }] }
         ,
-          {
-            type: "button"
-            , options: [
-              { name: "Gửi", url:this.apiAuth.serviceUrls.RESOURCE_SERVER+'/comment-idea', next:'CALLBACK'}
-            ]
-          }
+        {
+          type: "button"
+          , options: [
+            { name: "Gửi", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/comment-idea', next: 'CALLBACK', token: true }
+          ]
+        }
       ]
     }
 
@@ -274,7 +277,7 @@ export class IdeaPage implements OnInit {
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
         parent: this,                 // for dismiss child component
-        callback: () => this.callbackComments, // function for callback process result of form
+        callback: this.callbackComments, // function for callback process result of form
         form: form                    // form dynamic 
       }
     );
@@ -288,7 +291,8 @@ export class IdeaPage implements OnInit {
         this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
       } else if (res.response_data) {
         // kết quả nhập comment
-         
+        console.log('new idea',res.response_data);
+        
       }
       resolve({ next: "CLOSE" });
     });
