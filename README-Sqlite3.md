@@ -14,5 +14,5 @@ Tất cả các bảng được thiết kế trên excel và dữ liệu tương
 
 # Hướng dẫn mới cho nhánh mới
 
-# abc
+# git push --set-upstream mf3 server-sqlite-demo
 
