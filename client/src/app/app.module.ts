@@ -10,11 +10,17 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TreeMenu } from './components/tree-menu/tree-menu';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service'
+import { SharedModule } from './shared.module';
+
+// import { IdeaCardComponent } from './components/idea-card/idea-card.component';
+
+// import {TimeAgoPipe} from 'time-ago-pipe';
 
 @NgModule({
   declarations: [
-    AppComponent
-    , TreeMenu
+    AppComponent,
+    TreeMenu
+
   ],
   entryComponents: [
     TreeMenu
@@ -23,6 +29,7 @@ import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service'
     BrowserModule,
     IonicModule.forRoot(),
     Ngxi4DynamicServiceModule.forRoot(),
+    SharedModule,
     AppRoutingModule
   ],
   providers: [

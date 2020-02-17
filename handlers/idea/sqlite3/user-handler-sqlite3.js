@@ -1,14 +1,16 @@
 "use strict"
 
 /**
- * Bộ tương tác csdl để xử lý tài nguyên ý tưởng
+ * Bộ tương tác csdl để tạo, quản lý user, (quản lý user sử dụng hệ thống)
  */
 
 // Kết nối csdl oracle theo pool
-const db = require('../../db/sqlite3/db-pool');
-const arrObj = require('../../utils/array-object');
+const db = require('../../../db/sqlite3/db-pool');
+const arrObj = require('../../../utils/array-object');
 
-class EBillHandler {
+const defaultOrganizationId = 3; // default tổ chức được tạo
+
+class UserHandler {
 
     // lấy thông tin user
     getUserInfo(req, res, next) {
@@ -45,6 +47,7 @@ class EBillHandler {
         const userInfo = {
             ...req.json_data,
             // các trường thông tin thêm vào
+            organization_id : defaultOrganizationId,
             username: req.user.username,
             status: 1,
             created_time: Date.now()
@@ -87,14 +90,8 @@ class EBillHandler {
                     error: err
                 })
             });
-
     }
-
-
-
-
-
 
 }
 
-module.exports = new EBillHandler();
+module.exports = new UserHandler();

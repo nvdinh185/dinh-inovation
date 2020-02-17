@@ -8,16 +8,16 @@ import { Component } from '@angular/core';
 export class HomePage {
 
   homeForm: any = {
-    title: 'Tổng quan sáng tạo',
+    title: 'Văn phòng sáng tạo',
     card: {
       image: 'assets/imgs/background-idea.jpg',
-      title: 'Chương trình quản lý ý tưởng',
+      title: 'Văn phòng sáng tạo cho mọi người',
       subtitle: 'M.INOVATION',
-      content: `Chương trình hỗ trợ quản lý ý tưởng.`
+      content: `Chương trình hỗ trợ sáng tạo và quản lý ý tưởng.`
     }
     ,
     list: {
-      title: 'Tài liệu (nếu có)'
+      title: 'Tài liệu:'
       ,
       items: [
         {
@@ -25,7 +25,7 @@ export class HomePage {
           title: 'Hướng dẫn sử dụng chương trình',
           icon: { slot: 'start', color: 'medium', name: 'book' }
         }
-        ,
+        /* ,
         {
           url: 'https://www.ionicframework.com',
           title: 'Liên kết thử',
@@ -42,7 +42,7 @@ export class HomePage {
           url: 'https://www.ionicframework.com',
           title: 'Tài liệu thử',
           icon: { slot: 'start', color: 'medium', name: 'color-fill' }
-        }
+        } */
       ]
     }
   }

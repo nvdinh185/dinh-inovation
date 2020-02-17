@@ -7,7 +7,9 @@ const router = require('express').Router();
 const postHandler = require('../../utils/post-handler');
 
 // trường hợp nếu sử dụng csdl oracle thì thay handler này là được
-const ideaHandler = require('../../handlers/idea/idea-handler-sqlite3')
+const userHandler = require('../../handlers/idea/sqlite3/user-handler-sqlite3')
+const listHandler = require('../../handlers/idea/sqlite3/list-handler-sqlite3')
+const ideaHandler = require('../../handlers/idea/sqlite3/idea-handler-sqlite3')
 
 // thực hiện xác thực token user đã được cấp
 const jwtTokenVerify = require('../../handlers/jwt-token-verify');
@@ -21,25 +23,56 @@ const jwtTokenVerify = require('../../handlers/jwt-token-verify');
 // hoặc {status:'NOK', message:'User bị khóa liên hệ Quản trị hệ thống'}
 router.get('/get-user-info'
     , jwtTokenVerify                // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , ideaHandler.getUserInfo       // dựa vào giá trị req.user.username trả thông tin user
+    , userHandler.getUserInfo       // dựa vào giá trị req.user.username trả thông tin user
 )
 
 // 2. Trang login mở ra form nhập thông tin cá nhân để tạo user mới
 router.post('/create-user'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
-    , ideaHandler.createNewUser     // tạo user mới
-    , ideaHandler.getUserInfo       // trả thông tin user đã đăng ký
+    , userHandler.createNewUser     // tạo user mới
+    , userHandler.getUserInfo       // trả thông tin user đã đăng ký
 )
 
 // 3. Sửa thông tin cá nhân (kể cả update thông tin avatar & background)
 router.post('/edit-user'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
-    , ideaHandler.editUser          // Sửa thông tin cá nhân
-    , ideaHandler.getUserInfo       // trả thông tin user đã đăng ký
+    , userHandler.editUser          // Sửa thông tin cá nhân
+    , userHandler.getUserInfo       // trả thông tin user đã đăng ký
 )
 
 // ------- các chức năng phía trên yêu cầu phải được phân quyền và kiểm soát bởi jwt---//
+
+// -- các chức năng truy vấn danh mục -----
+router.get('/get-idea-parameters'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getListParameters       // trả về danh mục tham số của user đang thuộc tổ chức đó
+)
+
+
+// -- các chức năng cho ý tưởng chính -----
+
+// lấy các ý tưởng hiện có để hiển thị ra
+router.get('/get-ideas'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , ideaHandler.getIdeas                // trả về danh sách ý tưởng
+)
+
+// tạo ý tưởng mới
+router.post('/create-idea'
+    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
+    , ideaHandler.createIdea        // tạo idea mới
+    , ideaHandler.getIdeas       // trả thông tin idea mới
+)
+
+// sửa ý tưởng -- cập nhập trạng thái ...
+router.post('/edit-idea'
+    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
+    , ideaHandler.editIdea          // sửa idea mới
+    , ideaHandler.getIdeas       // trả thông tin idea
+)
 
 module.exports = router;

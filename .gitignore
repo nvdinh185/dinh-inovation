@@ -32,6 +32,7 @@ $RECYCLE.BIN/
 
 db/excel/~$*.*
 db/excel/.~*.*
+db/database/*.db
 cert/~$*.*
 # cert/*.pem
 # cert/*.csr

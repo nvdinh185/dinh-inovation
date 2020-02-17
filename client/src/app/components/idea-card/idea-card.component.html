@@ -1,0 +1,24 @@
+<ion-card *ngIf="commandCardForm" class="main-ion-card welcome-card">
+  <!-- Nếu có image thì ưu tiên lấy image làm nền, còn ko thì lấy màu background -->
+  <div *ngIf="!commandCardForm.image" class="welcome-card-image-height"
+    [style.background-color]="commandCardForm.background" style="opacity: 0.4;"></div>
+  <div *ngIf="commandCardForm.image" class="welcome-card-image-height"
+    [style.background-image]="'url('+commandCardForm.image+')'" style="opacity: 0.9;"></div>
+
+  <ion-card-header class="card-title">
+    <ion-card-title>{{commandCardForm.title}}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid fixed>
+      <ion-row>
+        <ion-col size="6">0 likes</ion-col>
+        <ion-col size="6">12 comments</ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+
+  <ion-button class="card-icon" (click)="onClickCommand(commandCardForm)"  shape="round">
+    <ion-icon slot="start" name="ios-arrow-back"></ion-icon>
+  </ion-button>
+
+</ion-card>

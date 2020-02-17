@@ -26,7 +26,7 @@ export class AppComponent {
 
   defaultMenu: any = [
     {
-      name: 'Trang chủ',
+      name: 'Văn phòng sáng tạo',
       size: '1.1em',
       type: 'route',     // chuyển trang theo routing
       url: '/home',      // chuyển trang theo routing
@@ -34,7 +34,7 @@ export class AppComponent {
     }
     ,
     {
-      name: 'Ý tưởng',
+      name: 'Phòng ý tưởng',
       size: '1.1em',
       type: 'route',     // chuyển trang theo routing
       url: '/idea',      // chuyển trang theo routing

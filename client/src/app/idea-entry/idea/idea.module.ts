@@ -8,6 +8,7 @@ import { IdeaPageRoutingModule } from './idea-routing.module';
 
 import { IdeaPage } from './idea.page';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
+import { SharedModule } from 'src/app/shared.module';
 
 @NgModule({
   imports: [
@@ -15,8 +16,11 @@ import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
     FormsModule,
     IonicModule,
     Ngxi4DynamicServiceModule,
+    SharedModule,
     IdeaPageRoutingModule
   ],
-  declarations: [IdeaPage]
+  declarations: [
+    IdeaPage
+  ]
 })
-export class IdeaPageModule {}
+export class IdeaPageModule { }
