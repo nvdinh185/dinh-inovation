@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { AuthService, CommonsService } from 'ngxi4-dynamic-service';
 import { MainService } from './services/main.service';
 
+import { environment } from './../environments/environment'
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -106,8 +108,8 @@ export class AppComponent {
    * Khởi tạo các biến đầu tiên
    */
   init() {
-    this.apiAuth.serviceUrls.AUTH_SERVER = 'http://localhost:9223/m-inovation/api/auth';
-    this.apiAuth.serviceUrls.RESOURCE_SERVER = 'http://localhost:9223/m-inovation/api';
+    this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER || 'http://localhost:9223/m-inovation/api/auth';
+    this.apiAuth.serviceUrls.RESOURCE_SERVER =  environment.RESOURCE_SERVER || 'http://localhost:9223/m-inovation/api';
 
     this.apiCommons.subscribe('event-login-ok', (userInfo)=>{
       this.userInfo = userInfo
