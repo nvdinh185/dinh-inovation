@@ -15,12 +15,12 @@
       <ion-row>
         <ion-col size="6">
           <ion-button color="secondary" (click)="onClickLike(commandCardForm)" shape="round"  size="small">
-            0<ion-icon slot="end" name="thumbs-up"></ion-icon>
+            {{commandCardForm.voted_count}}<ion-icon slot="end" name="thumbs-up"></ion-icon>
           </ion-button>
         </ion-col>
         <ion-col size="6">
           <ion-button color="success" (click)="onClickComment(commandCardForm)" shape="round" size="small">
-            12<ion-icon slot="end" name="chatbubbles"></ion-icon>
+              {{commandCardForm.commented_count}}<ion-icon slot="end" name="chatbubbles"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
