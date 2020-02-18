@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'ngxi4-dynamic-service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   homeForm: any = {
     title: 'Văn phòng sáng tạo',
@@ -25,29 +26,29 @@ export class HomePage {
           title: 'Hướng dẫn sử dụng chương trình',
           icon: { slot: 'start', color: 'medium', name: 'book' }
         }
-        /* ,
-        {
-          url: 'https://www.ionicframework.com',
-          title: 'Liên kết thử',
-          icon: { slot: 'start', color: 'medium', name: 'build' }
-        }
-        ,
-        {
-          url: 'https://www.ionicframework.com',
-          title: 'Hướng dẫn thử',
-          icon: { slot: 'start', color: 'medium', name: 'grid' }
-        }
-        ,
-        {
-          url: 'https://www.ionicframework.com',
-          title: 'Tài liệu thử',
-          icon: { slot: 'start', color: 'medium', name: 'color-fill' }
-        } */
       ]
     }
   }
 
+  topUsersActions: any;
 
-  constructor() {}
+  constructor(
+    private apiAuth: AuthService
+  ) { }
+
+  ngOnInit() {
+    this.init();
+  }
+
+  init() {
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-top-actions")
+      .then(data => {
+        // console.log('Data: ', data);
+        this.topUsersActions = data;
+      })
+      .catch(err => {
+        // console.log('Lỗi: ', err);
+      });
+  }
 
 }

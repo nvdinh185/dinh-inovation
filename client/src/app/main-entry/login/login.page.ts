@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, CommonsService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
+import { AuthService, CommonsService, DynamicFormMobilePage, Ionic4CroppieComponent, ImageService, CameraCardComponent } from 'ngxi4-dynamic-service';
 import { MainService } from '../../services/main.service';
 
 @Component({
@@ -19,6 +19,7 @@ export class LoginPage implements OnInit {
     private apiCommons: CommonsService
     , private apiAuth: AuthService
     , private mainService: MainService
+    , private apiImage: ImageService
   ) { }
 
   ngOnInit() {
@@ -38,10 +39,10 @@ export class LoginPage implements OnInit {
    * xử lý nút bấm
    * @param btn 
    */
-  onClick(btn){
+  onClick(btn) {
 
     // lệnh login
-    if (btn.command==='LOGIN'){
+    if (btn.command === 'LOGIN') {
       this.login()
     }
 
@@ -64,30 +65,67 @@ export class LoginPage implements OnInit {
    * xử lý upload ảnh mới
    * @param evt 
    */
-  imageUploadEvent(evt, item){
+  imageUploadEvent(evt, item) {
+    if (!evt.target) { return; }
+    if (!evt.target.files) { return; }
+    if (evt.target.files.length !== 1) { return; }
+    const file = evt.target.files[0];
+    if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif' && file.type !== 'image/jpg') { return; }
 
+    //gán sự kiện chọn ảnh
+    //this.imageChangedEvent = evt;
+
+    //gán sự kiện chọn ảnh crop
+    // = evt;
+    this.apiCommons.openModal(Ionic4CroppieComponent, {
+      parent: this, // để gọi cắt
+      item: item,
+      event: evt,
+      options: item.options
+    })
+      .then(data => {
+        item.value = data ? data : item.value;
+      })
   }
 
   /**
    * xử lý cắt ảnh
    * @param item 
    */
-  cropImage(item){
+  async cropImage(item) {
+    let imageBase64 = await this.apiImage.createBase64Image(item.value, 600);
 
+    this.apiCommons.openModal(Ionic4CroppieComponent, {
+      parent: this, // để gọi cắt
+      item: item,
+      // nếu giá trị là url thì chuyển thành base64 để crop
+      // giảm kích thước xuống còn 600x600 là tối đa nhé
+      image: imageBase64,
+      options: item.options
+    })
+      .then(data => {
+        item.value = data ? data : item.value;
+      })
   }
 
 
   /** mở webcam trên máy */
-  openCamera(item){
-
+  openCamera(item) {
+    this.apiCommons.openModal(CameraCardComponent, {
+      parent: this, // để gọi tắt cửa sổ
+    })
+      .then(data => {
+        // console.log('ảnh nhận được: ', data ? data.length : undefined);
+        item.value = data ? data : item.value;
+      })
   }
 
   /**
    * Hiển thị ảnh thật
    * @param item 
    */
-  showImage(item){
-
+  showImage(item) {
+    item.visible = !item.visible;
   }
 
   /**
@@ -158,19 +196,7 @@ export class LoginPage implements OnInit {
         , items: [
           /* {
             type: 'qrcode',
-            value: JSON.stringify(
-              {
-                title: 'ĐÃ ĐĂNG NHẬP'
-                , buttons: [
-                  { icon: 'barcode', command: 'CODE-SCANER' }
-                  , { icon: 'qr-code', command: 'CODE-SCANER-FORM' }
-                ]
-                , items: [
-                  {
-                    type: 'text'
-                  }
-                ]
-              }, null, 2)
+            value: token
           }
           , */
           {
@@ -207,9 +233,9 @@ export class LoginPage implements OnInit {
               }
             ]
           },
-          { id: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.image ? this.userInfo.image : "assets/imgs/avatar.jpg" }
+          { id: "avatar", type: "image-viewer", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.avatar ? this.userInfo.avatar : "assets/imgs/avatar.jpg" }
           ,
-          { id: "background", type: "image", name: "ẢNH NỀN", value: this.userInfo.background ? this.userInfo.background : "assets/imgs/background-idea.jpg" }
+          { id: "background", type: "image-viewer", name: "ẢNH NỀN", value: this.userInfo.background ? this.userInfo.background : "assets/imgs/background-idea.jpg" }
           ,
           {
             type: "button"
@@ -250,10 +276,10 @@ export class LoginPage implements OnInit {
   /**
    * Sửa thông tin cá nhân
    */
-  editUser(){
+  editUser() {
     let form = {
       title: "SỬA THÔNG TIN CÁ NHÂN"
-      , buttons:[
+      , buttons: [
         { color: 'danger', icon: 'close', next: 'CLOSE' }
       ]
       , items: [
@@ -263,6 +289,8 @@ export class LoginPage implements OnInit {
         , { key: "address", value: this.userInfo.address, name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 5 }] }
         , { key: "phone", value: this.userInfo.phone, name: "Điện thoại liên hệ", hint: "Yêu cầu định dạng số điện thoại nhé", type: "text", input_type: "tel", icon: "call", validators: [{ pattern: "^[0-9]*$" }] }
         , { key: "email", value: this.userInfo.email, name: "email", hint: "Yêu cầu định dạng email nhé", type: "text", input_type: "email", icon: "mail", validators: [{ pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" }] }
+        , { key: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.avatar ? this.userInfo.avatar : "assets/imgs/avatar.jpg", options: {ratio: 1/1, max_width:80} }
+        , { key: "background", type: "image", name: "ẢNH NỀN", value: this.userInfo.background ? this.userInfo.background : "assets/imgs/background-idea.jpg", options: {ratio: 16/9, max_width:300}  }
         , {
           type: "button"
           , options: [
@@ -300,6 +328,8 @@ export class LoginPage implements OnInit {
         , { key: "address", name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 5 }] }
         , { key: "phone", name: "Điện thoại liên hệ", hint: "Yêu cầu định dạng số điện thoại nhé", type: "text", input_type: "tel", icon: "call", validators: [{ pattern: "^[0-9]*$" }] }
         , { key: "email", value: username + "@mobifone.vn", name: "email", hint: "Yêu cầu định dạng email nhé", type: "text", input_type: "email", icon: "mail", validators: [{ pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" }] }
+        , { key: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.avatar ? this.userInfo.avatar : "assets/imgs/avatar.jpg" }
+        , { key: "background", type: "image", name: "ẢNH NỀN", value: this.userInfo.background ? this.userInfo.background : "assets/imgs/background-idea.jpg" }
         , {
           type: "button"
           , options: [
@@ -337,9 +367,9 @@ export class LoginPage implements OnInit {
           this.saveToken(res.button.token, res.response_data.data);
         }
         if (res.button.command === "EDIT-USER") {
-           this.userInfo = res.response_data.data
-           this.mainService.saveUserInfo(this.userInfo)
-           this.showUserInfo()
+          this.userInfo = res.response_data.data
+          this.mainService.saveUserInfo(this.userInfo)
+          this.showUserInfo()
         }
       }
 

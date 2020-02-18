@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonsService, AuthService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-idea',
@@ -26,17 +27,25 @@ export class IdeaPage implements OnInit {
 
   isCardNewShow: boolean = false;
 
+  userInfo: any;
+
   constructor(
     private apiCommons: CommonsService
     , private apiAuth: AuthService
     , private mainService: MainService
+    , private modalController: ModalController
   ) { }
 
   ngOnInit() {
+    this.init();
     this.refresh();
   }
 
-  async refresh() {
+
+  async init() {
+    // lấy thông tin user đang login có chưa?
+    this.userInfo = this.mainService.getUserInfo();
+
     try {
       this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
     } catch{ }
@@ -73,19 +82,27 @@ export class IdeaPage implements OnInit {
 
     this.dynamicCallback = this.dynamicCallbackCard;
 
+  }
+
+  async refresh() {
+    // lấy danh sách ý tưởng từ csdl mới nhất
     try {
-      this.formIdea.ideas = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-ideas')
+      this.formIdea.ideas = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-ideas', true)
+      if (Array.isArray(this.formIdea.ideas)) {
+        this.formIdea.ideas.forEach(el => {
+          if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
+          if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
+        });
+      }
     } catch{ }
-
     // Đã có danh sách ý tưởng mới lấy được từ csdl rồi
-
   }
 
   // hàm gọi lại xử lý ajax
   dynamicCallbackCard(ajaxItem) {
     return new Promise(resolve => {
 
-      console.log(ajaxItem);
+      // console.log(ajaxItem);
 
       let ajaxReturn = {
         key: 'name',
@@ -114,6 +131,7 @@ export class IdeaPage implements OnInit {
   // Đọc lại các ý tưởng mới
   doRefresh(evt) {
     setTimeout(() => {
+      this.refresh();        // làm mới ý tưởng mới
       evt.target.complete();
     }, 1000);
   }
@@ -156,15 +174,15 @@ export class IdeaPage implements OnInit {
             },
             {
               name: "Người tạo:",
-              value: item.changed_username
+              value: item.username
             },
             {
               name: "Loại ý tưởng:",
-              value: item.category_id
+              value: item.category_name
             },
             {
               name: "Trạng thái ý tưởng:",
-              value: item.status
+              value: item.status_name
             },
             {
               name: "Thời gian tạo:",
@@ -190,7 +208,7 @@ export class IdeaPage implements OnInit {
     }
 
     // call popup window for form login
-    this.apiCommons.openModal(DynamicFormMobilePage,
+    this.openModal(DynamicFormMobilePage,
       {
         parent: this,                 // for dismiss child component
         callback: () => new Promise<any>(resolve => { resolve({ next: 'CLOSE' }) }), // function for callback process result of form
@@ -206,8 +224,8 @@ export class IdeaPage implements OnInit {
     // id và token chứa user like id này
     this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/like-idea', { id: item.id }, true)
       .then(newIdea => {
-        console.log(newIdea);
-        
+        // console.log(newIdea);
+        this.refresh(); // làm mới ý tưởng mới
       })
       .catch(err => console.log(err))
   }
@@ -232,15 +250,15 @@ export class IdeaPage implements OnInit {
             },
             {
               name: "Người tạo:",
-              value: item.changed_username
+              value: item.username
             },
             {
               name: "Loại ý tưởng:",
-              value: item.category_id
+              value: item.category_name
             },
             {
               name: "Trạng thái ý tưởng:",
-              value: item.status
+              value: item.status_name
             },
             {
               name: "Thời gian tạo:",
@@ -274,7 +292,7 @@ export class IdeaPage implements OnInit {
     }
 
     // call popup window for form login
-    this.apiCommons.openModal(DynamicFormMobilePage,
+    this.openModal(DynamicFormMobilePage,
       {
         parent: this,                 // for dismiss child component
         callback: this.callbackComments, // function for callback process result of form
@@ -291,11 +309,21 @@ export class IdeaPage implements OnInit {
         this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
       } else if (res.response_data) {
         // kết quả nhập comment
-        console.log('new idea',res.response_data);
-        
+        // console.log('new idea', res.response_data);
+        this.refresh(); // làm mới ý tưởng mới
+
       }
       resolve({ next: "CLOSE" });
     });
   }.bind(this);
 
+
+  async openModal(componentPage, navParams) {
+    const myModal = await this.modalController.create({
+      component: componentPage,
+      componentProps: navParams,
+      cssClass: 'cng-custom-modal-css'
+    });
+    return await myModal.present();
+  }
 }

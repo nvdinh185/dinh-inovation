@@ -12,7 +12,19 @@ class IdeaHandler {
 
     // 1. lấy thông tin ý tưởng
     getIdeas(req, res, next) {
-        db.getRsts(`select * from ideas order by changed_time desc, created_time desc`)
+        db.getRsts(`select 
+                        d.fullname || '(' || d.nickname || ')' as username
+                        , c.name as status_name
+                        , b.name as category_name
+                        , a.* 
+                        from ideas a
+                        left join ideas_categories b
+                        on a.category_id = b.id
+                        left join ideas_statuses c
+                        on a.status = c.id
+                        left join users d
+                        on a.user_id = d.id
+                    order by a.changed_time desc, a.created_time desc`)
             .then(result => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(arrObj.getJsonStringify(result));
@@ -100,26 +112,28 @@ class IdeaHandler {
         req.ideaId = req.json_data.id;
         let jsonLike = {
             user_id: req.user.id,
-            ideas_id: req.ideaId,
+            idea_id: req.ideaId,
             created_time: Date.now(),
             activities_type: 1 // like
         }
 
-        db.getRst(`select activities_type from ideas_interactives where ideas_id=${req.ideaId} and user_id=${req.user.id}`)
+        db.getRst(`select activities_type from ideas_interactives where idea_id=${req.ideaId} and user_id=${req.user.id}`)
             .then(async result => {
                 if (result) {
                     // có tồn tại 1 bảng ghi rồi của user này chỉ được đếm 1 lần thôi
                     // nếu like thì unlike
                     if (result.activities_type !== 0) jsonLike.activities_type = 0;
-                    await db.update(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'ideas_id']))
+                    await db.update(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'idea_id']))
                 } else {
-                    await db.insert(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'ideas_id']))
+                    await db.insert(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'idea_id']))
                 }
                 // update số lượng like cho bảng gốc
-                let rowCount = await db.getRst(`select count(1) as voted_count from ideas_interactives
-                                                where ideas_id = ${req.ideaId}
-                                                and activities_type>0`);
-                await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, voted_count: rowCount.voted_count }, ["id"]))
+                let votedUsers = await db.getRsts(`select distinct user_id as user_id
+                                                    from ideas_interactives
+                                                    where idea_id = ${req.ideaId}
+                                                    and activities_type>0`);
+                votedUsers = votedUsers.map(o => o["user_id"]);
+                await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, voted_count: votedUsers.length, voted_users: JSON.stringify(votedUsers) }, ["id"]))
                 next()
             })
             .catch(err => {
@@ -138,20 +152,19 @@ class IdeaHandler {
         req.ideaId = req.json_data.id;
         let jsonComment = {
             user_id: req.user.id,
-            ideas_id: req.ideaId,
+            idea_id: req.ideaId,
             content: req.json_data.content,
             created_time: Date.now()
         }
         db.insert(db.convertSqlFromJson('ideas_comments', jsonComment, []))
             .then(async result => {
-                // console.log('kq',result);
-                // update số lượng comment cho bảng gốc
-                let rowCount = await db.getRst(`select 
-                                count(distinct user_id) as commented_count 
-                                from ideas_comments
-                                where ideas_id = ${req.ideaId}
-                                and parent_id is null`);
-                await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, commented_count: rowCount.commented_count }, ["id"]))
+                let commentedUsers = await db.getRsts(`select 
+                                                        distinct user_id as user_id 
+                                                        from ideas_comments
+                                                        where idea_id = ${req.ideaId}
+                                                        and parent_id is null`);
+                commentedUsers = commentedUsers.map(o => o["user_id"]);
+                await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, commented_count: commentedUsers.length, commented_users: JSON.stringify(commentedUsers) }, ["id"]))
                 next()
             })
             .catch(err => {

@@ -55,7 +55,7 @@ router.get('/get-idea-parameters'
 
 // lấy các ý tưởng hiện có để hiển thị ra
 router.get('/get-ideas'
-    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , ideaHandler.getIdeas                // trả về danh sách ý tưởng
 )
 
@@ -92,6 +92,13 @@ router.post('/comment-idea'
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
     , ideaHandler.commentIdea       // comment idea
     , ideaHandler.getIdea           // trả thông tin idea
+)
+
+
+// thống kê hoạt động thường xuyên đưa vào tôn vinh
+router.get('/get-top-actions'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getActionsList             // trả về danh sách ý tưởng
 )
 
 module.exports = router;

@@ -7,6 +7,10 @@
 
     <ion-title>{{(formIdea?.title?formIdea.title:'')}}</ion-title>
 
+    <ion-buttons *ngIf="userInfo" slot="secondary">
+      <ion-button shape="round">{{userInfo.username}}</ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -32,8 +36,8 @@
     </ion-fab-list>
   </ion-fab>
 
-  <ion-card class="card-add-new">
-    <card-dynamic-form *ngIf="isCardNewShow" [dynamicFormInput]="dynamicFormInput" [dynamicFormValue]="dynamicFormValue"
+  <ion-card class="card-add-new" *ngIf="isCardNewShow" >
+    <card-dynamic-form [dynamicFormInput]="dynamicFormInput" [dynamicFormValue]="dynamicFormValue"
       [dynamicCallback]="dynamicCallback" (onSelectedFinish)="onSelectedFinish($event)"></card-dynamic-form>
   </ion-card>
 
@@ -45,9 +49,10 @@
   </ion-refresher>
 
   <!-- Hiển thị danh sách các ý tưởng ra trên trang này sắp xếp thành các card theo các màu sắc ý tưởng khác nhau -->
-  <ion-grid fixed>
+  <ion-grid fixed *ngIf="!isCardNewShow">
     <ion-row>
-      <ion-col *ngFor="let it of formIdea?.ideas; let idx=index;" size="12" size-sm="6" size-md="4" size-lg="4" size-xl="3">
+      <ion-col *ngFor="let it of formIdea?.ideas; let idx=index;" size="12" size-sm="6" size-md="4" size-lg="4"
+        size-xl="3">
         <app-idea-card [cardData]="it" (onClickSub)="onClickIdeaCard($event)"></app-idea-card>
       </ion-col>
     </ion-row>
