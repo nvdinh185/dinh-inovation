@@ -106,8 +106,8 @@ export class AppComponent {
    * Khởi tạo các biến đầu tiên
    */
   init() {
-    this.apiAuth.serviceUrls.AUTH_SERVER = 'http://localhost:9223/m-inovation/api/auth';
-    this.apiAuth.serviceUrls.RESOURCE_SERVER = 'http://localhost:9223/m-inovation/api';
+    this.apiAuth.serviceUrls.AUTH_SERVER = 'https://c3.mobifone.vn/m-inovation/api/auth';
+    this.apiAuth.serviceUrls.RESOURCE_SERVER = 'https://c3.mobifone.vn/m-inovation/api';
 
     this.apiCommons.subscribe('event-login-ok', (userInfo)=>{
       this.userInfo = userInfo
