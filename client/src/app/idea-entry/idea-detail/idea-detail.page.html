@@ -68,10 +68,10 @@
 
   <!-- Nhập nội dung comment để góp ý ở ô này -->
   <ion-item class="input-comment">
-    <!-- <ion-textarea  ></ion-textarea> -->
-    <textarea autosize type="text" placeholder="Đóng góp ý kiến .... " [(ngModel)]="commentContent" [minRows]="1" [maxRows]="10">
-      Đây là đóng góp ý kiến thêm
-    </textarea>
+    <ion-textarea autosize type="text" placeholder="Đóng góp ý kiến .... " [(ngModel)]="message"></ion-textarea>
+    <ion-button color={{(message?"secondary":"light")}} (click)="onClickSend()" fill="clear" shape="round">
+      <ion-icon slot="icon-only" name="send"></ion-icon>
+    </ion-button>
   </ion-item>
 
   <!-- Lịch sử góp ý hiển thị theo hình cây ở dưới đây -->

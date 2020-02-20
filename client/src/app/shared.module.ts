@@ -21,6 +21,7 @@ import {AutosizeModule} from 'ngx-autosize';
     exports: [
         // Phải khai báo xuất bản ra mới sử dụng được nhé
         IdeaCardComponent,
+        AutosizeModule,
         TimeAgoPipe
     ]
 })

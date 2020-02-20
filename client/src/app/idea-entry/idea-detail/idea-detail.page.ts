@@ -13,7 +13,7 @@ export class IdeaDetailPage implements OnInit {
   userInfo: any;
   ideaInfo: any;
 
-
+  message: string;
 
   constructor(
     private route: ActivatedRoute
@@ -42,6 +42,14 @@ export class IdeaDetailPage implements OnInit {
     this.userInfo = this.mainService.getUserInfo();
   }
 
+
+  // Gửi nội dung comment đi
+  onClickSend(){
+    if (this.message){
+
+      this.message = '';
+    }
+  }
 
   // Bấm vào nút more 
   onClickMore(){
