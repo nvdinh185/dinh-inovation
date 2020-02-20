@@ -69,7 +69,7 @@
   <!-- Nhập nội dung comment để góp ý ở ô này -->
   <ion-item class="input-comment">
     <ion-textarea autosize type="text" placeholder="Đóng góp ý kiến .... " [(ngModel)]="message"></ion-textarea>
-    <ion-button color={{(message?"secondary":"light")}} (click)="onClickSend()" fill="clear" shape="round">
+    <ion-button color="{{(message?'secondary':'light')}}" (click)="onClickSend()" fill="clear" shape="round">
       <ion-icon slot="icon-only" name="send"></ion-icon>
     </ion-button>
   </ion-item>
