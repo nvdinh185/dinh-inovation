@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Chủ đề ý tưởng</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true" (ionScrollStart)="logScrollStart()" (ionScroll)="logScrolling($event)"
+  (ionScrollEnd)="logScrollEnd()">
+
+  <ion-item>
+    <ion-avatar slot="start">
+      <img src="{{ideaInfo?.idea?.avatar}}">
+    </ion-avatar>
+    <ion-label>
+      {{ideaInfo?.idea?.username}}
+      <br>
+      <ion-note>{{ideaInfo?.idea?.created_time | timeAgo}}</ion-note>
+    </ion-label>
+    <ion-button (click)="onClickMore()" slote="end" shape="round" fill="clear" size="small">
+      <ion-icon slot="icon-only" name="ios-more"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+
+
+  <h1>{{ideaInfo?.idea?.title}}</h1>
+
+
+</ion-content>

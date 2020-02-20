@@ -41,3 +41,36 @@ ng version
 # Downgrade build để ko phát sinh lỗi (xem trong package.json)
 npm i @angular-devkit/build-angular@0.803.24
 ```
+
+# Post dữ liệu giữa các trang trong IONIC4:
+```ts
+// Tại trang gốc cần chuyển đến trang sau
+import { Router } from '@angular/router';
+export class MyPage implements OnInit {
+    constructor(
+        ...
+        , private router: Router
+    ) { }
+
+    // hàm sự kiện cần chuyển
+    myEvent(item:any){
+        // trong đó item là một object = {}
+        // Chuyển tham số kiểu queryParams --> { queryParams: { page: pageNum } }
+        this.router.navigate(['/list'], { queryParams: item });
+    }
+}
+
+
+// Tại trang nhận nó sẽ khai báo như này
+import { ActivatedRoute } from '@angular/router';
+export class MyDetailPage implements OnInit {
+     constructor(
+    private route: ActivatedRoute
+  ) { }
+  ngOnInit() {
+    this.route.queryParams.subscribe(data => {
+      console.log('Nhận tham số từ this.router.navigate(["/list"], { queryParams: objectOptions });', data);
+    });
+  }
+}
+```
