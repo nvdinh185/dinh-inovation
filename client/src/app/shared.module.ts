@@ -4,12 +4,13 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { TimeAgoPipe } from 'time-ago-pipe';
 import { IdeaCardComponent } from './components/idea-card/idea-card.component';
-
+import {AutosizeModule} from 'ngx-autosize';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        AutosizeModule,
         IonicModule
     ],
     declarations: [

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'ngxi4-dynamic-service';
+import { MainService } from 'src/app/services/main.service';
 
 @Component({
   selector: 'app-idea-detail',
@@ -9,13 +10,21 @@ import { AuthService } from 'ngxi4-dynamic-service';
 })
 export class IdeaDetailPage implements OnInit {
 
+  userInfo: any;
   ideaInfo: any;
+
+
+
   constructor(
     private route: ActivatedRoute
     , private apiAuth: AuthService
+    , private mainService: MainService
   ) { }
 
   ngOnInit() {
+
+    this.init();
+
     this.route.queryParams.subscribe(item => {
       // console.log('item', item);
       // đọc chi tiết để hiển thị nội dung chi tiết ra
@@ -28,6 +37,11 @@ export class IdeaDetailPage implements OnInit {
         .catch(err => console.log('Lỗi lấy chi tiết', err))
     });
   }
+
+  init(){
+    this.userInfo = this.mainService.getUserInfo();
+  }
+
 
   // Bấm vào nút more 
   onClickMore(){

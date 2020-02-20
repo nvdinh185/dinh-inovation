@@ -26,10 +26,54 @@
       <ion-icon slot="icon-only" name="ios-more"></ion-icon>
     </ion-button>
   </ion-item>
+  <ion-list>
+    <ion-item>
+      <strong slot="start">
+        Chủ đề:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        {{ideaInfo?.idea?.title}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start">
+        Nội dung:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        {{ideaInfo?.idea?.description}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start">
+        Lĩnh vực:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        {{ideaInfo?.idea?.category_name}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start">
+        Giai đoạn:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        {{ideaInfo?.idea?.status_name}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
+  <ion-item-divider>
+    <ion-label>{{ideaInfo?.idea?.voted_count}} likes {{ideaInfo?.idea?.commented_count}} comments
+      {{ideaInfo?.idea?.shared_count}} shares</ion-label>
+  </ion-item-divider>
 
+  <!-- Nhập nội dung comment để góp ý ở ô này -->
+  <ion-item class="input-comment">
+    <!-- <ion-textarea  ></ion-textarea> -->
+    <textarea autosize type="text" placeholder="Đóng góp ý kiến .... " [(ngModel)]="commentContent" [minRows]="1" [maxRows]="10">
+      Đây là đóng góp ý kiến thêm
+    </textarea>
+  </ion-item>
 
-  <h1>{{ideaInfo?.idea?.title}}</h1>
-
+  <!-- Lịch sử góp ý hiển thị theo hình cây ở dưới đây -->
 
 </ion-content>

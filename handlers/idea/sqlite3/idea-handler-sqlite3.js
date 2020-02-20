@@ -115,7 +115,7 @@ class IdeaHandler {
                         order by a.changed_time desc, a.created_time desc
                     `);
 
-            let likes = await db.getRst(`with 
+            let likes = await db.getRsts(`with 
                                 likes_idea as
                                 (select * from ideas_interactives
                                 where idea_id  = ${ideaId}
@@ -127,7 +127,8 @@ class IdeaHandler {
                             from likes_idea a
                             left join users b
                             on a.user_id = b.id`);
-            let comments = await db.getRst(`with 
+
+            let comments = await db.getRsts(`with 
                                 comments_ideas as
                                 (select * from ideas_comments
                                 where idea_id = ${ideaId}
