@@ -211,6 +211,9 @@ SOFTWARE.
 jsbarcode
 MIT
 
+ngx-autosize
+MIT
+
 ngx-barcode
 MIT
 
