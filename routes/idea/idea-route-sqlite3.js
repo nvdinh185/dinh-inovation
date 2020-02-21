@@ -76,6 +76,15 @@ router.post('/edit-idea'
     , ideaHandler.getIdeas       // trả thông tin idea
 )
 
+
+
+// lấy chỉ tiết một ý tưởng để tương tác
+router.get('/get-idea'
+    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , ideaHandler.getIdea                // trả về chi tiết của ý tưởng đó
+)
+
+
 // like ý tưởng
 router.post('/like-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonsService, AuthService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
 import { ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-idea',
@@ -30,7 +31,7 @@ export class IdeaPage implements OnInit {
   userInfo: any;
 
   constructor(
-    private apiCommons: CommonsService
+    private router: Router
     , private apiAuth: AuthService
     , private mainService: MainService
     , private modalController: ModalController
@@ -156,65 +157,9 @@ export class IdeaPage implements OnInit {
   // Hiển thị item ý tưởng đó cho mọi người thông tin để biết
   viewIdea(item) {
     // mở ra một component để hiển thị thông tin ý tưởng, các chức năng như comment, like, share, edit, ... nằm ở component này
-    // trước mắt giai đoạn 1 hiển thị như cửa số pop up
-    // console.log("mở ý tưởng",item);
-    let form = {
-      title: "CHI TIẾT Ý TƯỞNG"
-      , buttons: [
-        { color: 'danger', icon: 'close', next: 'CLOSE' }
-      ]
-      , items: [
-        { name: item.title, type: "title" }
-        , {
-          type: "details",
-          details: [
-            {
-              name: "Mô tả:",
-              value: item.description
-            },
-            {
-              name: "Người tạo:",
-              value: item.username
-            },
-            {
-              name: "Loại ý tưởng:",
-              value: item.category_name
-            },
-            {
-              name: "Trạng thái ý tưởng:",
-              value: item.status_name
-            },
-            {
-              name: "Thời gian tạo:",
-              value: item.created_time,
-              pipe_date: "HH:mm:ss dd/MM/yyyy"
-            },
-            {
-              name: "Thời gian thay đổi:",
-              value: item.changed_time,
-              pipe_date: "HH:mm:ss dd/MM/yyyy"
-            },
-            {
-              name: "Số người thích:",
-              value: item.voted_count
-            },
-            {
-              name: "Số ý kiến phản biện:",
-              value: item.commented_count
-            }
-          ]
-        }
-      ]
-    }
+    // Chuyển tham số kiểu queryParams --> { queryParams: { page: pageNum } }
+    this.router.navigate(['/idea-detail'], { queryParams: {id:item.id} });
 
-    // call popup window for form login
-    this.openModal(DynamicFormMobilePage,
-      {
-        parent: this,                 // for dismiss child component
-        callback: () => new Promise<any>(resolve => { resolve({ next: 'CLOSE' }) }), // function for callback process result of form
-        form: form                    // form dynamic 
-      }
-    );
   }
 
 
@@ -231,91 +176,9 @@ export class IdeaPage implements OnInit {
   }
 
   // người dùng bấm nút comment
-  // mở cửa sổ ra lịch sử các comment để người dùng nhập comment
   commentIdea(item) {
-    // mở màn hình comment
-    let form = {
-      title: "CHI TIẾT Ý TƯỞNG"
-      , buttons: [
-        { color: 'danger', icon: 'close', next: 'CLOSE' }
-      ]
-      , items: [
-        { name: item.title, type: "title", key: "id", value: item.id }
-        , {
-          type: "details",
-          details: [
-            {
-              name: "Mô tả:",
-              value: item.description
-            },
-            {
-              name: "Người tạo:",
-              value: item.username
-            },
-            {
-              name: "Loại ý tưởng:",
-              value: item.category_name
-            },
-            {
-              name: "Trạng thái ý tưởng:",
-              value: item.status_name
-            },
-            {
-              name: "Thời gian tạo:",
-              value: item.created_time,
-              pipe_date: "HH:mm:ss dd/MM/yyyy"
-            },
-            {
-              name: "Thời gian thay đổi:",
-              value: item.changed_time,
-              pipe_date: "HH:mm:ss dd/MM/yyyy"
-            },
-            {
-              name: "Số người thích:",
-              value: item.count_likes
-            },
-            {
-              name: "Số ý kiến phản biện:",
-              value: item.count_comments
-            }
-          ]
-        }
-        , { type: "text_area", key: "content", name: "Nội dung góp ý", hint: "Nhập góp ý", input_type: "text", validators: [{ required: true }] }
-        ,
-        {
-          type: "button"
-          , options: [
-            { name: "Gửi", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/comment-idea', next: 'CALLBACK', token: true }
-          ]
-        }
-      ]
-    }
-
-    // call popup window for form login
-    this.openModal(DynamicFormMobilePage,
-      {
-        parent: this,                 // for dismiss child component
-        callback: this.callbackComments, // function for callback process result of form
-        form: form                    // form dynamic 
-      }
-    );
+    this.router.navigate(['/idea-detail'], { queryParams: {id:item.id} });
   }
-
-
-  callbackComments = function (res) {
-    return new Promise<any>((resolve, reject) => {
-
-      if (res.error) {
-        this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
-      } else if (res.response_data) {
-        // kết quả nhập comment
-        // console.log('new idea', res.response_data);
-        this.refresh(); // làm mới ý tưởng mới
-
-      }
-      resolve({ next: "CLOSE" });
-    });
-  }.bind(this);
 
 
   async openModal(componentPage, navParams) {

@@ -91,18 +91,72 @@ class IdeaHandler {
     }
 
     // lấy thông tin của 1 ý tưởng trả về khi người dùng like, edit, comment
-    getIdea(req, res, next) {
-        db.getRst(`select * from ideas where id=${(req.ideaId ? req.ideaId : 0)}`)
-            .then(result => {
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(arrObj.getJsonStringify(result));
+    async getIdea(req, res, next) {
+
+        // lấy ý tưởng chi tiết ra
+        let ideaId = req.paramS.id || req.ideaId || 0;
+        try {
+            let idea = await db.getRst(`with 
+                            ideas_selected as
+                            (select * from ideas where id = ${ideaId})
+                        select 
+                            d.fullname || '(' || d.nickname || ')' as username
+                            , d.avatar
+                            , c.name as status_name
+                            , b.name as category_name
+                            , a.* 
+                            from ideas_selected a
+                            left join ideas_categories b
+                            on a.category_id = b.id
+                            left join ideas_statuses c
+                            on a.status = c.id
+                            left join users d
+                            on a.user_id = d.id
+                        order by a.changed_time desc, a.created_time desc
+                    `);
+
+            let likes = await db.getRsts(`with 
+                                likes_idea as
+                                (select * from ideas_interactives
+                                where idea_id  = ${ideaId}
+                                order by created_time desc)
+                                select 
+                                b.fullname || '(' || b.nickname || ')' as username
+                                , b.avatar
+                                , a.* 
+                            from likes_idea a
+                            left join users b
+                            on a.user_id = b.id`);
+
+            let comments = await db.getRsts(`with 
+                                comments_ideas as
+                                (select * from ideas_comments
+                                where idea_id = ${ideaId}
+                                order by created_time desc)
+                                select 
+                                b.fullname || '(' || b.nickname || ')' as username
+                                , b.avatar
+                                , a.* 
+                            from comments_ideas a
+                            left join users b
+                            on a.user_id = b.id`);
+
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(arrObj.getJsonStringify({
+                idea,
+                likes,
+                comments
+            }));
+
+        } catch (err) {
+            res.status(401).json({
+                message: 'Lỗi update idea, liên hệ quản trị hệ thống',
+                error: err
             })
-            .catch(err => {
-                // console.log('Lỗi: ', err);
-                res.status(401).json({
-                    message: 'Lỗi truy vấn csdl getIdeaInfo'
-                })
-            });
+        }
+
+
+
     }
 
     // like ý tưởng

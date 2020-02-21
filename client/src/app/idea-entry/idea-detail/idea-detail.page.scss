@@ -1,0 +1,29 @@
+.idea-created{
+    border-radius: 2em;
+    opacity: 0.9;
+    margin: 5px;
+    border-style: solid;
+    border-color: gray;
+    border-width: 1px;
+}
+.input-comment{
+    position: relative;
+    border-radius: 2em;
+    opacity: 0.9;
+    margin: 15px;
+    border-style: solid;
+    border-color: green;
+    border-width: 1px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+}
+.comment-backgound{
+    position: relative;
+    border-radius: 1em;
+    opacity: 0.9;
+    padding: 8px;
+    background: whitesmoke;
+}
+
+.comment-list{
+    margin: 15px;
+}

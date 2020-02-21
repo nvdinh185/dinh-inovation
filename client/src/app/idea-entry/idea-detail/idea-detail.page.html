@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Chủ đề ý tưởng</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item lines="none" class="idea-created">
+    <ion-avatar slot="start">
+      <img src="{{ideaInfo?.idea?.avatar}}">
+    </ion-avatar>
+    <ion-label>
+      <strong slot="start">
+        {{ideaInfo?.idea?.username}}
+      </strong>
+      <br>
+      <ion-note>{{ideaInfo?.idea?.created_time | timeAgo}}</ion-note>
+    </ion-label>
+    <ion-button (click)="onClickMore()" slote="end" shape="round" fill="clear" size="small">
+      <ion-icon slot="icon-only" name="ios-more"></ion-icon>
+    </ion-button>
+  </ion-item>
+  <ion-list>
+    <ion-item>
+      <strong slot="start">
+        Chủ đề:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        {{ideaInfo?.idea?.title}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start">
+        Nội dung:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        <div [innerHTML]="ideaInfo?.idea?.description | newline | safe"></div>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start">
+        Lĩnh vực:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        {{ideaInfo?.idea?.category_name}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <strong slot="start">
+        Giai đoạn:
+      </strong>
+      <ion-label class="ion-text-wrap">
+        {{ideaInfo?.idea?.status_name}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-item lines="none">
+    <ion-button slot="start" color="{{(ideaInfo?.isUserVoted?'secondary':'light')}}"
+      (click)="likeIdea(ideaInfo?.idea)" shape="round" size="small">
+      {{ideaInfo?.idea?.voted_count}} likes
+    </ion-button>
+    <ion-button slot="start" color="{{(ideaInfo?.isUserCommented?'success':'light')}}" shape="round" size="small">
+      {{ideaInfo?.comments?.length}} comments
+    </ion-button>
+  </ion-item>
+
+  <!-- Nhập nội dung comment để góp ý ở ô này -->
+  <ion-item class="input-comment" lines="none">
+    <ion-avatar slot="start">
+      <img src="{{userInfo?.avatar}}">
+    </ion-avatar>
+    <ion-textarea autosize type="text" placeholder="Đóng góp ý kiến .... " [(ngModel)]="message"></ion-textarea>
+    <ion-button color="{{(message?'secondary':'light')}}" (click)="onClickSend()" fill="clear" shape="round">
+      <ion-icon slot="icon-only" name="send"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <!-- Lịch sử góp ý hiển thị theo hình cây ở dưới đây -->
+  <ion-list class="comment-list">
+    <div *ngFor="let comment of ideaInfo?.comments" [style.padding-left]="comment.parent_id?'20px':'0px'">
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img src="{{comment.avatar}}">
+        </ion-avatar>
+        <ion-label class="comment-backgound">
+          <strong slot="start">
+            {{comment.username}}
+          </strong>
+          <br>
+          <div [innerHTML]="comment.content | newline | safe"></div>
+        </ion-label>
+      </ion-item>
+      <ion-note [style.padding-left]="comment.parent_id?'100px':'80px'"> {{comment.created_time | timeAgo}} </ion-note>
+    </div>
+  </ion-list>
+
+</ion-content>
