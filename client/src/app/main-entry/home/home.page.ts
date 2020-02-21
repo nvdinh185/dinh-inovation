@@ -22,7 +22,7 @@ export class HomePage implements OnInit {
       ,
       items: [
         {
-          url: '',
+          url: 'assets/docs/manual_v1.pdf',
           title: 'Hướng dẫn sử dụng chương trình',
           icon: { slot: 'start', color: 'medium', name: 'book' }
         }

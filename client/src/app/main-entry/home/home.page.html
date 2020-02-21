@@ -28,79 +28,10 @@
           </ion-card-header>
           <ion-card-content *ngIf="homeForm?.card?.content">
             <div slot="start" [innerHTML]="homeForm.card.content"></div>
-            <!-- Hieu Add Table Bootstrap -->
-            <!-- TABLE BEGIN ------------------------------------------------------------------------------->
-            <ion-row>
-              <ion-col size-lg="12">
-                <div class="main-card mb-3 card">
-                  <div class="card-header">
-                    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">Hoạt động</div>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
-                      <thead>
-                      <tr>
-                        <th class="text-center">#</th>
-                        <th class="text-center">Avatar</th>
-                        <th class="text-center">Tên</th>
-                        <th class="text-center">Ý tưởng</th>
-                        <th class="text-center">Vote</th>
-                        <th class="text-center">Comment</th>
-                        <!-- <th class="text-center">SL YT Đã Cmt</th> -->
-                        <th class="text-center">Điểm</th>
-                        <th class="text-center">Hạng</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr *ngFor="let user of topUsersActions; let i = index">
-                        <td class="text-center text-muted" style="width: 50px;">{{i+1}}</td>
-                        <td class="text-center" style="width: 40px;">
-                          <img width="20" class="rounded-circle" src="{{user.avatar}}" alt="">
-                        </td>
-                        <td class="text-center"><a [routerLink]="">{{user.fullname}}</a></td>
-                        <td class="text-center">
-                          <div class="badge badge-pill badge-success">{{user.count_ideas}}</div>
-                        <td class="text-center">
-                          <div class="badge badge-pill badge-secondary">{{user.count_voted}}</div>
-                        </td>
-                        <td class="text-center">
-                          <div class="badge badge-pill badge-danger">{{user.count_commented}}</div>
-                        </td>
-                        <!-- <td class="text-center">
-                          <div class="badge badge-pill badge-warning">{{user.count_commented_ideas}}</div>
-                        </td> -->
-                        <td class="text-center">
-                          <div class="badge badge-pill badge-warning">{{user.total_action}}</div>
-                        </td>
-                        <td *ngIf="i === 0" class="text-center" style="width: 60px;">
-                          <img width="20" class="rounded-circle" src="assets/imgs/1st.png" alt="">
-                        </td>
-                        <td *ngIf="i === 1" class="text-center" style="width: 60px;">
-                          <img width="20" class="rounded-circle" src="assets/imgs/2nd.png" alt="">
-                        </td>
-                        <td *ngIf="i === 2" class="text-center" style="width: 60px;">
-                          <img width="20" class="rounded-circle" src="assets/imgs/3rd.png" alt="">
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="d-block p-4 text-center card-footer">
-                    <button class="btn-pill btn-shadow btn-wide fsize-1 btn btn-dark btn-md">
-                      <span class="mr-2 opacity-7">
-                          <i class="fa fa-cog fa-spin"></i>
-                      </span>
-                      <span class="mr-1">Xem hoạt động tất cả thành viên</span>
-                    </button>
-                  </div>
-                </div>
-              </ion-col>
-            </ion-row>
-            <!-- TABLE END ------------------------------------------------------------------------------->
+            
           </ion-card-content>
         </ion-card>
       </ion-col>
-
       <ion-col *ngIf="homeForm?.list" size="12" size-sm="6" size-md="6" size-lg="6" size-xl="6">
         <ion-list lines="none">
           <ion-list-header>
@@ -116,6 +47,74 @@
         </ion-list>
       </ion-col>
     </ion-row>
-    
+    <!-- Hieu Add Table Bootstrap -->
+    <!-- TABLE BEGIN ------------------------------------------------------------------------------->
+    <ion-row>
+      <ion-col size-lg="12">
+        <div class="main-card mb-3 card">
+          <div class="card-header">
+            <div class="card-header-title font-size-md text-capitalize font-weight-normal">Hoạt động</div>
+          </div>
+          <div class="table-responsive">
+            <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+              <thead>
+              <tr>
+                <th class="d-none d-lg-table-cell text-center">#</th>
+                <th class="text-center">Avatar</th>
+                <th class="text-center">Tên</th>
+                <th class="d-none d-lg-table-cell text-center">Ý tưởng</th>
+                <th class="d-none d-lg-table-cell text-center">Vote</th>
+                <th class="d-none d-lg-table-cell text-center">Comment</th>
+                <!-- <th class="text-center">SL YT Đã Cmt</th> -->
+                <th class="text-center">Điểm</th>
+                <th class="text-center">Hạng</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let user of topUsersActions | slice:0:10; let i = index">
+                <td class="d-none d-lg-table-cell text-center text-muted" style="width: 50px;">{{i+1}}</td>
+                <td class="text-center" style="width: 20px;">
+                  <img width="25" class="rounded-circle" src="{{user?.avatar}}" alt="">
+                </td>
+                <td class="text-center"><a [routerLink]="">{{user.fullname}}</a></td>
+                <td class="d-none d-lg-table-cell text-center">
+                  <div class="badge badge-pill badge-success">{{user.count_ideas}}</div>
+                <td class="d-none d-lg-table-cell text-center">
+                  <div class="badge badge-pill badge-secondary">{{user.count_voted}}</div>
+                </td>
+                <td class="d-none d-lg-table-cell text-center">
+                  <div class="badge badge-pill badge-danger">{{user.count_commented}}</div>
+                </td>
+                <!-- <td class="text-center">
+                  <div class="badge badge-pill badge-warning">{{user.count_commented_ideas}}</div>
+                </td> -->
+                <td class="text-center">
+                  <div class="badge badge-pill badge-warning">{{user.total_action}}</div>
+                </td>
+                <td *ngIf="i === 0" class="text-center" style="width: 30px;">
+                  <img width="25" class="rounded-circle" src="assets/imgs/1st.png" alt="">
+                </td>
+                <td *ngIf="i === 1" class="text-center" style="width: 30px;">
+                  <img width="25" class="rounded-circle" src="assets/imgs/2nd.png" alt="">
+                </td>
+                <td *ngIf="i === 2" class="text-center" style="width: 30px;">
+                  <img width="25" class="rounded-circle" src="assets/imgs/3rd.png" alt="">
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-block p-4 text-center card-footer">
+            <button class="btn-pill btn-shadow btn-wide fsize-1 btn btn-dark btn-md">
+              <span class="mr-2 opacity-7">
+                  <i class="fa fa-cog fa-spin"></i>
+              </span>
+              <span class="mr-1">Xem hoạt động tất cả thành viên</span>
+            </button>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+    <!-- TABLE END ------------------------------------------------------------------------------->
   </ion-grid>
 </ion-content>
