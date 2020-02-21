@@ -41,3 +41,9 @@ ng version
 # Downgrade build để ko phát sinh lỗi (xem trong package.json)
 npm i @angular-devkit/build-angular@0.803.24
 ```
+
+## Thêm Bootstrap4 vào client project:
+``` sh
+Từ terminal chạy lệnh `npm install --save bootstrap` sau đó chạy tiếp `npm install --save jquery`
+Trong file global.scss thêm dòng `@import "~bootstrap/dist/css/bootstrap.css"`
+```
