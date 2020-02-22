@@ -57,7 +57,7 @@ export class IdeaPage implements OnInit {
 
     // form nhập liệu này
     this.dynamicFormInput = JSON.stringify({ // Form mẫu hiển thị nhập liệu tạo đối tượng jon_data
-      okButton: { icon: "save", name: "Ý tưởng mới của bạn là gì?", color: "secondary", next: "CALLBACK", command: "ADD", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/create-idea', token: true }
+      okButton: { icon: "save", name: "Ý tưởng mới của bạn là gì?", color: "secondary", next: "CALLBACK", command: "ADD",  url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/create-idea', type: "FORM-DATA", token: true }
       ,
       cancelButton: { icon: "close", next: "CLOSE" }
       ,
@@ -67,7 +67,7 @@ export class IdeaPage implements OnInit {
         , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
-        // , { type: "image", key: "logo", name: "Chọn ảnh đại diện?"}
+        , { type: "upload-files", name: "Chọn file", multiple: "single", accept:`image/gif, image/jpeg, image/png`}
       ]
     })
 
@@ -118,7 +118,8 @@ export class IdeaPage implements OnInit {
 
   // hàm trả kết quả của form nhập mới ý tưởng
   onSelectedFinish(evt) {
-    this.formIdea.ideas = evt && evt.response_data ? evt.response_data : this.formIdea.ideas;
+    // this.formIdea.ideas = evt && evt.response_data ? evt.response_data : this.formIdea.ideas;
+    this.refresh();        // làm mới ý tưởng mới
     this.isCardNewShow = false;
   }
 

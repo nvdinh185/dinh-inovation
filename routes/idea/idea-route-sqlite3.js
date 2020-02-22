@@ -63,17 +63,17 @@ router.get('/get-ideas'
 router.post('/create-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , userHandler.getUserId         // trả về req.user.id và req.user.username
-    , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
+    , postHandler.formProcess       // trả về req.form_data {thông tin của user}
     , ideaHandler.createIdea        // tạo idea mới
-    , ideaHandler.getIdeas       // trả thông tin idea mới
+    // , ideaHandler.getIdeas          // trả thông tin idea mới
 )
 
 // sửa ý tưởng -- cập nhập trạng thái ...
 router.post('/edit-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
-    , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
+    , postHandler.formProcess       // trả về req.json_data {thông tin của idea}
     , ideaHandler.editIdea          // sửa idea mới
-    , ideaHandler.getIdeas       // trả thông tin idea
+    // , ideaHandler.getIdeas       // trả thông tin idea
 )
 
 

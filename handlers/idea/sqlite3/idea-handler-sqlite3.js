@@ -8,6 +8,41 @@
 const db = require('../../../db/sqlite3/db-pool');
 const arrObj = require('../../../utils/array-object');
 
+
+/**
+ * 
+ * @param {*} files 
+ * @param {*} userId 
+ */
+const saveAttachFiles = (files, userId) => {
+    return new Promise(async (resolve, reject) => {
+        let fileIds;
+        // so luong file >0
+        let filePaths = [];
+        for (let key in files) {
+            filePaths.push(files[key].path_name);
+            let jsonFileAttach = {
+                file_name: files[key].file_name
+                , file_type: files[key].file_type
+                , file_size: files[key].file_size
+                , file_path: files[key].path_name
+                , created_time: Date.now()
+                , user_id: userId
+            }
+            try {
+                await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach, []))
+            } catch{ }
+        }
+        try {
+            // lấy tất cả các id của các file chèn vào csdl rồi
+            let fileRows = await db.getRsts(`select id from ideas_attachs where file_path in ('${filePaths.join("', '")}')`)
+            fileIds = fileRows.map(o => o["id"])
+        } catch{ }
+        resolve(fileIds)
+    })
+
+}
+
 class IdeaHandler {
 
     // 1. lấy thông tin ý tưởng
@@ -40,19 +75,29 @@ class IdeaHandler {
     /**
      * 2. Tạo ý tưởng mới
      */
-    createIdea(req, res, next) {
+    async createIdea(req, res, next) {
+
+        let fileIds;
+        if (req.form_data.params.count_file > 0) {
+            fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
+        }
 
         const ideaInfo = {
-            ...req.json_data,
+            ...req.form_data.params,
             // các trường thông tin thêm vào
+            attach_id_list: fileIds ? JSON.stringify(fileIds) : undefined,
             user_id: req.user.id,                // ý tưởng của user này
             changed_username: req.user.username,
             created_time: Date.now()
         }
 
+        // xóa cột gia tăng file nếu có
+        delete ideaInfo["count_file"];
+
         db.insert(arrObj.convertSqlFromJson("ideas", ideaInfo))
             .then(data => {
-                next();
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify({ status: "OK", message: "Tạo mới thành công" }));
             })
             .catch(err => {
                 console.log('Lỗi tạo user mới', err);
@@ -66,19 +111,32 @@ class IdeaHandler {
     /**
      * 3. sửa thông tin ý tưởng
      */
-    editIdea(req, res, next) {
+    async editIdea(req, res, next) {
+
+        let fileIds;
+        if (req.form_data.params.count_file > 0) {
+            fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
+        }
+
+        // Phải lấy danh sách attach file cũ sẵn có nữa mới đủ
+        // nếu không sẽ bị mất file cũ liên kết với nó
 
         const ideaInfo = {
-            ...req.json_data,
+            ...req.form_data.params,
             // thêm trường
+            // attach_id_list: fileIds ? JSON.stringify(fileIds) : undefined,
             changed_username: req.user.username,
             changed_time: Date.now()
         }
 
+        // xóa cột gia tăng file nếu có
+        delete ideaInfo["count_file"];
+
         db.update(arrObj.convertSqlFromJson("ideas", ideaInfo, ['id']))
             .then(data => {
                 req.ideaId = ideaInfo.id;
-                next();
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify({ status: "OK", message: "Sửa thành công" }));
             })
             .catch(err => {
                 // console.log('Lỗi update user', err);
@@ -201,31 +259,12 @@ class IdeaHandler {
         // thông tin đầu vào là req.user.id 
         // và req.form_data.params.id chứa mã ý tưởng
         // console.log('form', req.form_data);
+     
         let fileIds;
-
         if (req.form_data.params.count_file > 0) {
-            // so luong file >0
-            let filePaths = [];
-            for (let key in req.form_data.files) {
-                filePaths.push(req.form_data.files[key].path_name);
-                let jsonFileAttach = {
-                    file_name: req.form_data.files[key].file_name
-                    , file_type: req.form_data.files[key].file_type
-                    , file_size: req.form_data.files[key].file_size
-                    // , file_url: req.form_data.files[key].url
-                    , file_path: req.form_data.files[key].path_name
-                    , created_time: Date.now()
-                    , user_id: req.user.id
-                }
-                try {
-                    await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach, []))
-                } catch{ }
-            }
-            // lấy tất cả các id của các file chèn vào csdl rồi
-            let fileRows = await db.getRsts(`select id from ideas_attachs where file_path in ('${filePaths.join("', '")}')`)
-            fileIds = fileRows.map(o => o["id"])
+            fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
         }
-
+    
         req.ideaId = req.form_data.params.id;
         let jsonComment = {
             user_id: req.user.id,
