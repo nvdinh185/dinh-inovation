@@ -11,10 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { TreeMenu } from './components/tree-menu/tree-menu';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service'
 import { SharedModule } from './shared.module';
-
-// import { IdeaCardComponent } from './components/idea-card/idea-card.component';
-
-// import {TimeAgoPipe} from 'time-ago-pipe';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @NgModule({
   declarations: [
@@ -35,6 +32,7 @@ import { SharedModule } from './shared.module';
   providers: [
     StatusBar,
     SplashScreen,
+    InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -8,6 +8,9 @@
 // Kết nối csdl oracle theo pool
 const db = require('../../../db/sqlite3/db-pool');
 const arrObj = require('../../../utils/array-object');
+const fs = require('fs');
+// const mime = require('mime-types');
+// const systempath = require('path');
 
 class ListHandler {
 
@@ -98,6 +101,64 @@ class ListHandler {
             });
     }
 
+    // lấy các đường dẫn file đính kèm
+    // trường hợp các ý tưởng hoặc comment có truyền lên file
+    getIdeasAttachs(req, res, next) {
+        let listString = '';
+        try {
+            let ids = (req.paramS.id_list ? JSON.parse(req.paramS.id_list) : 0);
+            listString = ids.toString();
+        } catch{ listString = '' }
+        db.getRsts(`select id, file_name, file_type from ideas_attachs where id in (${listString})`)
+            .then(results => {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify(results));
+            })
+            .catch(err => {
+                res.status(401).json({
+                    error: err,
+                    message: 'Lỗi đọc danh sách file'
+                })
+            });
+    }
+
+    // trả về file cho client hiển thị ra
+    // trường hợp người dùng chọn mở file có id đính kèm
+    getFileAttach(req, res, next) {
+        let openFilePromise = new Promise((resolve, reject) => {
+            let id = req.paramS.id ? req.paramS.id : 0;
+            db.getRst(`select file_path, file_type from ideas_attachs where id=${id}`)
+                .then(result => {
+                    if (result)
+                        resolve(result)
+                    else
+                        reject("Không có file")
+                })
+                .catch(err => {
+                    reject("Lỗi đọc file csdl")
+                });
+        })
+
+        openFilePromise
+            .then(file => {
+                // console.log('Data: ', file);
+                fs.readFile(file.file_path, { flag: 'r' }, function (error, data) {
+                    if (!error) {
+                        res.writeHead(200, { 'Content-Type': file.file_type });
+                        res.end(data);
+                    } else {
+                        res.writeHead(404, { 'Content-Type': 'text/html' });
+                        res.end("No file to read!");
+                    }
+                });
+            })
+            .catch(err => {
+                res.status(401).json({
+                    error: err,
+                    message: 'Lỗi đọc file all'
+                })
+            });
+    }
 }
 
 module.exports = new ListHandler();

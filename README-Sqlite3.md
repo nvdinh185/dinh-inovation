@@ -31,7 +31,6 @@ git pull mf3 <tên nhánh mới rẻ sang>/<hoặc bỏ trống sẽ lấy cấu
 git checkout <tên nhánh mới rẻ sang>
 
 
-
 # Để xóa nhánh không dùng đến nữa dùng lệnh tại máy local
 git branch -d <tên nhánh cần xóa>
 # xóa trên máy chủ git tên nhánh mới này

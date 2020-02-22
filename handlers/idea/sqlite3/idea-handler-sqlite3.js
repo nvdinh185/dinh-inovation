@@ -154,9 +154,6 @@ class IdeaHandler {
                 error: err
             })
         }
-
-
-
     }
 
     // like ý tưởng
@@ -200,14 +197,41 @@ class IdeaHandler {
 
 
     // comment ý tưởng
-    commentIdea(req, res, next) {
+    async commentIdea(req, res, next) {
         // thông tin đầu vào là req.user.id 
-        // và req.json_data.id chứa mã ý tưởng
-        req.ideaId = req.json_data.id;
+        // và req.form_data.params.id chứa mã ý tưởng
+        // console.log('form', req.form_data);
+        let fileIds;
+
+        if (req.form_data.params.count_file > 0) {
+            // so luong file >0
+            let filePaths = [];
+            for (let key in req.form_data.files) {
+                filePaths.push(req.form_data.files[key].path_name);
+                let jsonFileAttach = {
+                    file_name: req.form_data.files[key].file_name
+                    , file_type: req.form_data.files[key].file_type
+                    , file_size: req.form_data.files[key].file_size
+                    // , file_url: req.form_data.files[key].url
+                    , file_path: req.form_data.files[key].path_name
+                    , created_time: Date.now()
+                    , user_id: req.user.id
+                }
+                try {
+                    await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach, []))
+                } catch{ }
+            }
+            // lấy tất cả các id của các file chèn vào csdl rồi
+            let fileRows = await db.getRsts(`select id from ideas_attachs where file_path in ('${filePaths.join("', '")}')`)
+            fileIds = fileRows.map(o => o["id"])
+        }
+
+        req.ideaId = req.form_data.params.id;
         let jsonComment = {
             user_id: req.user.id,
             idea_id: req.ideaId,
-            content: req.json_data.content,
+            content: req.form_data.params.content,
+            attach_id_list: fileIds ? JSON.stringify(fileIds) : undefined,
             created_time: Date.now()
         }
         db.insert(db.convertSqlFromJson('ideas_comments', jsonComment, []))
@@ -223,12 +247,11 @@ class IdeaHandler {
             })
             .catch(err => {
                 res.status(401).json({
+                    error: err,
                     message: 'Lỗi tạo comment'
                 })
             });
     }
-
-
 
 
 }

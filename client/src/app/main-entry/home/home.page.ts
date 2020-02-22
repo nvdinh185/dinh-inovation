@@ -45,7 +45,7 @@ export class HomePage implements OnInit {
       .then(data => {
         // console.log('Data: ', data);
         this.topUsersActions = data;
-        console.log(this.topUsersActions);
+        // console.log(this.topUsersActions);
       })
       .catch(err => {
         // console.log('Lỗi: ', err);

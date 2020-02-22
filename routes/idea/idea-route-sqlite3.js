@@ -98,7 +98,7 @@ router.post('/like-idea'
 router.post('/comment-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , userHandler.getUserId         // trả về req.user.id và req.user.username
-    , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
+    , postHandler.formProcess       // trả về req.form_data {thông tin của idea}
     , ideaHandler.commentIdea       // comment idea
     , ideaHandler.getIdea           // trả thông tin idea
 )
@@ -109,5 +109,18 @@ router.get('/get-top-actions'
     // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , listHandler.getActionsList             // trả về danh sách ý tưởng
 )
+
+// get file id array ?id_list=[1,2,3,4]
+router.get('/get-attach-files'
+    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getIdeasAttachs            // trả về danh sách tên file đường dẫn cần lấy
+)
+
+// đọc dữ liệu 1 file trả kết quả về client mở file ra
+router.get('/get-file-id'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getFileAttach              // trả về dữ liệu file thực tế
+)
+
 
 module.exports = router;

@@ -23,7 +23,7 @@
       <br>
       <ion-note>{{ideaInfo?.idea?.created_time | timeAgo}}</ion-note>
     </ion-label>
-    <ion-button (click)="onClickMore()" slote="end" shape="round" fill="clear" size="small">
+    <ion-button (click)="onClickMore($event)" slote="end" shape="round" fill="clear" size="small">
       <ion-icon slot="icon-only" name="ios-more"></ion-icon>
     </ion-button>
   </ion-item>
@@ -63,8 +63,8 @@
   </ion-list>
 
   <ion-item lines="none">
-    <ion-button slot="start" color="{{(ideaInfo?.isUserVoted?'secondary':'light')}}"
-      (click)="likeIdea(ideaInfo?.idea)" shape="round" size="small">
+    <ion-button slot="start" color="{{(ideaInfo?.isUserVoted?'secondary':'light')}}" (click)="likeIdea(ideaInfo?.idea)"
+      shape="round" size="small">
       {{ideaInfo?.idea?.voted_count}} likes
     </ion-button>
     <ion-button slot="start" color="{{(ideaInfo?.isUserCommented?'success':'light')}}" shape="round" size="small">
@@ -73,15 +73,42 @@
   </ion-item>
 
   <!-- Nhập nội dung comment để góp ý ở ô này -->
-  <ion-item class="input-comment" lines="none">
-    <ion-avatar slot="start">
-      <img src="{{userInfo?.avatar}}">
-    </ion-avatar>
-    <ion-textarea autosize type="text" placeholder="Đóng góp ý kiến .... " [(ngModel)]="message"></ion-textarea>
-    <ion-button color="{{(message?'secondary':'light')}}" (click)="onClickSend()" fill="clear" shape="round">
-      <ion-icon slot="icon-only" name="send"></ion-icon>
-    </ion-button>
-  </ion-item>
+  <ion-card class="input-comment">
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img src="{{userInfo?.avatar}}">
+      </ion-avatar>
+      <ion-textarea autosize type="text" placeholder="Đóng góp ý kiến .... " [(ngModel)]="message"></ion-textarea>
+      <ion-button color="medium" fill="clear" shape="round">
+        <input class="file-over" type="file" multiple="multiple" (change)="uploadFilesEvent($event)" accept="image/gif, image/jpeg, image/png
+                  , application/pdf
+                  , .txt, .md
+                  , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel
+                  , application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+        <ion-icon slot="icon-only" name="attach"></ion-icon>
+      </ion-button>
+      <ion-button color="{{(message||uploadingFiles.length>0?'secondary':'light')}}" (click)="onClickSend()"
+        fill="clear" shape="round">
+        <ion-icon slot="icon-only" name="send"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item *ngIf="uploadingFiles?.length>0" lines="none">
+      <ion-label class="ion-text-wrap">
+        <span *ngFor="let file of uploadingFiles; let idx=index;">
+          <ion-button *ngIf="!file.isImage" color="secondary" (click)="onClickRemoveFile(idx)" fill="outline" shape="round" style="text-transform:none!important;">
+            {{file.name}}
+            <ion-icon slot="end" name="close"></ion-icon>
+          </ion-button>
+          <div *ngIf="file.isImage" class="image-upload-size">
+            <img src="{{file.image}}">
+            <div class='close-button' tappable>
+              <ion-icon slot="icon-only" name="close" color="medium" (click)="onClickRemoveFile(idx)"></ion-icon>
+            </div>
+          </div>
+        </span>
+      </ion-label>
+    </ion-item>
+  </ion-card>
 
   <!-- Lịch sử góp ý hiển thị theo hình cây ở dưới đây -->
   <ion-list class="comment-list">
@@ -99,6 +126,20 @@
         </ion-label>
       </ion-item>
       <ion-note [style.padding-left]="comment.parent_id?'100px':'80px'"> {{comment.created_time | timeAgo}} </ion-note>
+      <br>
+      <div [style.padding-left]="comment.parent_id?'80px':'60px'">
+        <img tappable *ngFor="let image of comment.images;" src="{{image.src}}" (click)="onClickViewImage(image.id)" class="image-comment-size">
+      </div>
+      <ion-item [style.padding-left]="comment.parent_id?'80px':'60px'" *ngIf="comment.attachs?.length>0" lines="none">
+        <ion-label class="ion-text-wrap">
+          <span *ngFor="let file of comment.attachs; let idx=index;">
+            <ion-button color="dark" (click)="onClickViewFile(file.id)" fill="outline" shape="round" style="text-transform:none!important;">
+              {{file.file_name}}
+              <ion-icon slot="end" name="eye"></ion-icon>
+            </ion-button>
+          </span>
+        </ion-label>
+      </ion-item>
     </div>
   </ion-list>
 
