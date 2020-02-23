@@ -103,23 +103,28 @@ class ListHandler {
 
     // lấy các đường dẫn file đính kèm
     // trường hợp các ý tưởng hoặc comment có truyền lên file
-    getIdeasAttachs(req, res, next) {
+    async getIdeasAttachs(req, res, next) {
         let listString = '';
         try {
             let ids = (req.paramS.id_list ? JSON.parse(req.paramS.id_list) : 0);
             listString = ids.toString();
-        } catch{ listString = '' }
-        db.getRsts(`select id, file_name, file_type from ideas_attachs where id in (${listString})`)
-            .then(results => {
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(arrObj.getJsonStringify(results));
+            let images = await db.getRsts(`select id, file_name, file_type from ideas_attachs 
+                                where id in (${listString})
+                                and file_type like 'image%'
+                                `)
+            let files = await db.getRsts(`select id, file_name, file_type from ideas_attachs 
+                                where id in (${listString})
+                                and file_type not like 'image%'
+                                `)
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(arrObj.getJsonStringify({ images, files }));
+        } catch (err) {
+            res.status(401).json({
+                error: err,
+                message: 'Lỗi đọc danh sách file'
             })
-            .catch(err => {
-                res.status(401).json({
-                    error: err,
-                    message: 'Lỗi đọc danh sách file'
-                })
-            });
+        }
+
     }
 
     // trả về file cho client hiển thị ra

@@ -67,7 +67,13 @@ export class IdeaPage implements OnInit {
         , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
-        , { type: "upload-files", name: "Chọn file", multiple: "single", accept:`image/gif, image/jpeg, image/png`}
+        , { type: "upload-files", name: "Files đính kèm"
+                                , multiple: "multiple"
+                                , accept:`image/gif, image/jpeg, image/png
+                                        , application/pdf
+                                        , .txt, .md, .zip, .tar
+                                        , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel
+                                        , application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document`}
       ]
     })
 

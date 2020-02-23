@@ -49,6 +49,27 @@ export class IdeaDetailPage implements OnInit {
 
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
+
+      if (this.ideaInfo.idea && this.ideaInfo.idea.attach_id_list) {
+        // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
+        this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(this.ideaInfo.idea.attach_id_list), true)
+          .then(list => {
+
+            if (list && Array.isArray(list.images)) {
+              this.ideaInfo.idea.images = list.images;
+              this.ideaInfo.idea.images.forEach(file => file.src = this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id)
+            }
+
+            if (list && Array.isArray(list.files)) {
+              this.ideaInfo.idea.attachs = list.files;
+            }
+
+          })
+          .catch(err => {
+            console.log('Lỗi lấy file: ', err);
+          });
+
+      }
       this.ideaInfo.isUserVoted = this.ideaInfo.likes.findIndex(x => x.user_id === this.userInfo.id && x.activities_type > 0) >= 0
       this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
       this.ideaInfo.comments.forEach(el => {
@@ -57,24 +78,20 @@ export class IdeaDetailPage implements OnInit {
           // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
           this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(el.attach_id_list), true)
             .then(list => {
-              if (Array.isArray(list)) {
-                el.attachs = [];
-                el.images = [];
-                list.forEach(file => {
-                  if (file.file_type.indexOf('image') >= 0)
-                    el.images.push({
-                      id: file.id,
-                      src: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id
-                    })
-                  else
-                    el.attachs.push(file)
-                })
+
+              if (list && Array.isArray(list.images)) {
+                el.images = list.images;
+                el.images.forEach(file => file.src = this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id)
               }
+
+              if (list && Array.isArray(list.files)) {
+                el.attachs = list.files;
+              }
+
             })
             .catch(err => {
               console.log('Lỗi lấy file: ', err);
             });
-
         }
       })
     }
@@ -170,13 +187,13 @@ export class IdeaDetailPage implements OnInit {
 
   // Thực thi lệnh của end user chọn menu setting
   processDetails(itemOrItems: any) {
-      let cmd = itemOrItems.value;
-      console.log('lenh',cmd);
-      
-      if (cmd === 'EDIT') {
-        //  do send
-       
-      }
+    let cmd = itemOrItems.value;
+    console.log('lenh', cmd);
+
+    if (cmd === 'EDIT') {
+      //  do send
+
+    }
   }
 
   // Người dùng bấm nút like

@@ -70,7 +70,26 @@
     <ion-button slot="start" color="{{(ideaInfo?.isUserCommented?'success':'light')}}" shape="round" size="small">
       {{ideaInfo?.comments?.length}} comments
     </ion-button>
+    <ion-label *ngIf="ideaInfo?.idea?.attach_id_list?.length>0" class="ion-text-wrap">
+      {{ideaInfo.idea.attach_id_list.length}} Files đính kèm
+    </ion-label>
   </ion-item>
+
+  <!-- Hiển thị nội dung file và image đính kèm của ý tưởng -->
+  <div [style.padding-left]="'20px'">
+    <img tappable *ngFor="let image of ideaInfo?.idea?.images;" src="{{image.src}}" (click)="onClickViewImage(image.id)" class="image-comment-size">
+  </div>
+  <ion-item [style.padding-left]="'20px'" *ngIf="ideaInfo?.idea?.attachs?.length>0" lines="none">
+    <ion-label class="ion-text-wrap">
+      <span *ngFor="let file of ideaInfo?.idea?.attachs;">
+        <ion-button color="primary" (click)="onClickViewFile(file.id)" fill="outline" shape="round" style="text-transform:none!important;">
+          {{file.file_name}}
+          <ion-icon slot="end" name="eye"></ion-icon>
+        </ion-button>
+      </span>
+    </ion-label>
+  </ion-item>
+
 
   <!-- Nhập nội dung comment để góp ý ở ô này -->
   <ion-card class="input-comment">
