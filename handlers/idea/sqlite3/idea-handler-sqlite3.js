@@ -51,6 +51,7 @@ class IdeaHandler {
                         d.fullname || '(' || d.nickname || ')' as username
                         , c.name as status_name
                         , b.name as category_name
+                        , b.background
                         , a.* 
                         from ideas a
                         left join ideas_categories b
@@ -157,7 +158,7 @@ class IdeaHandler {
             let idea = await db.getRst(`with 
                             ideas_selected as
                             (select * from ideas where id = ${ideaId})
-                        select 
+                            select 
                             d.fullname || '(' || d.nickname || ')' as username
                             , d.avatar
                             , c.name as status_name
