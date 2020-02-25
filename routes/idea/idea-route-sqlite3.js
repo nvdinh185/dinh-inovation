@@ -107,6 +107,24 @@ router.post('/comment-idea'
     , ideaHandler.getIdea           // trả thông tin idea
 )
 
+// đánh giá ý tưởng - cho điểm
+router.post('/mark-idea'
+    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , userHandler.getUserId         // trả về req.user.id và req.user.username
+    , postHandler.jsonProcess       // trả về req.form_data {thông tin của idea}
+    , ideaHandler.markIdea          // comment idea
+    , ideaHandler.getIdea           // trả thông tin idea
+)
+
+// xóa bỏ ý tưởng này
+router.post('/trash-idea'
+    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , userHandler.getUserId         // trả về req.user.id và req.user.username
+    , postHandler.jsonProcess       // trả về req.form_data {thông tin của idea}
+    , ideaHandler.trashIdea         // comment idea
+    , ideaHandler.getIdea           // trả thông tin idea
+)
+
 
 // thống kê hoạt động thường xuyên đưa vào tôn vinh
 router.get('/get-top-actions'
