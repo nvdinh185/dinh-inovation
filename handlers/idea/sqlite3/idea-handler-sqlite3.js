@@ -51,11 +51,6 @@ class IdeaHandler {
                         d.fullname || '(' || d.nickname || ')' as username
                         , c.name as status_name
                         , b.name as category_name
-                        , (CASE category_id
-                            WHEN 1 THEN 'red'
-                            WHEN 2 THEN 'blue'
-                            ELSE 'green' 
-                        END) as background
                         , a.* 
                         from ideas a
                         left join ideas_categories b
