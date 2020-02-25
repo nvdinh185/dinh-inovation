@@ -69,6 +69,7 @@ class IdeaHandler {
                         on a.status = c.id
                         left join users d
                         on a.user_id = d.id
+                        where c.status_type >1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
                     order by a.changed_time desc, a.created_time desc`)
             .then(result => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -319,8 +320,6 @@ class IdeaHandler {
             message: 'Lỗi cập nhập loại ý tưởng'
         })
     }
-
-
 
 }
 

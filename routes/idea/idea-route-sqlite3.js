@@ -126,6 +126,12 @@ router.post('/trash-idea'
 )
 
 
+// lấy danh sách câu hỏi để đánh giá
+router.get('/get-question'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getQuestions            
+)
+
 // thống kê hoạt động thường xuyên đưa vào tôn vinh
 router.get('/get-top-actions'
     // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
