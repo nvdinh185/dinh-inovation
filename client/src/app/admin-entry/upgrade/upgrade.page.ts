@@ -63,6 +63,10 @@ export class UpgradePage implements OnInit {
     }
   }
 
+  // Hàm gọi trang login
+  onClickLogin(){
+    this.router.navigate(['/login']);
+  }
 
   // hàm trả kết quả của form nhập sql thực thi lệnh xong
   onSelectedFinish(evt) {
