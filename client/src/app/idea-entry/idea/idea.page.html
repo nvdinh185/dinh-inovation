@@ -7,8 +7,11 @@
 
     <ion-title>{{(formIdea?.title?formIdea.title:'')}}</ion-title>
 
-    <ion-buttons *ngIf="userInfo" slot="secondary">
-      <ion-button shape="round">{{userInfo.username}}</ion-button>
+    <ion-buttons slot="end" *ngIf="userInfo" >
+      <ion-button shape="round" (click)="onClickLogin()">
+        <ion-icon slot="start" name="{{userInfo?'contact':'log-in'}}"></ion-icon>
+        {{userInfo?.username}}
+      </ion-button>
     </ion-buttons>
 
   </ion-toolbar>

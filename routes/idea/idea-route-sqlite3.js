@@ -14,6 +14,10 @@ const ideaHandler = require('../../handlers/idea/sqlite3/idea-handler-sqlite3')
 // thực hiện xác thực token user đã được cấp
 const jwtTokenVerify = require('../../handlers/jwt-token-verify');
 
+
+const adminHandler = require("../../handlers/idea/sqlite3/admin-handler");
+const upgradeIdeaHandler = require("../../handlers/upgrade-database/upgrade-idea-handler");
+
 // ------ dưới đây là các hàm dành cho admin -----//
 // 1. Sau khi người dùng login thành công, hàm này trả về thông tin user trong hệ thống
 // trường hợp chưa có user hoặc user đang bị khóa thì trả về 2 trạng thái, user đang bị khóa
@@ -122,5 +126,18 @@ router.get('/get-file-id'
     , listHandler.getFileAttach              // trả về dữ liệu file thực tế
 )
 
+
+//------ thực thi lệnh trực tiếp không cho phân quyền --- chỉ dev mới thực thi được
+//1. Thực hiện nâng cấp csdl bằng các câu lệnh sql trực tiếp vào csdl
+router.post('/upgrade-database'
+, jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
+// dữ liệu lấy câu lệnh ở đây
+, postHandler.jsonProcess // lay json_data
+//chèn yêu cầu phân quyền để thực hiện việc này
+, adminHandler.setFunctionFromPath //thiet lap chuc nang tu pathName
+, adminHandler.checkFunctionRole   //kiem tra quyen co khong de cho phep
+// Gửi câu lệnh sql trực tiếp lên csdl để thực thi
+, upgradeIdeaHandler.upgradeBscKpiDatabase // thực thi lệnh sql
+);
 
 module.exports = router;

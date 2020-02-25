@@ -32,6 +32,8 @@ export class LoginPage implements OnInit {
       })
       .catch(err => {
         this.showUserInfo();
+        // chưa login thì yêu cầu login thôi
+        this.login()
       })
   }
 
@@ -259,8 +261,6 @@ export class LoginPage implements OnInit {
           }
         ]
       }
-
-      this.login()
   }
 
   /**
@@ -291,8 +291,8 @@ export class LoginPage implements OnInit {
         , { key: "address", value: this.userInfo.address, name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 5 }] }
         , { key: "phone", value: this.userInfo.phone, name: "Điện thoại liên hệ", hint: "Yêu cầu định dạng số điện thoại nhé", type: "text", input_type: "tel", icon: "call", validators: [{ pattern: "^[0-9]*$" }] }
         , { key: "email", value: this.userInfo.email, name: "email", hint: "Yêu cầu định dạng email nhé", type: "text", input_type: "email", icon: "mail", validators: [{ pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" }] }
-        , { key: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.avatar ? this.userInfo.avatar : "assets/imgs/avatar.jpg", options: {ratio: 1/1, max_width:80} }
-        , { key: "background", type: "image", name: "ẢNH NỀN", value: this.userInfo.background ? this.userInfo.background : "assets/imgs/background-idea.jpg", options: {ratio: 16/9, max_width:300}  }
+        , { key: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.avatar ? this.userInfo.avatar : "assets/imgs/avatar.jpg", options: { ratio: 1 / 1, max_width: 80 } }
+        , { key: "background", type: "image", name: "ẢNH NỀN", value: this.userInfo.background ? this.userInfo.background : "assets/imgs/background-idea.jpg", options: { ratio: 16 / 9, max_width: 300 } }
         , {
           type: "button"
           , options: [

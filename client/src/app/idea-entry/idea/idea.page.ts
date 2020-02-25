@@ -105,20 +105,27 @@ export class IdeaPage implements OnInit {
     // Đã có danh sách ý tưởng mới lấy được từ csdl rồi
   }
 
-  // hàm gọi lại xử lý ajax
+
+  // Hàm gọi trang login
+  onClickLogin(){
+    this.router.navigate(['/login']);
+  }
+
+  // hàm gọi lại xử lý ajax khi người dùng thay chọn lựa ở card nhập nội dung
   dynamicCallbackCard(ajaxItem) {
     return new Promise(resolve => {
-
       // console.log(ajaxItem);
-
-      let ajaxReturn = {
+      /* let ajaxReturn = {
         key: 'name',
         property_name: 'value',
         new_data: 'Tên mới thay đổi từ ajax'
       }
       // or 
       // ajaxReturns = [{...ajaxReturn}]
-      resolve(ajaxReturn);
+      resolve(ajaxReturn); */
+
+      resolve({});
+
     })
   }
 

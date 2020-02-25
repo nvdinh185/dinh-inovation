@@ -49,7 +49,7 @@ export class IdeaDetailPage implements OnInit {
 
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
-
+      
       if (this.ideaInfo.idea && this.ideaInfo.idea.attach_id_list) {
         // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
         this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(this.ideaInfo.idea.attach_id_list), true)
@@ -130,6 +130,37 @@ export class IdeaDetailPage implements OnInit {
 
   // Bấm vào nút more 
   onClickMore(ev) {
+
+    // kiểm tra quyền của userInfo mà hiển thị menu khác nhau
+
+    // nếu user không thuộc ý tưởng, thì có quyền đánh giá và khảo sát mức độ của ý tưởng này
+    // menu đánh giá (cho điểm ý tưởng này - mỗi người chỉ được đánh giá cho điểm --)
+    // hiển thị các tiêu chí để đánh giá .... khảo sát như là biên bản khảo sát đánh giá cho điểm vậy
+    
+    // nếu là ý tưởng thuộc user thì cho phép sửa nội dung
+
+    // nếu user có quyền role như sau
+    /**
+     * 
+      1	User thường	User -- hiển thị mỗi một menu đánh giá
+      
+      --- hiển thị menu đánh giá -- ý tưởng này - cho điểm theo từng tiêu chí
+      2	Chủ tịch hội đồng KHCN	Chủ tịch hội đồng KHCN
+      3	Thành viên Hội đồng KHCN	Thành viên Hội đồng KHCN
+
+      -- hiển thị tất cả các menu
+      98	Admin	Quản trị hệ thống -- hiển thị hết menu
+      99	Developper	Người phát triển -- hiển thị hết menu
+
+      -- xem kết quả đánh giá khảo sát ý tưởng này ....
+
+
+     */
+    
+     console.log('user', this.userInfo);
+     
+
+
     let settingsMenu = [
       {
         name: "Sửa nội dung"

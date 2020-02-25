@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'ngxi4-dynamic-service';
+import { Router } from '@angular/router';
+import { MainService } from 'src/app/services/main.service';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +24,7 @@ export class HomePage implements OnInit {
       ,
       items: [
         {
-          url: 'assets/docs/manual_v1.pdf',
+          url: 'assets/docs/ManualGuide_v1.pdf',
           title: 'Hướng dẫn sử dụng chương trình',
           icon: { slot: 'start', color: 'medium', name: 'book' }
         }
@@ -32,8 +34,12 @@ export class HomePage implements OnInit {
 
   topUsersActions: any;
 
+  userInfo: any;
+
   constructor(
     private apiAuth: AuthService
+    , private router: Router
+    , private mainService: MainService
   ) { }
 
   ngOnInit() {
@@ -41,6 +47,11 @@ export class HomePage implements OnInit {
   }
 
   init() {
+
+    setTimeout(()=>{
+      this.userInfo = this.mainService.getUserInfo();
+    },1000)
+
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-top-actions")
       .then(data => {
         // console.log('Data: ', data);
@@ -50,6 +61,10 @@ export class HomePage implements OnInit {
       .catch(err => {
         // console.log('Lỗi: ', err);
       });
+  }
+
+  onClickLogin(){
+    this.router.navigate(['/login']);
   }
 
 }

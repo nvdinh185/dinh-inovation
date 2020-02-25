@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'idea-detail',
     loadChildren: () => import('./idea-entry/idea-detail/idea-detail.module').then( m => m.IdeaDetailPageModule)
   },
+  {
+    path: 'upgrade',
+    loadChildren: () => import('./admin-entry/upgrade/upgrade.module').then( m => m.UpgradePageModule)
+  },
 
 ];
 
