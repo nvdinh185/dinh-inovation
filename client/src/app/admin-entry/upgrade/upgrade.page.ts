@@ -63,6 +63,10 @@ export class UpgradePage implements OnInit {
     }
   }
 
+  // Hàm gọi trang login
+  onClickLogin(){
+    this.router.navigate(['/login']);
+  }
 
   // Hàm gọi trang login
   onClickLogin(){
