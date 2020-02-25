@@ -93,7 +93,7 @@ class LDAPHandler {
         const { username, password } = req.json_data   // req.body
 
         // cắt lấy user không thôi, không cho nhập @ vào username
-        const nameMatch = str.match(/^([^@]*)@/);
+        const nameMatch = username.match(/^([^@]*)@/);
         let shortName = nameMatch ? nameMatch[1] : username;
 
         // fakeLoginLdap(username, password)
