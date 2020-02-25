@@ -4,6 +4,7 @@ import { AuthService, CommonsService, PopoverCardComponent, DynamicFormMobilePag
 import { MainService } from 'src/app/services/main.service';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-idea-detail',
@@ -33,18 +34,23 @@ export class IdeaDetailPage implements OnInit {
     this.route.queryParams.subscribe(item => {
       // console.log('item', item);
       // đọc chi tiết để hiển thị nội dung chi tiết ra
-      this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea?id=' + item.id, true)
-        .then(ideaDetail => {
-          this.ideaInfo = ideaDetail
-          // console.log('chi tiết', this.ideaInfo);
-          this.refreshUserAction()
-        })
-        .catch(err => console.log('Lỗi lấy chi tiết', err))
+      this.refresh(item.id)
     });
   }
 
   init() {
     this.userInfo = this.mainService.getUserInfo();
+  }
+
+  // làm mới ý tưởng này
+  refresh(id) {
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea?id=' + id, true)
+      .then(ideaDetail => {
+        this.ideaInfo = ideaDetail
+        // console.log('chi tiết', this.ideaInfo);
+        this.refreshUserAction()
+      })
+      .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
 
   refreshUserAction() {
@@ -336,7 +342,16 @@ export class IdeaDetailPage implements OnInit {
   }
 
   // chấm điểm ý tưởng này theo các tiêu chí định nghĩa
-  markIdea(idea) {
+  async markIdea(idea) {
+    // popup cửa sổ này lên và cho phép chỉnh sửa ý tưởng này
+    let questions;
+    try {
+      questions = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-questions', true)
+    } catch{ }
+
+    // let categoryOptions = parameters && parameters.ideas_categories ? parameters.ideas_categories : [];
+
+
     // Chấm điểm ý tưởng - popup cửa sổ chấm điểm
     let form: any = {
       title: 'Chấm điểm ý tưởng'
@@ -375,30 +390,145 @@ export class IdeaDetailPage implements OnInit {
   }
 
   // sửa lại ý tưởng này
-  editIdea(idea) {
+  async editIdea(idea) {
     // popup cửa sổ này lên và cho phép chỉnh sửa ý tưởng này
+    let parameters;
+    try {
+      parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
+    } catch{ }
+
+    let categoryOptions = parameters && parameters.ideas_categories ? parameters.ideas_categories : [];
+
+    let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
+
+    // Chấm điểm ý tưởng - popup cửa sổ chấm điểm
+    let form: any = {
+      title: 'Sửa ý tưởng'
+      , buttons: [
+        { color: 'danger', icon: 'close', next: 'CLOSE' }
+      ]
+      ,
+      items: [
+        // Danh sách các trường nhập liệu
+        { type: "hidden", key: "id", value: idea.id }
+        , { type: "text", key: "title", value: idea.title, name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự", input_type: "text", icon: "md-help", validators: [{ required: true, min: 5, max: 200 }] }
+        , { type: "text_area", key: "description", value: idea.description, name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
+        , { type: "select", key: "category_id", value: "" + idea.category_id, name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
+        , { type: "select", key: "status", value: "" + idea.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
+        ,
+        {
+          type: 'button'
+          , options: [
+            {
+              name: 'Gửi sửa ý tưởng'    // button name
+              , id: idea.id              // trả lại id của ý tưởng này
+              , next: 'CALLBACK'         // callback get resulte or json
+              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
+              , command: 'EDIT'          // extra parameter for callback process
+            }
+          ]
+        }
+      ]
+    }
+
+    // call popup window for form login
+    this.apiCommons.openModal(DynamicFormMobilePage,
+      {
+        parent: this,  // for dismiss child component
+        callback: this.callbackProcess, //function for callback process result of form
+        form: form    // form dynamic 
+      }
+    );
+
 
   }
 
   // Chuyển trạng thái của ý tưởng
-  changeStatusIdea(idea) {
+  async changeStatusIdea(idea) {
+    let parameters;
+    try {
+      parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
+    } catch{ }
 
+    let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
+
+    let form: any = {
+      title: 'Thay đổi trạng thái'
+      , buttons: [
+        { color: 'danger', icon: 'close', next: 'CLOSE' }
+      ]
+      ,
+      items: [
+        // Danh sách các trường nhập liệu
+        { type: "hidden", key: "id", value: idea.id }
+        , { type: "select", key: "status", value: "" + idea.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "warning" }
+        ,
+        {
+          type: 'button'
+          , options: [
+            {
+              name: 'Chuyển trạng thái ý tưởng này'    // button name
+              , id: idea.id              // trả lại id của ý tưởng này
+              , next: 'CALLBACK'         // callback get resulte or json
+              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
+              , command: 'EDIT'          // extra parameter for callback process
+            }
+          ]
+        }
+      ]
+    }
+
+    // call popup window for form login
+    this.apiCommons.openModal(DynamicFormMobilePage,
+      {
+        parent: this,  // for dismiss child component
+        callback: this.callbackProcess, //function for callback process result of form
+        form: form    // form dynamic 
+      }
+    );
   }
 
-  // Ghéo ý tưởng
+  // Ghép ý tưởng
   mergeIdea(idea) {
 
   }
 
   // loại bỏ ý tưởng này
   trashIdea(idea) {
-    this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/trash-idea", { id: idea.id }, true)
-      .then(data => {
-        console.log('Data: ', data);
-      })
-      .catch(err => {
-        console.log('Lỗi: ', err);
-      });
+    let form: any = {
+      title: 'Dừng ý tưởng'
+      , buttons: [
+        { color: 'danger', icon: 'close', next: 'CLOSE' }
+      ]
+      ,
+      items: [
+        // Danh sách các trường nhập liệu
+        { type: "hidden", key: "id", value: idea.id }
+        , { type: "select", key: "status", value: "0", name: "Trạng thái của ý tưởng?", icon: "clock", options: [{ value: "0", name: "Triển khai sau" }], color: "secondary" }
+        ,
+        {
+          type: 'button'
+          , options: [
+            {
+              name: 'Dừng ý tưởng này'    // button name
+              , id: idea.id              // trả lại id của ý tưởng này
+              , next: 'CALLBACK'         // callback get resulte or json
+              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
+              , command: 'EDIT'          // extra parameter for callback process
+            }
+          ]
+        }
+      ]
+    }
+
+    // call popup window for form login
+    this.apiCommons.openModal(DynamicFormMobilePage,
+      {
+        parent: this,  // for dismiss child component
+        callback: this.callbackProcess, //function for callback process result of form
+        form: form    // form dynamic 
+      }
+    );
   }
 
   // hàm gọi lại xử lý form popup
@@ -406,7 +536,7 @@ export class IdeaDetailPage implements OnInit {
     // allway return Promise for callback
     return new Promise<any>((resolve, reject) => {
 
-      console.log(res);
+      // console.log(res);
 
       if (res.error) {
         //If error 
@@ -418,6 +548,10 @@ export class IdeaDetailPage implements OnInit {
         if (res.button.command === "MARK") {
           // Do any for command
 
+        }
+        if (res.button.command === "EDIT") {
+          // Do any for command
+          this.refresh(res.button.id)
         }
 
       }
