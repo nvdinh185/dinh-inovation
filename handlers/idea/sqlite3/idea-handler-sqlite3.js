@@ -9,6 +9,15 @@ const db = require('../../../db/sqlite3/db-pool');
 const arrObj = require('../../../utils/array-object');
 
 
+/* const returnErrorMessage = (res, err, message) => {
+    res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({
+        status: 'NOK'
+        , error: err
+        , message: message
+    }, null, 2));
+} */
+
 /**
  * 
  * @param {*} files 
@@ -260,12 +269,12 @@ class IdeaHandler {
         // thông tin đầu vào là req.user.id 
         // và req.form_data.params.id chứa mã ý tưởng
         // console.log('form', req.form_data);
-     
+
         let fileIds;
         if (req.form_data.params.count_file > 0) {
             fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
         }
-    
+
         req.ideaId = req.form_data.params.id;
         let jsonComment = {
             user_id: req.user.id,
@@ -292,6 +301,25 @@ class IdeaHandler {
                 })
             });
     }
+
+
+    // đánh giá ý tưởng
+    async markIdea(req, res, next) {
+        // next()
+        res.status(401).json({
+            message: 'Lỗi chưa thể chấm điểm được'
+        })
+    }
+
+    // xóa bỏ ý tưởng
+    trashIdea(req, res, next) {
+        // next()
+        // returnErrorMessage(res, { code: 11 }, 'Lỗi xóa ý tưởng')
+        res.status(401).json({
+            message: 'Lỗi cập nhập loại ý tưởng'
+        })
+    }
+
 
 
 }
