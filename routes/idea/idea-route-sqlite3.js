@@ -21,6 +21,11 @@ const jwtTokenVerify = require('../../handlers/jwt-token-verify');
 // {status:'OK', message:'Login thành công', data: userInfo}
 // trường hợp userInfo không có dữ liệu thì phải yêu cầu khai báo form user
 // hoặc {status:'NOK', message:'User bị khóa liên hệ Quản trị hệ thống'}
+router.get('/get-all-users'
+    , jwtTokenVerify                // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , userHandler.getAllUsers       // dựa vào giá trị req.user.username trả thông tin user
+)
+
 router.get('/get-user-info'
     , jwtTokenVerify                // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , userHandler.getUserInfo       // dựa vào giá trị req.user.username trả thông tin user

@@ -141,7 +141,9 @@
             {{comment.username}}
           </strong>
           <br>
-          <div [innerHTML]="comment.content | newline | safe"></div>
+          <ion-label class="ion-text-wrap">
+            <div [innerHTML]="comment.content | newline | safe"></div>
+          </ion-label>
         </ion-label>
       </ion-item>
       <ion-note [style.padding-left]="comment.parent_id?'100px':'80px'"> {{comment.created_time | timeAgo}} </ion-note>

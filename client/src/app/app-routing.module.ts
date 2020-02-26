@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'idea-detail',
     loadChildren: () => import('./idea-entry/idea-detail/idea-detail.module').then( m => m.IdeaDetailPageModule)
   },
+  {
+    path: 'user-activity',
+    loadChildren: () => import('./main-entry/home/user-activity/user-activity.module').then( m => m.UserActivityPageModule)
+  },
 
 ];
 
