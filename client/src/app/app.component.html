@@ -10,7 +10,7 @@
                 [style.background-image]="'url('+(userInfo?.background?userInfo.background:'assets/imgs/background.jpg')+')'"
                 tappable (click)="onClickUserImage('background')"></div>
               <ion-label class="card-title-header" tappable (click)="onClickUser()">
-                {{userInfo?.full_name?userInfo?.full_name:userInfo?.username}}{{userInfo?.nickname?"\n("+userInfo?.nickname+")":""}}
+                {{userInfo?.fullname?userInfo?.fullname:userInfo?.username}}{{userInfo?.nickname?"\n("+userInfo?.nickname+")":""}}
               </ion-label>
               <div class="avatar-header"
                 [style.background-image]="'url('+(userInfo?.avatar?userInfo?.avatar:'assets/imgs/avatar.jpg')+')'"

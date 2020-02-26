@@ -91,15 +91,20 @@ class LDAPHandler {
     async  login(req, res, next) {
         // thay dữ liệu đã parse body thành json bằng công cụ ở utils by cuongdq
         const { username, password } = req.json_data   // req.body
+
+        // cắt lấy user không thôi, không cho nhập @ vào username
+        const nameMatch = username.match(/^([^@]*)@/);
+        let shortName = nameMatch ? nameMatch[1] : username;
+
         // fakeLoginLdap(username, password)
         loginLdapMobifone(username, password)
             .then(user => {
                 res.status(200).send({
                     status: 200,
                     message: 'success',
-                    username: username.toLowerCase(),
+                    username: shortName.toLowerCase(),
                     token: jwtToken({
-                        username: username.toLowerCase()
+                        username: shortName.toLowerCase()
                     })
                 })
             })

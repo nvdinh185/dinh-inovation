@@ -43,6 +43,7 @@ class ListHandler {
             });
     }
 
+    // lấy danh sách người dùng tích cực
     getActionsList(req, res, next) {
         db.getRsts(`with 
                     users_origin as
@@ -99,6 +100,22 @@ class ListHandler {
                     message: 'Lỗi truy vấn csdl getListParameters'
                 })
             });
+    }
+
+    // lấy danh sách câu hỏi
+    getQuestions(req, res, next) {
+        db.getRsts(`SELECT * FROM ideas_questions
+                    -- where status >0
+                    order by order_1`)
+        .then(result => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(arrObj.getJsonStringify(result));
+        })
+        .catch(err => {
+            res.status(401).json({
+                message: 'Lỗi truy vấn csdl getQuestions'
+            })
+        });
     }
 
     // lấy các đường dẫn file đính kèm

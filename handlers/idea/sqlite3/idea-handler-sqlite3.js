@@ -9,6 +9,15 @@ const db = require('../../../db/sqlite3/db-pool');
 const arrObj = require('../../../utils/array-object');
 
 
+/* const returnErrorMessage = (res, err, message) => {
+    res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({
+        status: 'NOK'
+        , error: err
+        , message: message
+    }, null, 2));
+} */
+
 /**
  * 
  * @param {*} files 
@@ -51,6 +60,7 @@ class IdeaHandler {
                         d.fullname || '(' || d.nickname || ')' as username
                         , c.name as status_name
                         , b.name as category_name
+                        , b.background
                         , a.* 
                         from ideas a
                         left join ideas_categories b
@@ -59,6 +69,7 @@ class IdeaHandler {
                         on a.status = c.id
                         left join users d
                         on a.user_id = d.id
+                        where c.status_type >1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
                     order by a.changed_time desc, a.created_time desc`)
             .then(result => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -157,7 +168,7 @@ class IdeaHandler {
             let idea = await db.getRst(`with 
                             ideas_selected as
                             (select * from ideas where id = ${ideaId})
-                        select 
+                            select 
                             d.fullname || '(' || d.nickname || ')' as username
                             , d.avatar
                             , c.name as status_name
@@ -259,12 +270,12 @@ class IdeaHandler {
         // thông tin đầu vào là req.user.id 
         // và req.form_data.params.id chứa mã ý tưởng
         // console.log('form', req.form_data);
-     
+
         let fileIds;
         if (req.form_data.params.count_file > 0) {
             fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
         }
-    
+
         req.ideaId = req.form_data.params.id;
         let jsonComment = {
             user_id: req.user.id,
@@ -292,6 +303,23 @@ class IdeaHandler {
             });
     }
 
+
+    // đánh giá ý tưởng
+    async markIdea(req, res, next) {
+        // next()
+        res.status(401).json({
+            message: 'Lỗi chưa thể chấm điểm được'
+        })
+    }
+
+    // xóa bỏ ý tưởng
+    trashIdea(req, res, next) {
+        // next()
+        // returnErrorMessage(res, { code: 11 }, 'Lỗi xóa ý tưởng')
+        res.status(401).json({
+            message: 'Lỗi cập nhập loại ý tưởng'
+        })
+    }
 
 }
 

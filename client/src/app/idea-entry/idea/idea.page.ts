@@ -63,8 +63,8 @@ export class IdeaPage implements OnInit {
       ,
       items: [
         // Danh sách các trường nhập liệu
-        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự", input_type: "text", icon: "md-help", validators: [{ required: true, min: 5, max: 200 }] }
-        , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
+        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "md-help", validators: [{ required: true, min: 5, max: 200 }] }
+        , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
         , { type: "upload-files", name: "Files đính kèm"
@@ -105,20 +105,27 @@ export class IdeaPage implements OnInit {
     // Đã có danh sách ý tưởng mới lấy được từ csdl rồi
   }
 
-  // hàm gọi lại xử lý ajax
+
+  // Hàm gọi trang login
+  onClickLogin(){
+    this.router.navigate(['/login']);
+  }
+
+  // hàm gọi lại xử lý ajax khi người dùng thay chọn lựa ở card nhập nội dung
   dynamicCallbackCard(ajaxItem) {
     return new Promise(resolve => {
-
       // console.log(ajaxItem);
-
-      let ajaxReturn = {
+      /* let ajaxReturn = {
         key: 'name',
         property_name: 'value',
         new_data: 'Tên mới thay đổi từ ajax'
       }
       // or 
       // ajaxReturns = [{...ajaxReturn}]
-      resolve(ajaxReturn);
+      resolve(ajaxReturn); */
+
+      resolve({});
+
     })
   }
 

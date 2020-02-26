@@ -26,8 +26,9 @@ export class AppComponent {
     this.height = win.innerHeight;
   }
 
-  defaultMenu: any = [
+  defaultMenu: any = JSON.stringify([
     {
+      id: 1,
       name: 'Văn phòng sáng tạo',
       size: '1.1em',
       type: 'route',     // chuyển trang theo routing
@@ -36,20 +37,13 @@ export class AppComponent {
     }
     ,
     {
-      name: 'Phòng ý tưởng',
-      size: '1.1em',
-      type: 'route',     // chuyển trang theo routing
-      url: '/idea',      // chuyển trang theo routing
-      icon: 'md-alarm'
-    }
-    ,
-    {
+      id: 2,
       name: 'Login/Logout',
       type: 'route',     // bấm chuyển trang theo routing
       url: '/login',     // bấm chuyển trang khai phần tử quản lý
       icon: 'log-in'
     }
-  ];
+  ]);
 
   rootPage: any;
   //Khai báo cây menu được tổ chức cho ứng dụng này 
@@ -97,9 +91,6 @@ export class AppComponent {
       this.splashScreen.hide();
 
       this.init();
-      
-      // gọi tổ chức menu tùy vào login hay chưa
-      this.refresh();
 
     });
   }
@@ -109,21 +100,28 @@ export class AppComponent {
    */
   init() {
     this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER || 'http://localhost:9223/m-inovation/api/auth';
-    this.apiAuth.serviceUrls.RESOURCE_SERVER =  environment.RESOURCE_SERVER || 'http://localhost:9223/m-inovation/api';
+    this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER || 'http://localhost:9223/m-inovation/api';
 
-    this.apiCommons.subscribe('event-login-ok', (userInfo)=>{
+    this.apiCommons.subscribe('event-login-ok', (userInfo) => {
       this.userInfo = userInfo
+      // gọi tổ chức menu tùy vào login hay chưa
+      this.refresh();
     })
-    
-    this.apiCommons.subscribe('event-logout-ok', ()=>{
+
+    this.apiCommons.subscribe('event-logout-ok', () => {
       this.userInfo = null
+      // gọi tổ chức menu tùy vào login hay chưa
+      this.refresh();
     })
 
     this.mainService.getTokenInfo()
       .then(userInfo => {
         this.userInfo = userInfo;
+        this.refresh();
       })
-      .catch(err => {})
+      .catch(err => {
+        this.refresh();
+      })
 
   }
 
@@ -132,7 +130,56 @@ export class AppComponent {
    */
   refresh() {
     // Khai báo menu Mặt định
-    this.treeMenu = this.defaultMenu;
+    // this.treeMenu = this.defaultMenu;
+
+    // menu này được lấy từ sự phân quyền trong csdl
+    // đọc lấy từ bảng admin_menu, sau đó thêm vào cây menu để hiển thị
+    let menuAfterlogin: any = [];
+
+
+    let menuDeveloper: any = [];
+
+
+    if (this.userInfo) {
+      // thực hiện get menu from user
+      menuAfterlogin = [
+        {
+          id: 3,
+          name: 'Phòng ý tưởng',
+          size: '1.1em',
+          type: 'route',     // chuyển trang theo routing
+          url: '/idea',      // chuyển trang theo routing
+          icon: 'md-alarm'
+        }
+      ]
+
+      if (this.userInfo.username === "cuong.dq" || this.userInfo.role === 99) {
+        menuDeveloper = [
+          {
+            id: 99,
+            name: 'Nâng cấp CSDL (*)',
+            size: '1.1em',
+            type: 'route',        // chuyển trang theo routing
+            url: '/upgrade',      // chuyển trang theo routing
+            icon: 'cube'
+          }
+        ]
+      }
+
+    }
+
+    let menuAll = JSON.parse(this.defaultMenu);
+
+    menuAfterlogin.forEach(el => {
+      if (!menuAll.find(x => x.id === el.id)) menuAll.splice(1, 0, el)
+    });
+
+    menuDeveloper.forEach(el => {
+      if (!menuAll.find(x => x.id === el.id)) menuAll.splice(menuAll.length, 0, el)
+    });
+
+    // tạo cây menu trước khi thực hiện
+    this.treeMenu = this.apiCommons.createTreeMenu(menuAll, 'id', 'parent_id');
 
   }
 

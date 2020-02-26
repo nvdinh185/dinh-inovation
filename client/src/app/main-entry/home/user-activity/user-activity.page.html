@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Hoạt động của thành viên</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Hieu Add Table Bootstrap -->
+  <!-- TABLE BEGIN ------------------------------------------------------------------------------->
+  <ion-row>
+    <ion-col size-lg="12">
+      <div class="main-card mb-3 card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-6">
+              <div
+                class="card-header-title font-size-md text-capitalize font-weight-normal"
+              >
+                Hoạt động
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <div class="text-center col-md-3 offset-2">
+                  <label>Tìm kiếm</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" (input) = "onFilterNameString($event)" class="form-control" >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table
+            class="align-middle text-truncate mb-0 table table-borderless table-hover"
+          >
+            <thead>
+              <tr>
+                <th class="d-none d-lg-table-cell text-center">#</th>
+                <th class="text-center">Avatar</th>
+                <th class="text-center">Tên</th>
+                <th class="d-none d-lg-table-cell text-center">Ý tưởng</th>
+                <th class="d-none d-lg-table-cell text-center">Vote</th>
+                <th class="d-none d-lg-table-cell text-center">Comment</th>
+                <!-- <th class="text-center">SL YT Đã Cmt</th> -->
+                <th class="text-center">Điểm</th>
+                <!-- <th class="text-center">Hạng</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of userActionFilterArr; let i = index">
+                <td
+                  class="d-none d-lg-table-cell text-center text-muted"
+                  style="width: 50px;"
+                >
+                  {{i+1}}
+                </td>
+                <td class="text-center" style="width: 20px;">
+                  <img
+                    width="25"
+                    class="rounded-circle"
+                    src="{{user?.avatar}}"
+                    alt=""
+                  />
+                </td>
+                <td class="text-center">
+                  <a [routerLink]="">{{user.fullname}}</a>
+                </td>
+                <td class="d-none d-lg-table-cell text-center">
+                  <div class="badge badge-pill badge-success">
+                    {{user.count_ideas}}
+                  </div>
+                </td>
+
+                <td class="d-none d-lg-table-cell text-center">
+                  <div class="badge badge-pill badge-secondary">
+                    {{user.count_voted}}
+                  </div>
+                </td>
+                <td class="d-none d-lg-table-cell text-center">
+                  <div class="badge badge-pill badge-danger">
+                    {{user.count_commented}}
+                  </div>
+                </td>
+                <!-- <td class="text-center">
+                  <div class="badge badge-pill badge-warning">{{user.count_commented_ideas}}</div>
+                </td> -->
+                <td class="text-center">
+                  <div class="badge badge-pill badge-warning">
+                    {{user.total_action}}
+                  </div>
+                </td>
+                <!-- <td *ngIf="i === 0" class="text-center" style="width: 30px;">
+                  <img
+                    width="25"
+                    class="rounded-circle"
+                    src="assets/imgs/1st.png"
+                    alt=""
+                  />
+                </td>
+                <td *ngIf="i === 1" class="text-center" style="width: 30px;">
+                  <img
+                    width="25"
+                    class="rounded-circle"
+                    src="assets/imgs/2nd.png"
+                    alt=""
+                  />
+                </td>
+                <td *ngIf="i === 2" class="text-center" style="width: 30px;">
+                  <img
+                    width="25"
+                    class="rounded-circle"
+                    src="assets/imgs/3rd.png"
+                    alt=""
+                  />
+                </td> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-block p-4 text-center card-footer">
+          
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+  <!-- TABLE END ------------------------------------------------------------------------------->
+</ion-content>
