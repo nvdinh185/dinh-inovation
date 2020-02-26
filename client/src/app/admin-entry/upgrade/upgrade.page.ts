@@ -64,40 +64,6 @@ export class UpgradePage implements OnInit {
     this.router.navigate(['/login']);
   }
 
-<<<<<<< HEAD
-
-  // hàm trả kết quả của form nhập sql thực thi lệnh xong
-  onSelectedFinish(evt) {
-    
-    if (evt) {
-      if (evt.error && evt.message) {
-        this.errorMessage = evt.message
-      }
-      else {
-        this.errorMessage = undefined
-      }
-
-      if (evt.response_data && evt.response_data.status === "OK" && evt.response_data.message) {
-        this.returnMessage = evt.response_data.message
-      }
-      else {
-        this.returnMessage = undefined
-      }
-
-      if (evt.response_data &&  Array.isArray(evt.response_data) && evt.response_data.length>0) {
-        this.returnArray = evt.response_data
-        let oneRow = this.returnArray[0];
-        this.returnHeader = Object.keys(oneRow);
-      }
-      else {
-        this.returnArray = undefined
-        this.returnHeader = undefined
-      }
-
-    } else { // không trả về gì cả thì quay về home
-      this.router.navigate(['/']);
-    }
-=======
   // gửi lệnh sql lên máy chủ
   onClickSend() {
 
@@ -141,7 +107,6 @@ export class UpgradePage implements OnInit {
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
     xlsx.writeFile(wb, 'sql-json-to-excel.xlsx');
->>>>>>> cuongdq/angular-export-excel
   }
 
 }
