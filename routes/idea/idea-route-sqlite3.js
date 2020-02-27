@@ -128,10 +128,26 @@ router.post('/mark-idea'
     , ideaHandler.getIdea           // trả thông tin idea
 )
 
+// xóa bỏ ý tưởng này
+// router.post('/trash-idea'
+//     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+//     , userHandler.getUserId         // trả về req.user.id và req.user.username
+//     , postHandler.jsonProcess       // trả về req.form_data {thông tin của idea}
+//     , ideaHandler.trashIdea         // comment idea
+//     , ideaHandler.getIdea           // trả thông tin idea
+// )
+
+
+// lấy log sql
+router.get('/get-sql-logs'
+    , jwtTokenVerify                     // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getSqlLogs            
+)
+
 // lấy danh sách câu hỏi để đánh giá
 router.get('/get-questions'
-    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , listHandler.getQuestions          
+    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getQuestions            
 )
 
 // thống kê hoạt động thường xuyên đưa vào tôn vinh
@@ -142,7 +158,7 @@ router.get('/get-top-actions'
 
 // get file id array ?id_list=[1,2,3,4]
 router.get('/get-attach-files'
-    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , jwtTokenVerify                         // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , listHandler.getIdeasAttachs            // trả về danh sách tên file đường dẫn cần lấy
 )
 
@@ -157,6 +173,7 @@ router.get('/get-file-id'
 //1. Thực hiện nâng cấp csdl bằng các câu lệnh sql trực tiếp vào csdl
 router.post('/upgrade-database'
 , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
+, userHandler.getUserId               // trả về req.user.id và req.user.username
 // dữ liệu lấy câu lệnh ở đây
 , postHandler.jsonProcess // lay json_data
 //chèn yêu cầu phân quyền để thực hiện việc này
