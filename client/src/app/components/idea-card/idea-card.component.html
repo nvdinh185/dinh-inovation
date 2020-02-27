@@ -6,7 +6,7 @@
     [style.background-image]="'url('+commandCardForm.image+')'" style="opacity: 0.9;"></div>
 
   <ion-card-header class="card-title">
-    <ion-card-title>{{commandCardForm.title}}</ion-card-title>
+    <ion-card-title>#{{commandCardForm.id}} - {{commandCardForm.title}}</ion-card-title>
     <ion-card-subtitle>{{commandCardForm.created_time | timeAgo}}</ion-card-subtitle>
     {{commandCardForm.description.substring(0,100)}}
   </ion-card-header>
