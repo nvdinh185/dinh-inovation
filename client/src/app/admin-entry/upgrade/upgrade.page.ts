@@ -87,6 +87,9 @@ export class UpgradePage implements OnInit {
           } else {
             this.returnArrayViewer = this.returnArray
           }
+        } else {
+          // console.log(data);
+          this.returnMessage = "Không tìm thấy bảng ghi nào"
         }
 
       })
