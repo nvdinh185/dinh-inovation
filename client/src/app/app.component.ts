@@ -226,7 +226,7 @@ export class AppComponent {
    * Bam goi user
    */
   onClickUser() {
-
+    this.router.navigate(['/login']);
   }
 
 
@@ -234,7 +234,7 @@ export class AppComponent {
    * Thay đổi ảnh đại diện
    */
   onClickUserImage(type: string) {
-
+    this.router.navigate(['/login']);
   }
 
 }
