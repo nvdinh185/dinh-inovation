@@ -120,7 +120,24 @@
           </table>
         </div>
         <div class="d-block p-4 text-center card-footer">
-          
+          <!-- pager -->
+          <ul *ngIf="pagination.pages && pagination.pages.length" class="pagination">
+            <li [ngClass]="{disabled:pagination.currentPage === 1}">
+                <a (click)="setPage(1)">First</a>
+            </li>
+            <li [ngClass]="{disabled:pagination.currentPage === 1}">
+                <a (click)="setPage(pagination.currentPage - 1)">Previous</a>
+            </li>
+            <li *ngFor="let page of pagination.pages" [ngClass]="{active:pagination.currentPage === page}">
+                <a (click)="setPage(page)">{{page}}</a>
+            </li>
+            <li [ngClass]="{disabled:pagination.currentPage === pagination.totalPages}">
+                <a (click)="setPage(pagination.currentPage + 1)">Next</a>
+            </li>
+            <li [ngClass]="{disabled:pagination.currentPage === pagination.totalPages}">
+                <a (click)="setPage(pagination.totalPages)">Last</a>
+            </li>
+        </ul>
         </div>
       </div>
     </ion-col>

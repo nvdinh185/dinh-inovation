@@ -105,7 +105,7 @@ class ListHandler {
     // lấy danh sách câu hỏi
     getQuestions(req, res, next) {
         db.getRsts(`SELECT * FROM ideas_questions
-                    -- where status >0
+                    -- where status > 0
                     order by order_1`)
         .then(result => {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });

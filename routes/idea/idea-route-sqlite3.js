@@ -68,6 +68,13 @@ router.get('/get-ideas'
     , ideaHandler.getIdeas                // trả về danh sách ý tưởng
 )
 
+// lấy thông tin user đã đánh giá idea hay chưa
+router.get('/user-mark-idea'
+    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
+    , userHandler.getUserId         // trả về req.user.id và req.user.username
+    , ideaHandler.getUserMarkIdea   // trả về thông tin user đã đánh giá hay chưa
+)
+
 // tạo ý tưởng mới
 router.post('/create-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
@@ -116,25 +123,15 @@ router.post('/comment-idea'
 router.post('/mark-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , userHandler.getUserId         // trả về req.user.id và req.user.username
-    , postHandler.jsonProcess       // trả về req.form_data {thông tin của idea}
+    , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
     , ideaHandler.markIdea          // comment idea
     , ideaHandler.getIdea           // trả thông tin idea
 )
 
-// xóa bỏ ý tưởng này
-router.post('/trash-idea'
-    , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
-    , userHandler.getUserId         // trả về req.user.id và req.user.username
-    , postHandler.jsonProcess       // trả về req.form_data {thông tin của idea}
-    , ideaHandler.trashIdea         // comment idea
-    , ideaHandler.getIdea           // trả thông tin idea
-)
-
-
 // lấy danh sách câu hỏi để đánh giá
-router.get('/get-question'
+router.get('/get-questions'
     // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , listHandler.getQuestions            
+    , listHandler.getQuestions          
 )
 
 // thống kê hoạt động thường xuyên đưa vào tôn vinh

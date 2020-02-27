@@ -209,12 +209,25 @@ class IdeaHandler {
                             from comments_ideas a
                             left join users b
                             on a.user_id = b.id`);
+            let marks = await db.getRsts(`with 
+                                marks_ideas as
+                                (select * from ideas_marks
+                                where idea_id = ${ideaId}
+                                order by created_time desc)
+                                select 
+                                b.fullname || '(' || b.nickname || ')' as username
+                                , b.avatar
+                                , a.* 
+                            from marks_ideas a
+                            left join users b
+                            on a.user_id = b.id`);
 
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(arrObj.getJsonStringify({
                 idea,
                 likes,
-                comments
+                comments,
+                marks
             }));
 
         } catch (err) {
@@ -306,19 +319,124 @@ class IdeaHandler {
 
     // đánh giá ý tưởng
     async markIdea(req, res, next) {
-        // next()
-        res.status(401).json({
-            message: 'Lỗi chưa thể chấm điểm được'
-        })
+        if (req.json_data && req.json_data.id && req.user.id) {
+            let arrMarks = [];
+
+            for (const key in req.json_data) {
+                if (key && key.indexOf("question") === 0) {
+                    try {
+
+                        let question_id = parseInt(key.split("_").pop());
+                        arrMarks.push({
+                            idea_id: req.json_data.id,
+                            question_id: question_id,
+                            user_id: req.user.id,
+                            point: req.json_data[key],
+                            created_time: Date.now()
+                        }
+                        )
+                    } catch { }
+                }
+            }
+
+            let insertMarkPromise = new Promise(resolve => {
+                let count = 0;
+                arrMarks.forEach(async el => {
+                    try {
+                        await db.insert(db.convertSqlFromJson('ideas_marks', el, []));
+                    } catch (err) {
+                        if (err.code === 'SQLITE_CONSTRAINT') {
+                            try {
+                                delete el['created_time'];
+                                el.updated_time = Date.now();
+                                await db.update(db.convertSqlFromJson('ideas_marks', el, ['idea_id', 'question_id', 'user_id']))
+                            } catch { }
+                        }
+                    } finally {
+                        count++;
+                        if (count === arrMarks.length) {
+                            resolve("Finish")
+                        }
+                    }
+                })
+            })
+
+            insertMarkPromise.then(async data => {
+                let row = await db.getRst(`with 
+                                                        -- Lấy một ý tưởng cho đánh giá    
+                                                        marks as (
+                                                            select 	a.user_id,
+                                                                    a.idea_id,
+                                                                    a.question_id,
+                                                                    b.weight,
+                                                                    a.point
+                                                            from ideas_marks as a
+                                                            left join ideas_questions as b
+                                                            on a.question_id = b.id
+                                                            where a.idea_id = ${req.json_data.id}),
+                                                        -- Lấy một ý tưởng cho đánh giá    
+                                                        mark_group as (
+                                                        select user_id, idea_id, sum(point*weight) as total_point
+                                                        from marks
+                                                        group by user_id, idea_id
+                                                        ),
+
+                                                        -- Lấy một ý tưởng cho đánh giá
+                                                        user_point_weight as (
+                                                            select 	a.user_id,
+                                                                    b.role,
+                                                                    (CASE b.role
+                                                                        WHEN 2 THEN 3
+                                                                        WHEN 3 THEN 2
+                                                                        WHEN 0 THEN 0
+                                                                        ELSE 1
+                                                                    END) as weight,
+                                                                    a.total_point
+                                                            from mark_group as a, users as b
+                                                            where a.user_id = b.id
+                                                        )
+
+                                                    -- Menh de chinh de lay du lieu
+                                                    select sum(total_point*weight)/sum(weight) as total_point 
+                                                    from user_point_weight`);
+                db.update(db.convertSqlFromJson("ideas", { id: req.json_data.id, total_point: row.total_point }, ["id"]))
+                    .then(async result => {
+                        // res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                        next();
+                    }).catch(err => {
+                        res.status(401).json({
+                            message: 'Lỗi không cập nhập điểm tổng được!'
+                        })
+                    })
+            }).catch(err => {
+                res.status(401).json({
+                    message: 'Lỗi chưa thể chấm điểm được!'
+                })
+            })
+        } else {
+            res.status(401).json({
+                message: 'Lỗi không có thông tin hợp lệ!'
+            })
+        }
     }
 
+
+
     // xóa bỏ ý tưởng
-    trashIdea(req, res, next) {
-        // next()
-        // returnErrorMessage(res, { code: 11 }, 'Lỗi xóa ý tưởng')
-        res.status(401).json({
-            message: 'Lỗi cập nhập loại ý tưởng'
-        })
+    getUserMarkIdea(req, res, next) {
+        db.getRsts(`select * from ideas_marks
+                        where user_id = ${req.user.id}
+                        and idea_id = ${req.paramS.id}
+                    `)
+            .then(data => {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify(data));
+            })
+            .catch(err => {
+                res.status(401).json({
+                    message: 'Lỗi lấy user chấm điểm ý tưởng'
+                })
+            })        
     }
 
 }

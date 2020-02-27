@@ -13,7 +13,7 @@
  * repaired 20190105: col.value !=undefined && !=null 
  */
 const sqlite3 = require('sqlite3').verbose();
-const isSilence = false;
+const isSilence = true;
 
 class SQLiteDAO {
 

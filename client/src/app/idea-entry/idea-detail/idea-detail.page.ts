@@ -49,6 +49,7 @@ export class IdeaDetailPage implements OnInit {
         this.ideaInfo = ideaDetail
         // console.log('chi tiết', this.ideaInfo);
         this.refreshUserAction()
+        console
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
@@ -275,7 +276,9 @@ export class IdeaDetailPage implements OnInit {
     // console.log('lenh', cmd);
     if (this.ideaInfo && this.ideaInfo.idea) {
       if (cmd === 'MARK') {
-        //  chấm điểm ý tưởng
+        // kiểm tra user đã đánh giá hay chưa
+
+        // gọi form đánh giá
         this.markIdea(this.ideaInfo.idea)
       }
       if (cmd === 'EDIT') {
@@ -345,12 +348,30 @@ export class IdeaDetailPage implements OnInit {
   async markIdea(idea) {
     // popup cửa sổ này lên và cho phép chỉnh sửa ý tưởng này
     let questions;
+    let userMarkIdea;
     try {
       questions = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-questions', true)
+      userMarkIdea = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/user-mark-idea?id='+idea.id, true)
     } catch{ }
 
+    // Chuyển json trả về thành dạng mảng chứa phần tử của dynamic form
+    let arrayTestDemo = [];
+    for (let ques of questions) {
+      let oldMarkQues = userMarkIdea.find(x => x.question_id === ques.id);
+      let oldMark = oldMarkQues? oldMarkQues.point : 0;
+      let obj = {
+        type: "range-text",
+        key: "question_"+ques.id,
+        name: ques.question,
+        icon: "help",
+        disabled: true,
+        value: oldMark,
+        min: ques.min_point,
+        max: ques.max_point
+      }
+      arrayTestDemo.push(obj);
+    }
     // let categoryOptions = parameters && parameters.ideas_categories ? parameters.ideas_categories : [];
-
 
     // Chấm điểm ý tưởng - popup cửa sổ chấm điểm
     let form: any = {
@@ -360,15 +381,14 @@ export class IdeaDetailPage implements OnInit {
       ]
       , items: [
         { type: 'title', name: idea.title, key: 'id', value: idea.id }
-        , { type: "range-text", key: "poit_1", name: "Rõ ràng?", icon: "megaphone", disabled: true, value: 0, min: 0, max: 10 }
-        , { type: "range-text", key: "poit_2", name: "Hiệu quả?", icon: "paper-plane", color: "warning", disabled: true, value: 0, min: 0, max: 10 }
-        ,
-        {
+        , ...arrayTestDemo // sử dụng spread operation ở đây để load động các questions đánh giá
+        , {
           type: 'button'
           , options: [
             {
               name: 'Gửi đánh giá'    // button name
               , next: 'CALLBACK'      // callback get resulte or json
+              , id: idea.id
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/mark-idea'
               , token: true           // token login before interceptor or token string
               , command: 'MARK'       // extra parameter for callback process
@@ -547,6 +567,7 @@ export class IdeaDetailPage implements OnInit {
         // next="CALLBACK", url="http://..." [,token: true | wzI...]
         if (res.button.command === "MARK") {
           // Do any for command
+          this.refresh(res.button.id);
 
         }
         if (res.button.command === "EDIT") {

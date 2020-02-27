@@ -11,20 +11,19 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./main-entry/login/login.module').then( m => m.LoginPageModule)
-  },  {
+  },
+  {
     path: 'idea-detail',
     loadChildren: () => import('./idea-entry/idea-detail/idea-detail.module').then( m => m.IdeaDetailPageModule)
   },
   {
-<<<<<<< HEAD
-    path: 'user-activity',
-    loadChildren: () => import('./main-entry/home/user-activity/user-activity.module').then( m => m.UserActivityPageModule)
-=======
     path: 'upgrade',
     loadChildren: () => import('./admin-entry/upgrade/upgrade.module').then( m => m.UpgradePageModule)
->>>>>>> 61f4974c8987ffc4b4e3c2b3924517999f7afdd8
   },
-
+  {
+    path: 'user-activity',
+    loadChildren: () => import('./main-entry/home/user-activity/user-activity.module').then( m => m.UserActivityPageModule)
+  }
 ];
 
 @NgModule({

@@ -70,6 +70,9 @@
     <ion-button slot="start" color="{{(ideaInfo?.isUserCommented?'success':'light')}}" shape="round" size="small">
       {{ideaInfo?.comments?.length}} comments
     </ion-button>
+    <ion-button slot="start" color="{{(ideaInfo?.isUserCommented?'success':'light')}}" shape="round" size="small">
+      {{ideaInfo?.idea?.total_point}} điểm
+    </ion-button>
     <ion-label *ngIf="ideaInfo?.idea?.attach_id_list?.length>0" class="ion-text-wrap">
       {{ideaInfo.idea.attach_id_list.length}} Files đính kèm
     </ion-label>
