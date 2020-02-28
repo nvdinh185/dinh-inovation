@@ -13,7 +13,7 @@ const arrTables = [
     "organizations"
     , "job_roles"
     , "staffs"
-    // , "users"
+    , "users"
     , "ideas"
     , "ideas_comments"
     , "ideas_interactives"
@@ -30,8 +30,10 @@ setTimeout(() => {
             try {
                 let rsts = await dbOld.getRsts(`select * from ${el}`);
                 // console.log(rsts);
-                let executed = await dbNew.runSql(`delete from ${el}`);
-                console.log(executed);
+                if (el !== 'users') {
+                    let executed = await dbNew.runSql(`delete from ${el}`);
+                    console.log(executed);
+                }
                 let inserted = await dbNew.insertTableData(el, rsts);
                 console.log('insert', el, inserted);
             } catch (e) {
