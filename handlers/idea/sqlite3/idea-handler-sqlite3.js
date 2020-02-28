@@ -363,42 +363,34 @@ class IdeaHandler {
 
             insertMarkPromise.then(async data => {
                 let row = await db.getRst(`with 
-                                                        -- Lấy một ý tưởng cho đánh giá    
-                                                        marks as (
-                                                            select 	a.user_id,
-                                                                    a.idea_id,
-                                                                    a.question_id,
-                                                                    b.weight,
-                                                                    a.point
-                                                            from ideas_marks as a
-                                                            left join ideas_questions as b
-                                                            on a.question_id = b.id
-                                                            where a.idea_id = ${req.json_data.id}),
-                                                        -- Lấy một ý tưởng cho đánh giá    
-                                                        mark_group as (
-                                                        select user_id, idea_id, sum(point*weight) as total_point
-                                                        from marks
-                                                        group by user_id, idea_id
-                                                        ),
+                                                -- Lấy một ý tưởng cho đánh giá    
+                                                mark_group as (
+                                                    select 	a.user_id,
+                                                            sum(a.point*b.weight)/sum(b.weight) as total_point
+                                                    from ideas_marks as a
+                                                    left join ideas_questions as b
+                                                    on a.question_id = b.id
+                                                    where a.idea_id = ${req.json_data.id}
+                                                    group by a.user_id),
 
-                                                        -- Lấy một ý tưởng cho đánh giá
-                                                        user_point_weight as (
-                                                            select 	a.user_id,
-                                                                    b.role,
-                                                                    (CASE b.role
-                                                                        WHEN 2 THEN 3
-                                                                        WHEN 3 THEN 2
-                                                                        WHEN 0 THEN 0
-                                                                        ELSE 1
-                                                                    END) as weight,
-                                                                    a.total_point
-                                                            from mark_group as a, users as b
-                                                            where a.user_id = b.id
-                                                        )
+                                                -- Lấy một ý tưởng cho đánh giá
+                                                user_point_weight as (
+                                                    select 	a.user_id,
+                                                            b.role,
+                                                            (CASE b.role
+                                                                WHEN 2 THEN 3
+                                                                WHEN 3 THEN 2
+                                                                WHEN 0 THEN 0
+                                                                ELSE 1
+                                                            END) as weight,
+                                                            a.total_point
+                                                    from mark_group as a, users as b
+                                                    where a.user_id = b.id
+                                                )
 
-                                                    -- Menh de chinh de lay du lieu
-                                                    select sum(total_point*weight)/sum(weight) as total_point 
-                                                    from user_point_weight`);
+                                            -- Menh de chinh de lay du lieu
+                                            select sum(total_point*weight)/sum(weight) as total_point 
+                                            from user_point_weight`);
                 db.update(db.convertSqlFromJson("ideas", { id: req.json_data.id, total_point: row.total_point }, ["id"]))
                     .then(async result => {
                         // res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
