@@ -50,7 +50,7 @@ const trainFastText = (fileInput, fileOutput) => {
         epoch: 100, //number of epochs (5'ten 100'e yükseltildi)
         neg: 5,
         input: fileInput || __dirname + "/data/train.idea.db.txt",
-        output: fileOutput || __dirname + "/models/model.idea.db"
+        output: fileOutput || __dirname + "/models/model.idea"
     }
     return new Promise((resolve, reject) => {
         // cho học tạo ra file model.bin
@@ -73,7 +73,7 @@ const trainFastText = (fileInput, fileOutput) => {
 const getFastTextResults = (statement, fileModel, maxReturnLength) => {
     return new Promise((resolve, reject) => {
         FastText.predict(
-            fileModel || __dirname + "/models/model.idea.db.bin"
+            fileModel || __dirname + "/models/model.idea.bin"
             , maxReturnLength || 3
             , [statement]
             , (success, error) => {
