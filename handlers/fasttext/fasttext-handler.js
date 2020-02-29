@@ -21,7 +21,7 @@ const exportDb2Train = (fileOutput) => {
             let writeStream = fs.createWriteStream(trainFile);
             for (let i = 0; i < requests.length; i++) {
                 let el = requests[i];
-                writeStream.write('__label__Idea#' + el.id + ' ' + el.title + "; " + el.description + '\n', 'utf-8');
+                writeStream.write('__label__Idea#' + el.id + ' ' + el.title /* + "; " + el.description */ + '\n', 'utf-8');
             }
             writeStream.on('finish', () => {
                 // console.log('wrote all data to file after end()');

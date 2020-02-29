@@ -1,7 +1,5 @@
-__label__Idea#1 Chủ đề thảo luận số 1; Thành lập văn phòng ý tưởng mới
-__label__Idea#3 chủ đề 2; en ter xuống dòng
-ney
-__label__Idea#4 chủ đề 3 thêm file; có file kèm theo không
-__label__Idea#5 kèm file thật rồi; Đây à các file có thể kèm theo cho nó nhé
-đây mè
-__label__Idea#6 Nhập nội dung file đính kèm ý tưởng thêm vào; Đây là nội dung ý tưởng cần bổ sung thêm
+__label__Idea#1 Chủ đề thảo luận số 1
+__label__Idea#3 chủ đề 2
+__label__Idea#4 chủ đề 3 thêm file
+__label__Idea#5 kèm file thật rồi
+__label__Idea#6 Nhập nội dung file đính kèm ý tưởng thêm vào
