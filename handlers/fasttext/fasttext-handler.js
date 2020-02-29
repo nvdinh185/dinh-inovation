@@ -6,6 +6,7 @@ const FastText = require('node-fasttext');
 
 const arrObj = require('../../utils/array-object');
 
+const vn = require('../../utils/vietnamese-handler');
 
 const db = require('../../db/sqlite3/db-pool');
 
@@ -21,7 +22,10 @@ const exportDb2Train = (fileOutput) => {
             let writeStream = fs.createWriteStream(trainFile);
             for (let i = 0; i < requests.length; i++) {
                 let el = requests[i];
-                writeStream.write('__label__Idea#' + el.id + ' ' + el.title /* + "; " + el.description */ + '\n', 'utf-8');
+                let strTrain = vn.convertPlainText(el.title + ". " + el.description);
+                writeStream.write('__label__Idea#' + el.id + ' ' + strTrain + '\n', 'utf-8');
+                writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain) + '\n', 'utf-8');
+                writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain).toLowerCase() + '\n', 'utf-8');
             }
             writeStream.on('finish', () => {
                 // console.log('wrote all data to file after end()');
@@ -40,7 +44,11 @@ const exportDb2Train = (fileOutput) => {
 // file được huấn luyện. mặc định sẽ lấy tên file như bên dưới
 const trainFastText = (fileInput, fileOutput) => {
     let config = {
-        dim: 100,
+        lr: 0.05,   // learning rate
+        dim: 5,     // size of word vectors (orj 100)
+        ws: 5,      // size of context window
+        epoch: 100, //number of epochs (5'ten 100'e yükseltildi)
+        neg: 5,
         input: fileInput || __dirname + "/data/train.idea.db.txt",
         output: fileOutput || __dirname + "/models/model.idea.db"
     }
