@@ -25,6 +25,7 @@
     "ldapjs": "^1.0.2",
     "ngxi4-dynamic-service": "^2.0.0",
     "node-cron": "^2.0.3",
+    "node-fasttext": "^1.0.0-alpha.1",
     "node-rsa": "^1.0.7",
     "oracledb": "^4.2.0",
     "path": "^0.12.7",

@@ -37,8 +37,12 @@ function main(isHttp, isHttps) {
   // Đây là máy chủ xác thực ldap của mobifone
   app.use('/m-inovation/api/auth', ldap_auth);
   
-  // Máy chủ api giao tiếp giành cho admin phát hành thông báo cước
+  // Máy chủ api giao tiếp cho ý tưởng
   app.use('/m-inovation/api', require('./routes/idea/idea-route-sqlite3'));
+
+  // Máy chủ api cho giao tiếp huấn luyện tiếng việt xử lý ngôn ngữ tự nhiên 
+  // tìm kiếm các chủ đề và nội dung tương tự
+  app.use('/m-inovation/nlp', require('./routes/nlp/idea-route-fasttext'));
 
   //ham tra loi cac dia chi khong co
   //The 404 Route (ALWAYS Keep this as the last route)
