@@ -22,7 +22,7 @@ const exportDb2Train = (fileOutput) => {
             let writeStream = fs.createWriteStream(trainFile);
             for (let i = 0; i < requests.length; i++) {
                 let el = requests[i];
-                let strTrain = vn.convertPlainText(el.title + ". " + el.description);
+                let strTrain = vn.convertPlainText(el.title /* + ". " + el.description */);
                 writeStream.write('__label__Idea#' + el.id + ' ' + strTrain + '\n', 'utf-8');
                 writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain) + '\n', 'utf-8');
                 writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain).toLowerCase() + '\n', 'utf-8');
@@ -47,7 +47,7 @@ const trainFastText = (fileInput, fileOutput) => {
         lr: 0.05,   // learning rate
         dim: 5,     // size of word vectors (orj 100)
         ws: 5,      // size of context window
-        epoch: 100, //number of epochs (5'ten 100'e yükseltildi)
+        epoch: 100, // number of epochs (5'ten 100'e yükseltildi)
         neg: 5,
         input: fileInput || __dirname + "/data/train.idea.db.txt",
         output: fileOutput || __dirname + "/models/model.idea"
