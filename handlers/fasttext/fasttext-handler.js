@@ -45,11 +45,12 @@ const exportDb2Train = (fileOutput) => {
 // file được huấn luyện. mặc định sẽ lấy tên file như bên dưới
 const trainFastText = (fileInput, fileOutput) => {
     let config = {
-        lr: 0.05,   // learning rate
-        dim: 5,     // size of word vectors (orj 100)
-        ws: 5,      // size of context window
-        epoch: 100, // number of epochs (5'ten 100'e yükseltildi)
-        neg: 5,
+        lr: 1.0,    // learning rate (0.05) - tốc độ học - từ 0-1 (0 tức không học, 1 tức học sâu, dữ liệu ít thì học sâu hơn)
+        dim: 5,      // size of word vectors (orj 100) (kích cỡ vector chứa từ, càng lớn là lưu trữ từ càng nhiều, dữ liệu ít thì cửa sổ này bé thôi)
+        ws: 5,       // size of context window (Kích cỡ cửa sổ ngữ cảnh)
+        epoch: 100,  // number of epochs (số lượng lần huấn luyện cho mỗi mẫu tăng từ 5-100, càng huấn luyện nhiều thì độ chính xác càng lớn nếu dữ liệu ít)
+        neg: 5,      // number of negatives sampled (Số lượng mẫu tiêu cực - âm tính)
+        wordNgrams: 2, // max length of word ngram (Kích cỡ từ ghép để tăng ngữ cảnh, default là 1 từ rời, tăng lên sẽ có ý nghĩa cho các từ gần nhau)
         input: fileInput || __dirname + "/data/train.idea.db.txt",
         output: fileOutput || __dirname + "/models/model.idea"
     }
