@@ -44,6 +44,9 @@ function main(isHttp, isHttps) {
   // tìm kiếm các chủ đề và nội dung tương tự
   app.use('/m-inovation/nlp', require('./routes/nlp/idea-route-fasttext'));
 
+  // Máy chủ giao tiếp huấn luyện bot bằng fasttext
+  app.use('/m-inovation/chatbot', require('./routes/chatbot/chatbot-route-fasttext'));
+
   //ham tra loi cac dia chi khong co
   //The 404 Route (ALWAYS Keep this as the last route)
   app.all('*', (req, res) => {

@@ -96,7 +96,7 @@ const getAnswerFromId = (intentId) => {
     return new Promise((resolve, reject) => {
         db.getRsts(`select * from ideas where id = ${intentId}`)
             .then(data => {
-                resolve(data[Math.floor(Math.random() * data.length)].answer)
+                resolve(data[Math.floor(Math.random() * data.length)].title)
             })
             .catch(err => {
                 reject(err);
@@ -108,11 +108,11 @@ const getAnswerFromId = (intentId) => {
 setTimeout(async () => {
     try {
         let exportResult = await exportDb2Train();
-        console.log(arrObj.getTimestamp(), "TRAIN DATA:", exportResult);
+        // console.log(arrObj.getTimestamp(), "TRAIN DATA-IDEA:", exportResult);
         let trainResult = await trainFastText();
-        console.log(arrObj.getTimestamp(), "TRAIN BIN:", trainResult);
+        console.log(arrObj.getTimestamp(), "TRAIN BIN-IDEA - OK");
     } catch (err) {
-        console.error(arrObj.getTimestamp(), "ERROR TRAIN: ", err);
+        console.error(arrObj.getTimestamp(), "ERROR TRAIN-IDEA: ", err);
     }
 }, 1000)
 

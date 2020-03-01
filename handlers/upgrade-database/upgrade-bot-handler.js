@@ -8,7 +8,7 @@
  * 
  */
 
-const db = require('../../db/sqlite3/db-pool');
+const db = require('../../db/sqlite3/db-pool-chatbot');
 
 /**
  * Khai báo các hàm tương tác với csdl
@@ -45,7 +45,7 @@ class Handler {
         if (sql) {
             // tạo câu lệnh json để lưu log
             let jsonLog = {
-                user_id: req.user.id,
+                // user_id: req.user.id,
                 created_time: Date.now(),
                 sql: sql,
                 type: 0,

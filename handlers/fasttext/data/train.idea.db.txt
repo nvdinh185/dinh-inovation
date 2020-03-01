@@ -1,15 +1,15 @@
-__label__Idea#1 Chủ đề thảo luận số 1. Thành lập văn phòng ý tưởng mới
-__label__Idea#1 Chu de thao luan so 1. Thanh lap van phong y tuong moi
-__label__Idea#1 chu de thao luan so 1. thanh lap van phong y tuong moi
-__label__Idea#3 chủ đề 2. en ter xuống dòngney
-__label__Idea#3 chu de 2. en ter xuong dongney
-__label__Idea#3 chu de 2. en ter xuong dongney
-__label__Idea#4 chủ đề 3 thêm file. có file kèm theo không
-__label__Idea#4 chu de 3 them file. co file kem theo khong
-__label__Idea#4 chu de 3 them file. co file kem theo khong
-__label__Idea#5 kèm file thật rồi. Đây à các file có thể kèm theo cho nó nhéđây mè
-__label__Idea#5 kem file that roi. Day a cac file co the kem theo cho no nheday me
-__label__Idea#5 kem file that roi. day a cac file co the kem theo cho no nheday me
-__label__Idea#6 Nhập nội dung file đính kèm ý tưởng thêm vào. Đây là nội dung ý tưởng cần bổ sung thêm
-__label__Idea#6 Nhap noi dung file dinh kem y tuong them vao. Day la noi dung y tuong can bo sung them
-__label__Idea#6 nhap noi dung file dinh kem y tuong them vao. day la noi dung y tuong can bo sung them
+__label__Idea#1 Chủ đề thảo luận số 1
+__label__Idea#1 chủ đề thảo luận số 1
+__label__Idea#1 CHỦ ĐỀ THẢO LUẬN SỐ 1
+__label__Idea#3 chủ đề 2
+__label__Idea#3 chủ đề 2
+__label__Idea#3 CHỦ ĐỀ 2
+__label__Idea#4 chủ đề 3 thêm file
+__label__Idea#4 chủ đề 3 thêm file
+__label__Idea#4 CHỦ ĐỀ 3 THÊM FILE
+__label__Idea#5 kèm file thật rồi
+__label__Idea#5 kèm file thật rồi
+__label__Idea#5 KÈM FILE THẬT RỒI
+__label__Idea#6 Nhập nội dung file đính kèm ý tưởng thêm vào
+__label__Idea#6 nhập nội dung file đính kèm ý tưởng thêm vào
+__label__Idea#6 NHẬP NỘI DUNG FILE ĐÍNH KÈM Ý TƯỞNG THÊM VÀO

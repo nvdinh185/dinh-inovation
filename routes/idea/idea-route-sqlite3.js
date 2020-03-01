@@ -141,13 +141,13 @@ router.post('/mark-idea'
 // lấy log sql
 router.get('/get-sql-logs'
     , jwtTokenVerify                     // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , listHandler.getSqlLogs            
+    , listHandler.getSqlLogs
 )
 
 // lấy danh sách câu hỏi để đánh giá
 router.get('/get-questions'
     , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , listHandler.getQuestions            
+    , listHandler.getQuestions
 )
 
 // thống kê hoạt động thường xuyên đưa vào tôn vinh
@@ -172,15 +172,15 @@ router.get('/get-file-id'
 //------ thực thi lệnh trực tiếp không cho phân quyền --- chỉ dev mới thực thi được
 //1. Thực hiện nâng cấp csdl bằng các câu lệnh sql trực tiếp vào csdl
 router.post('/upgrade-database'
-, jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
-, userHandler.getUserId               // trả về req.user.id và req.user.username
-// dữ liệu lấy câu lệnh ở đây
-, postHandler.jsonProcess // lay json_data
-//chèn yêu cầu phân quyền để thực hiện việc này
-, adminHandler.setFunctionFromPath //thiet lap chuc nang tu pathName
-, adminHandler.checkFunctionRole   //kiem tra quyen co khong de cho phep
-// Gửi câu lệnh sql trực tiếp lên csdl để thực thi
-, upgradeIdeaHandler.upgradeBscKpiDatabase // thực thi lệnh sql
+    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
+    , userHandler.getUserId               // trả về req.user.id và req.user.username
+    // dữ liệu lấy câu lệnh ở đây
+    , postHandler.jsonProcess // lay json_data
+    //chèn yêu cầu phân quyền để thực hiện việc này
+    , adminHandler.setFunctionFromPath //thiet lap chuc nang tu pathName
+    , adminHandler.checkFunctionRole   //kiem tra quyen co khong de cho phep
+    // Gửi câu lệnh sql trực tiếp lên csdl để thực thi
+    , upgradeIdeaHandler.upgradeDatabase // thực thi lệnh sql
 );
 
 module.exports = router;
