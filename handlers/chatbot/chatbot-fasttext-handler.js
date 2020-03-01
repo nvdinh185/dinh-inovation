@@ -199,6 +199,21 @@ class FastTextHandler {
             });
     }
 
+    // trả về dữ liệu ý định
+    getIntents(req, res, next) {
+        db.getRsts(`select * from intents`)
+            .then(result => {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify(result));
+            })
+            .catch(err => {
+                res.status(401).json({
+                    error: err,
+                    message: 'Lỗi lấy dữ liệu huấn luyện'
+                })
+            });
+    }
+
     // 2. Trả về mảng xác suất của mệnh đề nhập vào là gần đúng nhất
     // mục đích sẽ sắp xếp tiêu đề phù hợp nhất theo xác suất các mệnh đề tương tự
     getFastTextPredict(req, res, next) {

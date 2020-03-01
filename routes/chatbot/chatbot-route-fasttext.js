@@ -18,6 +18,11 @@ router.get('/get-trains'
     , chatbotHandler.getTrains
 )
 
+// lấy dữ liệu ý định
+router.get('/get-intents'
+    , chatbotHandler.getIntents
+)
+
 // Gửi lên câu yêu cầu
 // Trả về câu trả lời phù hợp mà máy đã học
 router.post('/request-answer'

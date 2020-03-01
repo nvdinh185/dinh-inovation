@@ -47,24 +47,26 @@ node ./create-chatbot-db-from-excel.js
 ```
 # Sử dụng các lệnh ở client để chat và huấn luyện mô hình như sau
 ```sh
+
+# server: http://localhost:9223;
 # 1. Test dự đoán câu gõ trên trình duyệt cho kết quả xác xuất
-http://localhost:9223/m-inovation/chatbot/get-predict?message=Bạn là con trai hay con gái
+https://c3.mobifone.vn/m-inovation/chatbot/get-predict?message=Bạn là con trai hay con gái
 
 
 # 2. Test câu hỏi để máy trả lời bằng lệnh post
-curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "message": "Xin chào bạn"}' http://localhost:9223/m-inovation/chatbot/request-answer
+curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "message": "Xin chào bạn"}' https://c3.mobifone.vn/m-inovation/chatbot/request-answer
 
 
 # 3. Dạy cho bot học cặp câu hỏi và câu trả lời
-curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "request":"Bạn là con trai hay con gái", "response":"Tôi là người máy, giới tính linh hoạt", "intent_name":"Giới tính"}' http://localhost:9223/m-inovation/chatbot/train-answer
+curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "request":"Bạn là con trai hay con gái", "response":"Tôi là người máy, giới tính linh hoạt", "intent_name":"Giới tính"}' https://c3.mobifone.vn/m-inovation/chatbot/train-answer
 
 
 # 4. Chạy huấn luyện cho bot
-curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "message": "run train"}' http://localhost:9223/m-inovation/chatbot/run-train
+curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "message": "run train"}' https://c3.mobifone.vn/m-inovation/chatbot/run-train
 
 
 # 5. Thử dữ liệu huấn luyện thành công không?
-curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "message": "trai hay gái"}' http://localhost:9223/m-inovation/chatbot/request-answer
+curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "message": "trai hay gái"}' https://c3.mobifone.vn/m-inovation/chatbot/request-answer
 
 # 6. Nâng cấp cơ sở dữ liệu (giành cho developper)
 curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{ "sql": "select id, request, response, intent_name, intent_id, status from bot_logs where status=2 and intent_name is not null"}' http://localhost:9223/m-inovation/chatbot/upgrade-database
