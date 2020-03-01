@@ -23,7 +23,7 @@ export class ChatBotPage implements OnInit {
 
   conversations = [];
 
-  isRepairing:false;
+  isRepairing: boolean = false;
 
   constructor(
     private route: ActivatedRoute
@@ -104,7 +104,7 @@ export class ChatBotPage implements OnInit {
 
   // sửa câu trả lời
   // thì hiển thị câu trả lời ngay ở dưới ô
-  onClickRepair(){
+  onClickRepair() {
     this.isRepairing = true;
   }
 
