@@ -37,12 +37,13 @@ const convertVietnamese2None = (str) => {
 }
 
 // xóa các ký tự xuống dòng cho text, và xóa các thẻ tag <>, #, $, và các ký tự đặc biệt
+// loại bỏ các từ đệm (option)
 const convertPlainText = (str) => {
-    let v_none_chars = `0123456789,._-+\`~/\\$#@()'''`.split("")
+    let v_none_chars = `0123456789,._-+\`'"~/\\$#@(){}`.split("")
     if (typeof str !== "string") return "";
     str = str.replace(/\r?\n|\r/g, '')  // xóa các ký tự xuống dòng
     for (let i = 0; i < v_none_chars.length; i++) {
-        // str = str.replace(new RegExp(v_none_chars[i], "g"),'')
+        str = str.replace(new RegExp(v_none_chars[i], "g"),' ')
     }
     return str;
 }
