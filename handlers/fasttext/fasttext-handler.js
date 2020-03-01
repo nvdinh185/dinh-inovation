@@ -26,9 +26,9 @@ const exportDb2Train = (fileOutput) => {
                 writeStream.write('__label__Idea#' + el.id + ' ' + strTrain + '\n', 'utf-8');
                 writeStream.write('__label__Idea#' + el.id + ' ' + strTrain.toLowerCase() + '\n', 'utf-8');
                 writeStream.write('__label__Idea#' + el.id + ' ' + strTrain.toUpperCase() + '\n', 'utf-8');
-                writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain) + '\n', 'utf-8');
-                writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain).toLowerCase() + '\n', 'utf-8');
-                writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain).toUpperCase() + '\n', 'utf-8');
+                // writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain) + '\n', 'utf-8');
+                // writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain).toLowerCase() + '\n', 'utf-8');
+                // writeStream.write('__label__Idea#' + el.id + ' ' + vn.convertVietnamese2None(strTrain).toUpperCase() + '\n', 'utf-8');
             }
             writeStream.on('finish', () => {
                 // console.log('wrote all data to file after end()');

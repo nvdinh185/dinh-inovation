@@ -43,7 +43,7 @@ const convertPlainText = (str) => {
     if (typeof str !== "string") return "";
     str = str.replace(/\r?\n|\r/g, '')  // xóa các ký tự xuống dòng
     for (let i = 0; i < v_none_chars.length; i++) {
-        str = str.replace(new RegExp(v_none_chars[i], "g"),' ')
+        // str = str.replace(new RegExp(v_none_chars[i], "g"),' ')
     }
     return str;
 }
