@@ -3,6 +3,7 @@ const router = require('express').Router();
 const postHandler = require('../../utils/post-handler');
 
 const chatbotHandler = require('../../handlers/chatbot/chatbot-fasttext-handler');
+const intentHandler = require('../../handlers/chatbot/intents-fasttext-handler');
 
 const upgradeIdeaHandler = require("../../handlers/upgrade-database/upgrade-bot-handler");
 
@@ -47,8 +48,22 @@ router.post('/train-answer'
 router.post('/run-train'
     , postHandler.jsonProcess
     , chatbotHandler.updateTrainSet
+    , intentHandler.runExportTrainBin  // next
     , chatbotHandler.runExportTrainBin
 )
+
+
+// lấy danh mục cho ý định theo xác suất
+// lấy dữ liệu ý định
+router.get('/get-intents-prob'
+    , intentHandler.getFastTextArray
+)
+
+router.get('/get-intents-predict'
+    , intentHandler.getFastTextPredict
+)
+
+
 
 
 //------ thực thi lệnh trực tiếp không cho phân quyền --- chỉ dev mới thực thi được

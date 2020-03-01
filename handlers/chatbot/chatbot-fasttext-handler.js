@@ -1,5 +1,9 @@
 "use strict"
 
+/**
+ * Máy học chatbot
+ */
+
 const fs = require('fs');
 
 const FastText = require('node-fasttext');
@@ -10,6 +14,10 @@ const vn = require('../../utils/vietnamese-handler');
 
 const db = require('../../db/sqlite3/db-pool-chatbot');
 
+const configFiles = {
+    train: '/data/train.bot.db.txt',
+    bin: "/models/model.bot"
+}
 
 // xuất dữ liệu từ bảng requests là bảng mẫu huấn luyện được đánh dấu là các intent_id
 // nếu các câu yêu cầu (request) có nội dung tương tự sẽ có xác suất của intent_id là cao nhất
@@ -18,7 +26,7 @@ const exportDb2Train = (fileOutput) => {
     return new Promise(async (resolve, reject) => {
         try {
             let requests = await db.getRsts(`select intent_id, request, intent_ids from requests`)
-            let trainFile = fileOutput || __dirname + '/data/train.bot.db.txt'
+            let trainFile = fileOutput || __dirname + configFiles.train
             let writeStream = fs.createWriteStream(trainFile);
             for (let i = 0; i < requests.length; i++) {
                 let el = requests[i];
@@ -62,8 +70,8 @@ const trainFastText = (fileInput, fileOutput) => {
         epoch: 100,  // number of epochs (số lượng lần huấn luyện cho mỗi mẫu tăng từ 5-100, càng huấn luyện nhiều thì độ chính xác càng lớn nếu dữ liệu ít)
         neg: 5,      // number of negatives sampled (Số lượng mẫu tiêu cực - âm tính)
         wordNgrams: 2, // max length of word ngram (Kích cỡ từ ghép để tăng ngữ cảnh, default là 1 từ rời, tăng lên sẽ có ý nghĩa cho các từ gần nhau)
-        input: fileInput || __dirname + "/data/train.bot.db.txt",
-        output: fileOutput || __dirname + "/models/model.bot"
+        input: fileInput || __dirname + configFiles.train,
+        output: fileOutput || __dirname + configFiles.bin
     }
     return new Promise((resolve, reject) => {
         // cho học tạo ra file model.bin
@@ -86,7 +94,7 @@ const trainFastText = (fileInput, fileOutput) => {
 const getFastTextResults = (message, fileModel, maxReturnLength) => {
     return new Promise((resolve, reject) => {
         FastText.predict(
-            fileModel || __dirname + "/models/model.bot.bin"
+            fileModel || __dirname + configFiles.bin + ".bin"
             , maxReturnLength || 3
             , [message]
             , (success, error) => {
@@ -119,9 +127,9 @@ setTimeout(async () => {
         let exportResult = await exportDb2Train();
         // console.log(arrObj.getTimestamp(), "TRAIN DATA-CHATBOT:", exportResult);
         let trainResult = await trainFastText();
-        console.log(arrObj.getTimestamp(), "TRAIN BIN - CHATBOT OK");
+        console.log(arrObj.getTimestamp(), "TRAIN BIN - CHATBOT OK", configFiles.bin);
     } catch (err) {
-        console.error(arrObj.getTimestamp(), "ERROR TRAIN - CHATBOT:", err);
+        console.error(arrObj.getTimestamp(), "ERROR TRAIN - CHATBOT:", configFiles.bin, err);
     }
 }, 1000)
 
@@ -256,9 +264,8 @@ class FastTextHandler {
                         created_time: Date.now()
                     }, []))
             } catch (errLog) { console.log(errLog) }
-
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(arrObj.getJsonStringify({ status: "OK", message: answer }));
+            res.end(arrObj.getJsonStringify({ status: "OK", intent_id: tagId === 4 ? 0 : tagId, message: answer }));
         } catch (err) {
             // console.log('Lỗi:', err);
             res.status(401).json({

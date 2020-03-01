@@ -23,6 +23,10 @@ const routes: Routes = [
   {
     path: 'user-activity',
     loadChildren: () => import('./main-entry/home/user-activity/user-activity.module').then( m => m.UserActivityPageModule)
+  },
+  {
+    path: 'chat-bot',
+    loadChildren: () => import('./chatbot/chat-bot/chat-bot.module').then( m => m.ChatBotPageModule)
   }
 ];
 
