@@ -14,6 +14,11 @@ router.get('/get-predict'
     , chatbotHandler.getFastTextPredict
 )
 
+// lệnh dự đoán trả xác suất câu
+router.post('/get-predict'
+    , chatbotHandler.getFastTextPredict
+)
+
 // lấy dữ liệu huấn luyện
 router.get('/get-trains'
     , chatbotHandler.getTrains
