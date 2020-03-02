@@ -39,7 +39,8 @@ git push mf3 --delete <tên nhánh cần xóa>
 ```
 
 
-## Tạo chatbot
+## Tạo chatbot ứng dụng chat bot 
+# server chỉ chạy được trên linux, hiện window bị lỗi cài node-fasttext nhé
 # Tạo danh mục chat ở file excel: ./db/excel/fasttext-chat-bot-sample-ver1.0.xlsx
 # Thực hiện tạo cơ sở dữ liệu chat bằng lệnh
 ``` sh

@@ -35,16 +35,16 @@ export class ChatBotPage implements OnInit {
     this.init();
 
     this.route.queryParams.subscribe(item => {
-      // console.log('item', item);
-      // đọc chi tiết để hiển thị nội dung chi tiết ra
       this.refresh(item)
     });
   }
 
+  // đọc dữ liệu user
   init() {
     this.userInfo = this.mainService.getUserInfo();
   }
 
+  // làm mới trang
   refresh(item) {
     this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.SOCKET_SERVER + '/request-answer'
       , {
@@ -63,7 +63,7 @@ export class ChatBotPage implements OnInit {
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
 
-  // Gửi nội dung comment đi
+  // Gửi nội dung comment đi bằng nút bấm
   onClickSend() {
     if (this.message && this.message.length > 0) {
       this.conversion = {
@@ -94,13 +94,15 @@ export class ChatBotPage implements OnInit {
     }
   }
 
-  keyInput(evt) {
-    if (evt.key === "Enter") {
-      console.log(evt, this.message);
+  // khi bấm enter để gửi lệnh
+  keyInput() {
       this.onClickSend();
-    }
   }
 
+  // bấm vào menu
+  onClickMore(evt){
+
+  }
 
   // sửa câu trả lời
   // thì hiển thị câu trả lời ngay ở dưới ô

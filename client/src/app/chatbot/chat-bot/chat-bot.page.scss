@@ -27,12 +27,26 @@
     border-width: 1px;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
 }
-.comment-backgound{
+
+.bot-backgound{
     position: relative;
+    margin-right: 10px;
     border-radius: 1em;
     opacity: 0.9;
     padding: 8px;
-    background: whitesmoke;
+    background-color: #E5E4E9;
+    color: #363636;
+}
+
+.user-backgound{
+    position: relative;
+    margin-left: 40px;
+    border-radius: 1em;
+    opacity: 0.7;
+    padding: 8px;
+    background-color: #2095FE;
+    color: #fff;
+    text-align: right;
 }
 
 .comment-list{

@@ -36,7 +36,8 @@
       <ion-avatar slot="start">
         <img src="{{userInfo?.avatar}}">
       </ion-avatar>
-      <ion-textarea autosize type="text" placeholder="Nhập câu yêu cầu cho máy .... " [(ngModel)]="message">
+      <ion-textarea autosize type="text" placeholder="Bạn cần tôi giúp gì?" [(ngModel)]="message"
+        (keyup.enter)="keyInput()">
       </ion-textarea>
       <ion-button color="{{(message?'secondary':'light')}}" (click)="onClickSend()" fill="clear" shape="round">
         <ion-icon slot="icon-only" name="send"></ion-icon>
@@ -47,12 +48,12 @@
   <!-- Lịch sử chatbot ở đây -->
   <ion-list class="comment-list">
     <!-- Hiển thị khi người dùng vừa gõ enter gửi đi máy chủ chưa trả lời -->
-    <div *ngIf="!conversion?.response && conversion.request" [style.padding-left]="'20px'">
+    <div *ngIf="!conversion?.response && conversion.request">
       <ion-item lines="none">
-        <ion-avatar slot="start">
+        <ion-avatar slot="end">
           <img src="{{userInfo?.avatar}}">
         </ion-avatar>
-        <ion-label class="ion-text-wrap comment-backgound">
+        <ion-label class="ion-text-wrap user-backgound">
           <strong slot="start">
             {{userInfo.fullname}}
           </strong>
@@ -67,12 +68,12 @@
 
     <!-- Khi máy chủ trả lời thì mặt nhiên nó sẽ ẩn đi và thông tin trả lời đã hiển thị ở mảng rồi -->
     <div *ngFor="let comment of conversations">
-      <div *ngIf="comment?.response" [style.padding-left]="'0px'">
+      <div *ngIf="comment?.response">
         <ion-item lines="none">
           <ion-avatar slot="start">
             <img src="{{chatbot?.avatar}}">
           </ion-avatar>
-          <ion-label class="ion-text-wrap comment-backgound">
+          <ion-label class="ion-text-wrap bot-backgound">
             <strong slot="start">
               {{chatbot?.username}}
             </strong>
@@ -80,18 +81,20 @@
             <ion-label class="ion-text-wrap">
               <div [innerHTML]="comment.response | newline | safe"></div>
             </ion-label>
-            <ion-button (click)="onClickRepair()" slote="end" shape="round" fill="clear" size="small">
-              <ion-icon slot="icon-only" name="ios-create"></ion-icon>
-            </ion-button>
           </ion-label>
+          <!-- Nút này chỉ xuất hiện ở câu chat cuối thôi nhé -->
+          <ion-button *ngIf="conversion.created_time === comment.created_time" (click)="onClickRepair()" slote="end"
+            shape="round" fill="clear" size="small">
+            <ion-icon slot="icon-only" name="ios-create"></ion-icon>
+          </ion-button>
         </ion-item>
       </div>
-      <div *ngIf="comment?.request" [style.padding-left]="'20px'">
+      <div *ngIf="comment?.request">
         <ion-item lines="none">
-          <ion-avatar slot="start">
+          <ion-avatar slot="end">
             <img src="{{userInfo?.avatar}}">
           </ion-avatar>
-          <ion-label class="ion-text-wrap comment-backgound">
+          <ion-label class="ion-text-wrap user-backgound">
             <strong slot="start">
               {{userInfo.fullname}}
             </strong>

@@ -101,6 +101,7 @@ export class AppComponent {
   init() {
     this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER || 'http://localhost:9223/m-inovation/api/auth';
     this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER || 'http://localhost:9223/m-inovation/api';
+    this.apiAuth.serviceUrls.MEDIA_SERVER = environment.MEDIA_SERVER || 'http://localhost:9223/m-inovation/nlp';
     this.apiAuth.serviceUrls.SOCKET_SERVER = environment.SOCKET_SERVER || 'http://localhost:9223/m-inovation/chatbot';
 
     this.apiCommons.subscribe('event-login-ok', (userInfo) => {
