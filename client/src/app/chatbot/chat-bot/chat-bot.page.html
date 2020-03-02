@@ -48,7 +48,7 @@
   <!-- Lịch sử chatbot ở đây -->
   <ion-list class="comment-list">
     <!-- Hiển thị khi người dùng vừa gõ enter gửi đi máy chủ chưa trả lời -->
-    <div *ngIf="!conversion?.response && conversion.request">
+    <div *ngIf="(!conversion?.response || isRepairing) && conversion.request">
       <ion-item lines="none">
         <ion-avatar slot="end">
           <img src="{{userInfo?.avatar}}">
@@ -66,6 +66,17 @@
       <ion-note [style.padding-left]="'100px'"> {{conversion.created_time | timeAgo}} </ion-note>
     </div>
 
+    <!-- Nhập nội dung trả lời sửa lại -->
+    <ion-card *ngIf="isRepairing" class="input-comment">
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img src="{{chatbot?.avatar}}">
+        </ion-avatar>
+        <ion-textarea autosize type="text" placeholder="Nhập câu trả lời" [(ngModel)]="conversion.response">
+        </ion-textarea>
+      </ion-item>
+    </ion-card>
+
     <!-- Khi máy chủ trả lời thì mặt nhiên nó sẽ ẩn đi và thông tin trả lời đã hiển thị ở mảng rồi -->
     <div *ngFor="let comment of conversations">
       <div *ngIf="comment?.response">
@@ -79,13 +90,14 @@
             </strong>
             <br>
             <ion-label class="ion-text-wrap">
-              <div [innerHTML]="comment.response | newline | safe"></div>
+              <div [innerHTML]="(conversion.created_time === comment.created_time?conversion.response:comment.response) | newline | safe"></div>
             </ion-label>
           </ion-label>
           <!-- Nút này chỉ xuất hiện ở câu chat cuối thôi nhé -->
           <ion-button *ngIf="conversion.created_time === comment.created_time" (click)="onClickRepair()" slote="end"
             shape="round" fill="clear" size="small">
-            <ion-icon slot="icon-only" name="ios-create"></ion-icon>
+            <ion-icon slot="icon-only" name="{{isRepairing?'save':'ios-create'}}"
+              color="{{isRepairing?'danger':'secondary'}}"></ion-icon>
           </ion-button>
         </ion-item>
       </div>
