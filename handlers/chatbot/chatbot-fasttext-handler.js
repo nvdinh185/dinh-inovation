@@ -232,7 +232,7 @@ class FastTextHandler {
                 // Nếu tên ý định không phù hợp với câu hỏi, ta có thể huấn luyện lại ý định mới cho đúng hơn
                 for (let i = 0; i < result.length; i++) {
                     let el = result[i];
-                    let intentId = el && el.label && el.label.indeOf("#") > 0 ? el.label.split('#').pop() : 0; // mã ý định không xác định
+                    let intentId = el && el.label && el.label.indexOf("#") > 0 ? el.label.split('#').pop() : 0; // mã ý định không xác định
                     el.intent_id = isNaN(intentId) ? 0 : parseInt(intentId);
                     el.intent = await db.getRst(`select * from intents where id=${el.intent_id}`);
                 }
