@@ -35,8 +35,9 @@
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
 }
 
-.input-answer{
-    // position: relative;
+// Khối dạy học cho máy
+.input-train{
+    position: relative;
     border-radius: 2em;
     opacity: 0.9;
     margin: 15px;
@@ -44,6 +45,14 @@
     border-color: red;
     border-width: 1px;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.input-train .close-button{
+    position: absolute;
+    z-index: 99;
+    top: 0%;
+    left: 90%;
+    font-size: 45px;
 }
 
 .bot-backgound{
@@ -80,22 +89,4 @@
     border-style: solid;
     border-color:black;
     border-width: 1px;
-}
-
-.image-upload-size{
-    position: relative;
-    max-width: 200px;
-    margin: 2px;
-    padding: 3px;
-    border-radius: 0.5em;
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
-}
-
-.image-upload-size .close-button {
-    position: absolute;
-    top: 2%;
-    left: 80%;
-    font-size: 30px;
 }

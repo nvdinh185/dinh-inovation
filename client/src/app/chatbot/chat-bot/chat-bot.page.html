@@ -69,7 +69,16 @@
     </div>
 
     <!-- Nhập nội dung trả lời sửa lại -->
-    <ion-card *ngIf="isRepairing" class="input-answer">
+    <ion-card *ngIf="isRepairing" class="input-train">
+
+      <!-- Nút đóng không chỉnh sửa nằm ở góc trái trên cùng -->
+      <div class='close-button' tappable>
+				<ion-icon slot="icon-only" name="close" color="danger" (click)="onClickClose()"></ion-icon>
+      </div>
+
+      <ion-item color="primary">
+        <ion-label color="light">DẠY CHO MÁY:</ion-label>
+      </ion-item>
 
       <!-- Hiển thị lại nội dung câu hỏi của bạn -->
       <ion-item>
@@ -92,14 +101,14 @@
         <ion-icon slot="start" color="primary" name="logo-reddit"></ion-icon>
         <ion-label position="stacked" class="ion-text-wrap" color="{{(conversion.invalid?'danger':'')}}"
           style="text-align: justify;">
-          Ý định của bạn hỏi gì?
+          Ý định này là gì?(*)
         </ion-label>
         <ion-input type="text" placeholder="Nhập ý định" [(ngModel)]="conversion.intent_name"></ion-input>
       </ion-item>
 
       <!-- Nhập câu trả lời -->
       <ion-item>
-        <ion-label class="form-title-item" color="tertiary">Nhập câu trả lời của bạn cho máy:</ion-label>
+        <ion-label class="form-title-item" color="tertiary">Câu trả lời dạy cho máy (*):</ion-label>
       </ion-item>
       <ion-item class="background-item-round">
         <ion-avatar slot="start">

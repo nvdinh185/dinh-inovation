@@ -16,7 +16,8 @@ const db = require('../../db/sqlite3/db-pool-chatbot');
 
 const configFiles = {
     train: '/data/train.bot.db.txt',
-    bin: "/models/model.bot"
+    bin: "/models/model.bot",
+    probability_threshold: 0.5 // ngưỡng xác suất cho phép trả về kết quả. Nếu xác xuất nhỏ hơn thì trả về ko tìm thấy
 }
 
 // xuất dữ liệu từ bảng requests là bảng mẫu huấn luyện được đánh dấu là các intent_id
@@ -226,7 +227,15 @@ class FastTextHandler {
     // mục đích sẽ sắp xếp tiêu đề phù hợp nhất theo xác suất các mệnh đề tương tự
     getFastTextPredict(req, res, next) {
         getFastTextResults(req.paramS.message || (req.json_data ? req.json_data.message : ''), null, 3)
-            .then(result => {
+            .then(async result => {
+                // xác xuất tính cho mã ý định nào. 
+                // Nếu tên ý định không phù hợp với câu hỏi, ta có thể huấn luyện lại ý định mới cho đúng hơn
+                for (let i = 0; i < result.length; i++) {
+                    let el = result[i];
+                    let intentId = el && el.label && el.label.indeOf("#") > 0 ? el.label.split('#').pop() : 0; // mã ý định không xác định
+                    el.intent_id = isNaN(intentId) ? 0 : parseInt(intentId);
+                    el.intent = await db.getRst(`select * from intents where id=${el.intent_id}`);
+                }
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(arrObj.getJsonStringify(result));
             })
@@ -244,8 +253,12 @@ class FastTextHandler {
         let message = req.paramS.message || (req.json_data ? req.json_data.message : '');
         try {
             let result = await getFastTextResults(message)
-            let itent_id = result[0].label.split('#').pop();
-            let tagId = isNaN(itent_id) ? 4 : parseInt(itent_id) // mã ý định 4 là câu trả lời chưa xác định
+            let el = result[0];
+            let intentId = el.label.split('#').pop();
+            // nếu xác suất > một ngưỡng xác định mới trả kết quả về nhé
+            // xác xuất <50 % thì thôi không trả về mà xem như chưa xác định
+            let tagId = isNaN(intentId) || el.value < configFiles.probability_threshold ? 0 : parseInt(intentId) 
+            // mã ý định 4 là câu trả lời chưa xác định -- Quy định là số này -- hoặc số 0 - tùy vào kịch bản nhé
             let answer = await getAnswerFromId(tagId);
 
             try {

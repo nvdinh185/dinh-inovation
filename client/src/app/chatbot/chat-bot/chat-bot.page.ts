@@ -233,6 +233,11 @@ export class ChatBotPage implements OnInit {
   }
 
 
+  // Đóng cửa sổ huấn luyện
+  onClickClose(){
+    this.isRepairing = false;
+  }
+
 
   /**
    * Gửi lệnh lênh máy chủ thông tin yêu cầu, máy chủ trả về 3 chuỗi xác suất nhé
