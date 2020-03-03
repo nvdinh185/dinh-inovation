@@ -240,6 +240,9 @@ class FastTextHandler {
                 res.end(arrObj.getJsonStringify(result));
             })
             .catch(err => {
+
+                console.log(err);
+                
                 res.status(401).json({
                     error: err,
                     message: 'Lỗi dự đoán mô hình'
