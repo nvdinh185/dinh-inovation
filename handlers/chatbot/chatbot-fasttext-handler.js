@@ -268,7 +268,7 @@ class FastTextHandler {
                         // session_hash:'',
                         request: message,
                         response: answer,
-                        intent_id: itent_id,
+                        intent_id: tagId,
                         machine_response: JSON.stringify(result
                             , (key, value) => {
                                 if (key === "text") return undefined
