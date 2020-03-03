@@ -240,12 +240,10 @@ class FastTextHandler {
                 res.end(arrObj.getJsonStringify(result));
             })
             .catch(err => {
-
-                console.log(err);
-                
+                // console.log(err);
                 res.status(401).json({
-                    error: err,
-                    message: 'Lỗi dự đoán mô hình'
+                    error: err?err.toString():'see logs',
+                    message: 'Lỗi dự đoán xác suất, không xử lý được'
                 })
             });
     }
@@ -260,7 +258,7 @@ class FastTextHandler {
             let intentId = el.label.split('#').pop();
             // nếu xác suất > một ngưỡng xác định mới trả kết quả về nhé
             // xác xuất <50 % thì thôi không trả về mà xem như chưa xác định
-            let tagId = isNaN(intentId) || el.value < configFiles.probability_threshold ? 0 : parseInt(intentId) 
+            let tagId = isNaN(intentId) || el.value < configFiles.probability_threshold ? 4 : parseInt(intentId) 
             // mã ý định 4 là câu trả lời chưa xác định -- Quy định là số này -- hoặc số 0 - tùy vào kịch bản nhé
             let answer = await getAnswerFromId(tagId);
 
@@ -285,7 +283,7 @@ class FastTextHandler {
         } catch (err) {
             // console.log('Lỗi:', err);
             res.status(401).json({
-                error: err,
+                error: err?err.toString():'see logs',
                 message: 'Lỗi tìm kết quả trả lời cho câu yêu cầu'
             })
         }
