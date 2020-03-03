@@ -20,6 +20,14 @@
 </ion-header>
 
 <ion-content>
+
+  <!-- Nút lệnh phía dưới cùng -->
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="secondary" (click)="onClickChatbot()">
+      <ion-icon name="chatbubbles"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
   <!-- Tổ chức kiểu web thì phân định ra bảng kéo dài ra -->
   <ion-grid>
     <ion-row>

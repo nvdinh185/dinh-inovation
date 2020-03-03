@@ -234,7 +234,7 @@ export class ChatBotPage implements OnInit {
 
 
   // Đóng cửa sổ huấn luyện
-  onClickClose(){
+  onClickClose() {
     this.isRepairing = false;
   }
 
@@ -261,14 +261,13 @@ export class ChatBotPage implements OnInit {
       details: []
     }
 
-
     let title = "Câu nói: ";
 
     for (let idx = 0; idx < results.length; idx++) {
       let el = results[idx];
       if (idx === 0) title += el.text;
       details.details.push({
-        name: el.label + " có xác suất:",
+        name: (el.intent && el.intent.name ? el.intent.id + "# " + el.intent.name : el.label),
         value: (el.value * 100).toFixed(2) + "%"
       })
     }

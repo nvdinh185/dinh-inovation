@@ -18,6 +18,16 @@
 <ion-content>
 
   <ion-card class="card-sql">
+    <ion-item>
+      <ion-icon slot="start" color="secondary" name="logo-buffer"></ion-icon>
+      <ion-label color="primary" class="ion-text-wrap"
+        style="text-align: justify;">Chọn cơ sở dữ liệu</ion-label>
+      <ion-select [(ngModel)]="selectedDbLink" style="background-color: lightblue; color:darkred; border-radius: 1em;">
+        <ion-select-option *ngFor="let mySet of dbLinks" value="{{mySet.value}}">{{mySet.name}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
     <ion-item lines="none">
       <ion-avatar slot="start">
         <img src="{{userInfo?.avatar}}">
@@ -29,8 +39,6 @@
       </ion-button>
     </ion-item>
   </ion-card>
-
-
 
   <ion-grid fixed *ngIf="errorMessage">
     <ion-row>
