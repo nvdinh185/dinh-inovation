@@ -13,7 +13,7 @@ export class ChatBotPage implements OnInit {
   chatbot: any = {
     avatar: "assets/imgs/avatar-ai.jpg",
     username: "AI-NLP-Mobifone-C3",
-    fullname: "Tôi là máy học, hiện thôi mới sinh ra, bạn hãy dạy cho tôi học nhé!",
+    fullname: "Tôi là máy học, tôi đang ở độ tuổi đi học, bạn hãy dạy cho tôi học nhé!",
     created_time: Date.now()
   };
 
