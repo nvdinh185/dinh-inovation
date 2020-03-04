@@ -5,8 +5,8 @@
 const SQLiteDAO = require('./db/sqlite3/sqlite-dao');
 
 // Khai báo các file csdl cần export và import vào
-const dbFilenameOld = "./db/database/inovation-manager.v5.db";     //ten database cu
-const dbFilenameNew = "./db/database/inovation-manager.v6.db";     //ten database moi
+const dbFilenameOld = "./db/database/inovation-manager.v6.db";     //ten database cu
+const dbFilenameNew = "./db/database/inovation-manager.v7.db";     //ten database moi
 
 // khai báo các tên bảng cần export và import vào từ cũ qua mới
 const arrTables = [
@@ -30,10 +30,8 @@ setTimeout(() => {
             try {
                 let rsts = await dbOld.getRsts(`select * from ${el}`);
                 // console.log(rsts);
-                if (el !== 'users') {
-                    let executed = await dbNew.runSql(`delete from ${el}`);
-                    console.log(executed);
-                }
+                let executed = await dbNew.runSql(`delete from ${el}`);
+                console.log(executed);
                 let inserted = await dbNew.insertTableData(el, rsts);
                 console.log('insert', el, inserted);
             } catch (e) {
