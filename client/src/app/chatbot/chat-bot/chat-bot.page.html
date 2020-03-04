@@ -36,7 +36,7 @@
   <ion-card *ngIf="!isRepairing" class="input-comment">
     <ion-item lines="none">
       <ion-avatar slot="start">
-        <img src="{{userInfo?.avatar}}">
+        <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
       </ion-avatar>
       <ion-textarea autosize type="text" placeholder="Bạn có yêu cầu gì?" [(ngModel)]="message"
         (keyup.enter)="keyInput()">
@@ -50,14 +50,14 @@
   <!-- Lịch sử chatbot ở đây -->
   <ion-list class="comment-list">
     <!-- Hiển thị khi người dùng vừa gõ enter gửi đi máy chủ chưa trả lời -->
-    <div *ngIf="!conversion?.response && !isRepairing && conversion.request">
+    <div *ngIf="!conversion?.response && !isRepairing && conversion?.request">
       <ion-item lines="none">
         <ion-avatar slot="end">
-          <img src="{{userInfo?.avatar}}">
+          <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
         </ion-avatar>
         <ion-label class="ion-text-wrap user-backgound">
           <strong slot="start">
-            {{userInfo.fullname}}
+            {{userInfo?.fullname}}
           </strong>
           <br>
           <ion-label class="ion-text-wrap">
@@ -65,7 +65,7 @@
           </ion-label>
         </ion-label>
       </ion-item>
-      <ion-note [style.padding-left]="'100px'"> {{conversion.created_time | timeAgo}} </ion-note>
+      <ion-note [style.padding-left]="'100px'"> {{conversion?.created_time | timeAgo}} </ion-note>
     </div>
 
     <!-- Nhập nội dung trả lời sửa lại -->
@@ -83,15 +83,15 @@
       <!-- Hiển thị lại nội dung câu hỏi của bạn -->
       <ion-item>
         <ion-avatar slot="end">
-          <img src="{{userInfo?.avatar}}">
+          <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
         </ion-avatar>
         <ion-label class="ion-text-wrap user-backgound">
           <strong slot="start">
-            {{userInfo.fullname}}
+            {{userInfo?.fullname}}
           </strong>
           <br>
           <ion-label class="ion-text-wrap">
-            <div [innerHTML]="conversion.request | newline | safe"></div>
+            <div [innerHTML]="conversion?.request | newline | safe"></div>
           </ion-label>
         </ion-label>
       </ion-item>
@@ -114,10 +114,10 @@
         <ion-avatar slot="start">
           <img src="{{chatbot?.avatar}}">
         </ion-avatar>
-        <ion-textarea autosize type="text" placeholder="Nhập câu trả lời" color="{{(conversion.response?'':'danger')}}"
+        <ion-textarea autosize type="text" placeholder="Nhập câu trả lời" color="{{(conversion?.response?'':'danger')}}"
           [(ngModel)]="conversion.response">
         </ion-textarea>
-        <ion-button color="{{(conversion.response?'danger':'light')}}" (click)="onClickRepair()" fill="clear"
+        <ion-button color="{{(conversion?.response?'danger':'light')}}" (click)="onClickRepair()" fill="clear"
           shape="round">
           <ion-icon slot="icon-only" name="save"></ion-icon>
         </ion-button>
@@ -156,11 +156,11 @@
       <div *ngIf="comment?.request && (!isRepairing || conversion.created_time !== comment.created_time)">
         <ion-item lines="none">
           <ion-avatar slot="end">
-            <img src="{{userInfo?.avatar}}">
+            <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
           </ion-avatar>
           <ion-label class="ion-text-wrap user-backgound">
             <strong slot="start">
-              {{userInfo.fullname}}
+              {{userInfo?.fullname}}
             </strong>
             <br>
             <ion-label class="ion-text-wrap">

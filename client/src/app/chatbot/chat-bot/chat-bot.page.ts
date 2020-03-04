@@ -145,6 +145,11 @@ export class ChatBotPage implements OnInit {
       }
     ]
 
+    // Nếu user không login thì không cho chạy huấn luyện
+    if (!this.userInfo) {
+      allMenu.splice(2, 1)
+    }
+
     if (!this.conversion || !this.conversion.request) {
       allMenu.splice(1, 1)
     }
