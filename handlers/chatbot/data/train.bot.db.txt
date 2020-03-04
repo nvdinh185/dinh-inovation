@@ -52,9 +52,57 @@ __label__bot#2 XIN CHÚC MỪNG BẠN
 __label__bot#2 Xin chuc mung ban
 __label__bot#2 xin chuc mung ban
 __label__bot#2 XIN CHUC MUNG BAN
-__label__bot#6 Bạn là con trai hay con gái
-__label__bot#6 bạn là con trai hay con gái
-__label__bot#6 BẠN LÀ CON TRAI HAY CON GÁI
-__label__bot#6 Ban la con trai hay con gai
-__label__bot#6 ban la con trai hay con gai
-__label__bot#6 BAN LA CON TRAI HAY CON GAI
+__label__bot#5 Bạn là con trai hay con gái
+__label__bot#5 bạn là con trai hay con gái
+__label__bot#5 BẠN LÀ CON TRAI HAY CON GÁI
+__label__bot#5 Ban la con trai hay con gai
+__label__bot#5 ban la con trai hay con gai
+__label__bot#5 BAN LA CON TRAI HAY CON GAI
+__label__bot#6 B?n l� con trai hay con g�i
+__label__bot#6 b?n l� con trai hay con g�i
+__label__bot#6 B?N L� CON TRAI HAY CON G�I
+__label__bot#6 B?n l� con trai hay con g�i
+__label__bot#6 b?n l� con trai hay con g�i
+__label__bot#6 B?N L� CON TRAI HAY CON G�I
+__label__bot#7 hi
+__label__bot#7 hi
+__label__bot#7 HI
+__label__bot#7 hi
+__label__bot#7 hi
+__label__bot#7 HI
+__label__bot#8 Cảm ơn
+__label__bot#8 cảm ơn
+__label__bot#8 CẢM ƠN
+__label__bot#8 Cam on
+__label__bot#8 cam on
+__label__bot#8 CAM ON
+__label__bot#9 Gói cước c90 là gì
+__label__bot#9 gói cước c90 là gì
+__label__bot#9 GÓI CƯỚC C90 LÀ GÌ
+__label__bot#9 Goi cuoc c90 la gi
+__label__bot#9 goi cuoc c90 la gi
+__label__bot#9 GOI CUOC C90 LA GI
+__label__bot#10 hôm nay là thứ mấy
+__label__bot#10 hôm nay là thứ mấy
+__label__bot#10 HÔM NAY LÀ THỨ MẤY
+__label__bot#10 hom nay la thu may
+__label__bot#10 hom nay la thu may
+__label__bot#10 HOM NAY LA THU MAY
+__label__bot#11 Bạn tên là gì?
+__label__bot#11 bạn tên là gì?
+__label__bot#11 BẠN TÊN LÀ GÌ?
+__label__bot#11 Ban ten la gi?
+__label__bot#11 ban ten la gi?
+__label__bot#11 BAN TEN LA GI?
+__label__bot#11 tên của bạn
+__label__bot#11 tên của bạn
+__label__bot#11 TÊN CỦA BẠN
+__label__bot#11 ten cua ban
+__label__bot#11 ten cua ban
+__label__bot#11 TEN CUA BAN
+__label__bot#5 Tôi là con trai, vậy bạn giới tính là gì?
+__label__bot#5 tôi là con trai, vậy bạn giới tính là gì?
+__label__bot#5 TÔI LÀ CON TRAI, VẬY BẠN GIỚI TÍNH LÀ GÌ?
+__label__bot#5 Toi la con trai, vay ban gioi tinh la gi?
+__label__bot#5 toi la con trai, vay ban gioi tinh la gi?
+__label__bot#5 TOI LA CON TRAI, VAY BAN GIOI TINH LA GI?
