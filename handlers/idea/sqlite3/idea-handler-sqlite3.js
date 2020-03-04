@@ -54,7 +54,10 @@ const saveAttachFiles = (files, userId) => {
 
 class IdeaHandler {
 
-    // 1. lấy thông tin ý tưởng
+    // 1. lấy danh sách ý tưởng hiển thị, sắp xếp ý tưởng có tác động sửa, tạo mới nhất
+    // và chỉ hiển thị những ý tưởng còn hiệu lực thôi
+    // trường hợp người dùng chỉ lọc những ý tưởng liên quan thì truyền lên bộ lọc
+    // Chỉ những ý tưởng của mình quan tâm (tức là các ý tưởng của mình,...)
     getIdeas(req, res, next) {
         db.getRsts(`select 
                         d.fullname || '(' || d.nickname || ')' as username
@@ -70,7 +73,7 @@ class IdeaHandler {
                         left join users d
                         on a.user_id = d.id
                         where c.status_type >1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
-                    order by a.changed_time desc, a.created_time desc`)
+                    order by IFNULL(a.changed_time, a.created_time) desc`)
             .then(result => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(arrObj.getJsonStringify(result));
