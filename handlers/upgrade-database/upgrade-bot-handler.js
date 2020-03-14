@@ -40,7 +40,7 @@ class Handler {
     upgradeDatabase(req, res, next) {
 
         let sql = req.json_data ? req.json_data.sql : undefined;
-        let isSelect = sql ? sql.trimStart().search(/select/i) === 0 : false; //req.json_data ? req.json_data.select : false;
+        let isSelect = sql ? (sql.trimStart().search(/select/i) === 0 || sql.trimStart().search(/with/i) === 0) : false; //req.json_data ? req.json_data.select : false;
 
         if (sql) {
             // tạo câu lệnh json để lưu log
