@@ -26,6 +26,7 @@ export class AppComponent {
     this.height = win.innerHeight;
   }
 
+  // giả lập lấy menu từ máy chủ về
   defaultMenu: any = JSON.stringify([
     {
       id: 1,
@@ -138,9 +139,12 @@ export class AppComponent {
     // đọc lấy từ bảng admin_menu, sau đó thêm vào cây menu để hiển thị
     let menuAfterlogin: any = [];
 
-
+    // menu dành cho người phát triển
     let menuDeveloper: any = [];
 
+    // menu dành cho đội ngũ đánh giá ý tưởng
+    // gồm hội đồng khcn
+    let menuReviewTeam: any = [];
 
     if (this.userInfo) {
       // thực hiện get menu from user
@@ -168,6 +172,25 @@ export class AppComponent {
         ]
       }
 
+      if (
+        this.userInfo.username === "cuong.dq" 
+      || this.userInfo.role === 2 
+      || this.userInfo.role === 3 
+      || this.userInfo.role === 98 
+      || this.userInfo.role === 99 
+      ) {
+        menuReviewTeam = [
+          {
+            id: 39,
+            name: 'Họp xét duyệt',
+            size: '1.1em',
+            type: 'route',             // chuyển trang theo routing
+            url: '/ideas-review',      // chuyển trang theo routing
+            icon: 'ios-people'
+          }
+        ]
+      }
+
     }
 
     let menuAll = JSON.parse(this.defaultMenu);
@@ -176,6 +199,11 @@ export class AppComponent {
       if (!menuAll.find(x => x.id === el.id)) menuAll.splice(1, 0, el)
     });
 
+    
+    menuReviewTeam.forEach(el => {
+      if (!menuAll.find(x => x.id === el.id)) menuAll.splice(menuAll.length, 0, el)
+    });
+    
     menuDeveloper.forEach(el => {
       if (!menuAll.find(x => x.id === el.id)) menuAll.splice(menuAll.length, 0, el)
     });
@@ -226,9 +254,11 @@ export class AppComponent {
 
   /**
    * Bam goi user
+   * Trả thông tin user này cho trang ý tưởng của tôi
+   * Trường hợp người dùng bấm bất kỳ thông tin user nào thì trả qua đúng user_id đó luôn
    */
   onClickUser() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/my-idea'], { queryParams: { id: this.userInfo.id } });
   }
 
 

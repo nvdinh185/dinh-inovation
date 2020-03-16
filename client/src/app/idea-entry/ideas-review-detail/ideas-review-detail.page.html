@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Danh sách đánh giá</ion-title>
+
+    <ion-buttons slot="end" *ngIf="userInfo">
+      <ion-button shape="round" (click)="onClickSearch()">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+</ion-content>

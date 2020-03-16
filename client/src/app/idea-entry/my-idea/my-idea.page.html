@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Ý tưởng của tôi</ion-title>
+
+    <ion-buttons slot="end" *ngIf="userInfo">
+      <ion-button shape="round" (click)="onClickMore()">
+        <ion-icon slot="start" name="more"></ion-icon>
+        Lọc ý tưởng
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+</ion-content>

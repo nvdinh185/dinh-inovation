@@ -9,13 +9,12 @@
 
     <ion-buttons slot="end" *ngIf="userInfo">
       <ion-button shape="round" (click)="onClickAdd()">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Tạo kỳ họp
+        <ion-icon slot="{{(isMobile?'icon-only':'start')}}" name="add"></ion-icon>
+        {{(isMobile?'':'Tạo kỳ họp')}}
       </ion-button>
     </ion-buttons>
 
   </ion-toolbar>
-</ion-header>
 </ion-header>
 
 <ion-content>

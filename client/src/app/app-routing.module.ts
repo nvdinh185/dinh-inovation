@@ -31,6 +31,14 @@ const routes: Routes = [
   {
     path: 'ideas-review',
     loadChildren: () => import('./idea-entry/ideas-review/ideas-review.module').then( m => m.IdeasReviewPageModule)
+  },
+  {
+    path: 'ideas-review-detail',
+    loadChildren: () => import('./idea-entry/ideas-review-detail/ideas-review-detail.module').then( m => m.IdeasReviewDetailPageModule)
+  },
+  {
+    path: 'my-idea',
+    loadChildren: () => import('./idea-entry/my-idea/my-idea.module').then( m => m.MyIdeaPageModule)
   }
 ];
 

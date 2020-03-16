@@ -101,7 +101,11 @@ ionic cordova build ios --prod --release --buildConfig=build.json
 
 # Lệnh tạo trang (Page) trong thư mục lists có tên là IdeasReviewPage
 ``` sh
+ionic g page idea-entry/MyIdea
+
 ionic g page idea-entry/IdeasReview
+
+ionic g page idea-entry/IdeasReviewDetail
 ```
 
 # Lệnh tạo thành phần thẻ (Component) trong thư mục components là PopoverCard
