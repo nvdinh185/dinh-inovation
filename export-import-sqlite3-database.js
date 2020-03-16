@@ -18,6 +18,9 @@ const arrTables = [
     , "ideas_comments"
     , "ideas_interactives"
     , "ideas_attachs"
+    , "ideas_marks"
+    , "ideas_reviews"
+    , "ideas_prizes"
 ]
 
 const dbOld = new SQLiteDAO(dbFilenameOld);
