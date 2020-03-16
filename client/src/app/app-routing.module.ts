@@ -27,6 +27,10 @@ const routes: Routes = [
   {
     path: 'chat-bot',
     loadChildren: () => import('./chatbot/chat-bot/chat-bot.module').then( m => m.ChatBotPageModule)
+  },
+  {
+    path: 'ideas-review',
+    loadChildren: () => import('./idea-entry/ideas-review/ideas-review.module').then( m => m.IdeasReviewPageModule)
   }
 ];
 

@@ -99,9 +99,9 @@ ionic cordova build ios --prod --release --buildConfig=build.json
 # 4. Tạo trang mới:
 # xem lệnh tạo trang, thành phần, thuộc tính, dịch vụ...
 
-# Lệnh tạo trang (Page) trong thư mục lists có tên là JobRolesPage
+# Lệnh tạo trang (Page) trong thư mục lists có tên là IdeasReviewPage
 ``` sh
-ionic g page lists/JobRoles
+ionic g page idea-entry/IdeasReview
 ```
 
 # Lệnh tạo thành phần thẻ (Component) trong thư mục components là PopoverCard
