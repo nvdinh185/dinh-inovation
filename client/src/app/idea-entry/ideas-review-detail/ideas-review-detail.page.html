@@ -18,18 +18,19 @@
   <!-- Chế độ web -->
   <ion-grid fixed *ngIf="!isMobile" class="table-row">
     <ion-row class="table-header">
-      <ion-col>TT</ion-col>
+      <ion-col>ID</ion-col>
       <ion-col *ngFor="let col of returnHeader">{{col.value}}</ion-col>
       <ion-col>Thao tác</ion-col>
     </ion-row>
     <ion-row *ngFor="let row of reviewDetail; let idx=index;">
-      <ion-col class="ion-text-right">{{idx+1}}</ion-col>
+      <ion-col class="ion-text-right"><strong>#{{row.id}}</strong></ion-col>
       <ion-col class="db-output" *ngFor="let col of returnHeader"
         [ngClass]="{'desc-text-wrap': col.key === 'description' || col.key === 'title'}"
         [style.text-align]="(row[col]?.length>0?'left':'right')">
         {{col.key !== 'created_time' ? row[col.key] : row[col.key] | timeAgo}}
       </ion-col>
       <ion-col>
+
         <ion-row>
           <ion-col>
             <ion-button (click)="onClickEvaluate(row)" color="secondary" shape="round">
@@ -40,34 +41,16 @@
             <ion-note color="danger">{{row.value_prize? row.value_prize: 0}}</ion-note>
           </ion-col>
         </ion-row>
+        
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!-- <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Title</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let el of reviewDetail">
-          <td>{{el.id}}</td>
-          <td>{{el.title}}</td>
-          <td>{{el.description}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div> -->
 
   <!-- Chế độ mobile -->
   <ion-list *ngIf="isMobile">
     <ion-item *ngFor="let el of reviewDetail">
       <ion-label class="ion-text-wrap" style="text-align: justify;">
-        <h2>{{el.title}}</h2>
+        <h2><strong>#{{el.id}}</strong>{{el.title}}</h2>
         <p>{{el.description}}</p>
         <ion-note>{{el.created_time | timeAgo}}</ion-note>
       </ion-label>
