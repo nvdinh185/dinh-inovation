@@ -67,7 +67,7 @@ export class IdeasReviewDetailPage implements OnInit {
       .then(data => {
         this.reviewDetail = data;
         this.createHeader();
-        console.log(this.reviewDetail);
+        // console.log(this.reviewDetail);
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
@@ -110,8 +110,8 @@ export class IdeasReviewDetailPage implements OnInit {
         },
         { type: "hidden", key: "idea_id", value: el.id }
         , { type: "hidden", key: "review_id", value: this.reviewId }
-        , { type: "text", key: "value_prize", value: "", name: "Nhập giải thưởng? ", hint: "Nhập số tiền phù hợp (5-200 ký tự)", input_type: "text", icon: "md-help", validators: [{ required: true}] }
-        , { type: "text_area", key: "description", value: "", name: "Mô tả nhận xét của hội đồng", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
+        , { type: "text", key: "value_prize", value: "", name: "Nhập giải thưởng?", hint: "Nhập giá trị của giải thưởng (vd: 200k)", input_type: "text", icon: "md-help", validators: [{ required: true}] }
+        , { type: "text_area", key: "description", value: "", name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
         , { type: "select", key: "idea_status", value: ""+el.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
         , {
           type: 'button'

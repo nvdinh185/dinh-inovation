@@ -22,45 +22,9 @@ __label__int#4 CÂU TRẢ LỜI CHUNG
 __label__int#4 Cau tra loi chung
 __label__int#4 cau tra loi chung
 __label__int#4 CAU TRA LOI CHUNG
-__label__int#5 Giới tính
-__label__int#5 giới tính
-__label__int#5 GIỚI TÍNH
-__label__int#5 Gioi tinh
-__label__int#5 gioi tinh
-__label__int#5 GIOI TINH
-__label__int#6 Gi?i t�nh
-__label__int#6 gi?i t�nh
-__label__int#6 GI?I T�NH
-__label__int#6 Gi?i t�nh
-__label__int#6 gi?i t�nh
-__label__int#6 GI?I T�NH
-__label__int#7 Chào hỏi
-__label__int#7 chào hỏi
-__label__int#7 CHÀO HỎI
-__label__int#7 Chao hoi
-__label__int#7 chao hoi
-__label__int#7 CHAO HOI
-__label__int#8 Cảm ơn
-__label__int#8 cảm ơn
-__label__int#8 CẢM ƠN
-__label__int#8 Cam on
-__label__int#8 cam on
-__label__int#8 CAM ON
-__label__int#9 Gói C90
-__label__int#9 gói c90
-__label__int#9 GÓI C90
-__label__int#9 Goi C90
-__label__int#9 goi c90
-__label__int#9 GOI C90
-__label__int#10 Hỏi ngày tháng
-__label__int#10 hỏi ngày tháng
-__label__int#10 HỎI NGÀY THÁNG
-__label__int#10 Hoi ngay thang
-__label__int#10 hoi ngay thang
-__label__int#10 HOI NGAY THANG
-__label__int#11 Hỏi tên
-__label__int#11 hỏi tên
-__label__int#11 HỎI TÊN
-__label__int#11 Hoi ten
-__label__int#11 hoi ten
-__label__int#11 HOI TEN
+__label__int#6 Giới tính
+__label__int#6 giới tính
+__label__int#6 GIỚI TÍNH
+__label__int#6 Gioi tinh
+__label__int#6 gioi tinh
+__label__int#6 GIOI TINH

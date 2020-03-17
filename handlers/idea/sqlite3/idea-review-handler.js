@@ -91,6 +91,7 @@ class ReviewHandler {
                 res.end(arrObj.getJsonStringify(data));
             })
             .catch(err => {
+                console.log(err);
                 res.status(401).json({
                     message: 'Lỗi lấy số kỳ đánh giá của hội đồng'
                 })
@@ -102,6 +103,7 @@ class ReviewHandler {
                         ideas_eval as
                             (select 
                             c.name as status_type_name
+                            , b.status_type
                             , b.name as status_name
                             , cat.name as category_name
                             , a.* from ideas a
@@ -115,8 +117,8 @@ class ReviewHandler {
                         select b.value_prize, b.description as old_review_result ,a.* from ideas_eval a
                         LEFT JOIN ideas_prizes b
                         on a.id = b.idea_id
-                        and b.review_id = ${(req.paramS.id ? req.paramS.id : 0)} -- chinh la ky hop hoi dong
-                        where a.status in (2,3)
+                        and b.review_id = ${(req.paramS.id ? req.paramS.id : 0)} -- kỳ họp hội đồng
+                        ${(req.paramS.show_all ? ``: `where a.status_type in (2,3)`)} -- chỉ hiển thị các trạng thái còn triển khai tiếp
                         order by b.created_time desc
                     `)
             .then(data => {

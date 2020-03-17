@@ -24,23 +24,17 @@
     </ion-row>
     <ion-row *ngFor="let row of reviewDetail; let idx=index;">
       <ion-col class="ion-text-right">{{idx+1}}</ion-col>
-      <ion-col
-        class="db-output"
-        *ngFor="let col of returnHeader"
+      <ion-col class="db-output" *ngFor="let col of returnHeader"
         [ngClass]="{'desc-text-wrap': col.key === 'description' || col.key === 'title'}"
-        [style.text-align]="(row[col]?.length>0?'left':'right')"
-        >{{col.key !== 'created_time' ? row[col.key] : row[col.key] | timeAgo}}
+        [style.text-align]="(row[col]?.length>0?'left':'right')">
+        {{col.key !== 'created_time' ? row[col.key] : row[col.key] | timeAgo}}
       </ion-col>
       <ion-col>
         <ion-row>
           <ion-col>
-            <ion-button
-            (click)="onClickEvaluate(row)"
-            color="secondary"
-            shape="round"
-          >
-            Đánh giá
-          </ion-button>
+            <ion-button (click)="onClickEvaluate(row)" color="secondary" shape="round">
+              Đánh giá
+            </ion-button>
           </ion-col>
           <ion-col style="text-align: center;">
             <ion-note color="danger">{{row.value_prize? row.value_prize: 0}}</ion-note>
@@ -73,17 +67,14 @@
   <ion-list *ngIf="isMobile">
     <ion-item *ngFor="let el of reviewDetail">
       <ion-label class="ion-text-wrap" style="text-align: justify;">
-        <h1>{{el.title}}</h1>
+        <h2>{{el.title}}</h2>
         <p>{{el.description}}</p>
+        <ion-note>{{el.created_time | timeAgo}}</ion-note>
       </ion-label>
       <table slot="end">
         <tbody>
           <tr>
-            <ion-button
-              (click)="onClickEvaluate(el)"
-              color="secondary"
-              shape="round"
-            >
+            <ion-button (click)="onClickEvaluate(el)" color="secondary" shape="round">
               Đánh giá
             </ion-button>
           </tr>
