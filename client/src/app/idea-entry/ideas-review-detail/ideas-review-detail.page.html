@@ -41,7 +41,7 @@
             <ion-note color="danger">{{row.value_prize? row.value_prize: 0}}</ion-note>
           </ion-col>
         </ion-row>
-        
+
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -50,7 +50,7 @@
   <ion-list *ngIf="isMobile">
     <ion-item *ngFor="let el of reviewDetail">
       <ion-label class="ion-text-wrap" style="text-align: justify;">
-        <h2><strong>#{{el.id}}</strong>{{el.title}}</h2>
+        <h2><strong>#{{el.id}}</strong>. {{el.title}}</h2>
         <p>{{el.description}}</p>
         <ion-note>{{el.created_time | timeAgo}}</ion-note>
       </ion-label>
