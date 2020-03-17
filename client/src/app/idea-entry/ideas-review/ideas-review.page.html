@@ -22,5 +22,15 @@
      Mỗi dòng liệt kê sẽ bố trí các thông tin file đính kèm (nếu có), số lượng idea được đánh giá
      và kết quả khen thưởng 
 -->
-
+<ion-list>
+  <ion-item *ngFor="let rev of reviewList">
+    {{ rev.name }}
+    <ion-button (click)="onClickEvaluate(rev)" slot="end" color="secondary" shape="round">
+      Đánh giá
+    </ion-button>
+    <ion-button (click)="onClickEdit(rev)" slot="end" color="danger" shape="round">
+      Sửa
+    </ion-button>
+  </ion-item>
+</ion-list>
 </ion-content>

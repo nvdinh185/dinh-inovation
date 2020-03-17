@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./my-idea.page.scss'],
 })
 export class MyIdeaPage implements OnInit {
-
+  userInfo: any;
   constructor(
     private route: ActivatedRoute
     , private apiCommons: CommonsService

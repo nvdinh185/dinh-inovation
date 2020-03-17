@@ -1,6 +1,5 @@
 <ion-header>
   <ion-toolbar color="primary">
-
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -12,10 +11,87 @@
         <ion-icon slot="icon-only" name="search"></ion-icon>
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Chế độ web -->
+  <ion-grid fixed *ngIf="!isMobile" class="table-row">
+    <ion-row class="table-header">
+      <ion-col>TT</ion-col>
+      <ion-col *ngFor="let col of returnHeader">{{col.value}}</ion-col>
+      <ion-col>Thao tác</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let row of reviewDetail; let idx=index;">
+      <ion-col class="ion-text-right">{{idx+1}}</ion-col>
+      <ion-col
+        class="db-output"
+        *ngFor="let col of returnHeader"
+        [ngClass]="{'desc-text-wrap': col.key === 'description' || col.key === 'title'}"
+        [style.text-align]="(row[col]?.length>0?'left':'right')"
+        >{{col.key !== 'created_time' ? row[col.key] : row[col.key] | timeAgo}}
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            <ion-button
+            (click)="onClickEvaluate(row)"
+            color="secondary"
+            shape="round"
+          >
+            Đánh giá
+          </ion-button>
+          </ion-col>
+          <ion-col style="text-align: center;">
+            <ion-note color="danger">{{row.value_prize? row.value_prize: 0}}</ion-note>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
+  <!-- <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Title</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let el of reviewDetail">
+          <td>{{el.id}}</td>
+          <td>{{el.title}}</td>
+          <td>{{el.description}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div> -->
+
+  <!-- Chế độ mobile -->
+  <ion-list *ngIf="isMobile">
+    <ion-item *ngFor="let el of reviewDetail">
+      <ion-label class="ion-text-wrap" style="text-align: justify;">
+        <h1>{{el.title}}</h1>
+        <p>{{el.description}}</p>
+      </ion-label>
+      <table slot="end">
+        <tbody>
+          <tr>
+            <ion-button
+              (click)="onClickEvaluate(el)"
+              color="secondary"
+              shape="round"
+            >
+              Đánh giá
+            </ion-button>
+          </tr>
+          <tr style="text-align: center;">
+            <ion-note color="danger">{{el.value_prize}}</ion-note>
+          </tr>
+        </tbody>
+      </table>
+    </ion-item>
+  </ion-list>
 </ion-content>

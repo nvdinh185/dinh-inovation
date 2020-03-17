@@ -10,6 +10,7 @@ const postHandler = require('../../utils/post-handler');
 const userHandler = require('../../handlers/idea/sqlite3/user-handler-sqlite3')
 const listHandler = require('../../handlers/idea/sqlite3/list-handler-sqlite3')
 const ideaHandler = require('../../handlers/idea/sqlite3/idea-handler-sqlite3')
+const reviewIdeaHandler = require('../../handlers/idea/sqlite3/idea-review-handler')
 
 // thực hiện xác thực token user đã được cấp
 const jwtTokenVerify = require('../../handlers/jwt-token-verify');
@@ -156,6 +157,11 @@ router.get('/get-top-actions'
     , listHandler.getActionsList             // trả về danh sách ý tưởng
 )
 
+router.get('/get-all-actions'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getAllUserActions             // trả về danh sách ý tưởng
+)
+
 // get file id array ?id_list=[1,2,3,4]
 router.get('/get-attach-files'
     , jwtTokenVerify                         // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
@@ -182,5 +188,45 @@ router.post('/upgrade-database'
     // Gửi câu lệnh sql trực tiếp lên csdl để thực thi
     , upgradeIdeaHandler.upgradeDatabase // thực thi lệnh sql
 );
+
+router.get('/get-cat-ideas-total'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getCatIdeaTotal
+)
+
+router.get('/get-user-ideas-cat-total'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getCatUserIdeaTotal
+)
+
+// ----- Các hàm liên quan tới chức năng review (đánh giá hội đồng)
+router.post('/add-review'
+    , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
+    , userHandler.getUserId                 // trả về req.user.id và req.user.username
+    // dữ liệu lấy câu lệnh ở đây
+    , postHandler.formProcess               // lay form_data
+    //chèn yêu cầu phân quyền để thực hiện việc này
+    , adminHandler.setFunctionFromPath //thiet lap chuc nang tu pathName
+    , adminHandler.checkFunctionRole   //kiem tra quyen co khong de cho phep
+    // Gửi câu lệnh sql trực tiếp lên csdl để thực thi
+    , reviewIdeaHandler.addReview // thực thi lệnh sql
+);
+
+router.get('/get-reviews'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , reviewIdeaHandler.getReviews
+)
+
+router.get('/get-review-detail'
+    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , reviewIdeaHandler.getReviewDetail
+)
+
+router.post('/add-idea-prize'
+    , jwtTokenVerify                        // nhúng xác thực token trước khi cho xử lý tiếp
+    , userHandler.getUserId                 
+    , postHandler.jsonProcess               // trả về req.json_data {thông tin của idea}
+    , reviewIdeaHandler.addIdeaPrize        // thêm đánh giá ý tưởng
+)
 
 module.exports = router;

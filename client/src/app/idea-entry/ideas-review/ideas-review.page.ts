@@ -4,8 +4,9 @@
  * Chức năng này chỉ phân quyền cho user có role = 2,3,98,99
  */
 import { Component, OnInit } from '@angular/core';
-import { CommonsService, AuthService } from 'ngxi4-dynamic-service';
+import { CommonsService, AuthService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ideas-review',
@@ -17,15 +18,19 @@ export class IdeasReviewPage implements OnInit {
   userInfo: any;
 
   isMobile: boolean;
-  
+
+  reviewList: any;
+
   constructor(
-    private apiCommons: CommonsService
+    private router: Router
+    , private apiCommons: CommonsService
     , private apiAuth: AuthService
     , private mainService: MainService
   ) { }
 
   ngOnInit() {
     this.init();
+    this.refresh();
   }
 
 
@@ -35,11 +40,100 @@ export class IdeasReviewPage implements OnInit {
     this.isMobile = this.apiCommons.isMobile();
   }
 
+  refresh() {
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-reviews', true)
+      .then(data => {
+        this.reviewList = data;
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  onClickEvaluate(rev) {
+    this.router.navigate(['/ideas-review-detail'], { queryParams: {id:rev.id} });
+  }
+
+  onClickEdit(rev) {
+
+  }
+
   /**
    * Tạo một kỳ họp hội đồng
    * 
    */
-  onClickAdd(){
+  onClickAdd() {
+    let form: any = {
+      title: 'Tạo một kỳ họp mới'
+      , buttons: [
+        { color: 'danger', icon: 'close', next: 'CLOSE' }
+      ]
+      ,
+      items: [
+        // Danh sách các trường nhập liệu
+        { type: "text", key: "name", value: "", name: "Nhập tên của kỳ họp? ", hint: "Nhập tên kỳ họp (5-200 ký tự)", input_type: "text", icon: "md-help", validators: [{ required: true, min: 5, max: 200 }] }
+        , { type: "text_area", key: "description", value: "", name: "Mô tả đợt đánh giá: thành phần, hội đồng? Gõ nội dung nhận xét của hội đồng", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
+        , {
+          type: "upload-files", name: "Files đính kèm"
+          , multiple: "multiple"
+          , accept: `image/gif, image/jpeg, image/png
+                , application/pdf
+                , .txt, .md, .zip, .tar
+                , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel
+                , application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document`}
+        , {
+          type: 'button'
+          , options: [
+            {
+              name: 'Tạo mới kỳ họp'    // button name
+              , next: 'CALLBACK'         // callback get resulte or json
+              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/add-review', type: "FORM-DATA", token: true
+              , command: 'ADD-REVIEW'          // extra parameter for callback process
+            }
+          ]
+        }
+      ]
+    }
+    // call popup window for form login
+    this.apiCommons.openModal(DynamicFormMobilePage,
+      {
+        parent: this,  // for dismiss child component
+        callback: this.callbackProcess, //function for callback process result of form
+        form: form    // form dynamic 
+      }
+    );
 
   }
+
+  // hàm gọi lại xử lý form popup
+  callbackProcess = function (res) {
+    // allway return Promise for callback
+    return new Promise<any>((resolve, reject) => {
+
+      // console.log(res);
+
+      if (res.error) {
+        //If error 
+        this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
+
+      } else if (res.response_data) {
+        // Data return when server response or sqlite app respone
+        // next="CALLBACK", url="http://..." [,token: true | wzI...]
+        if (res.button.command === "ADD-REVIEW") {
+          // Do any for command
+          this.refresh();
+
+        }
+        if (res.button.command === "EDIT-REVIEW") {
+          // Do any for command
+          this.refresh();
+        }
+
+      }
+
+      // close form
+      resolve({ next: "CLOSE" });
+
+    });
+  }.bind(this);
 }
