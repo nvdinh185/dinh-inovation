@@ -26,6 +26,7 @@ export class IdeasReviewDetailPage implements OnInit {
   returnHeader: any;
   parameters: any;
   reviewId: any;
+  ajaxReturn: any;
 
   constructor(private route: ActivatedRoute
     , private apiCommons: CommonsService
@@ -47,12 +48,12 @@ export class IdeasReviewDetailPage implements OnInit {
   createHeader() {
     let returnHeader = Object.keys(this.reviewDetail[0]);
     this.returnHeader = [
-      {key: 'title', value: 'Chủ đề'},
-      {key: 'description', value: 'Mô tả'},
-      {key: 'category_name', value: 'Chủ đề'},
-      {key: 'status_name', value: 'Lĩnh vực'},
-      {key: 'created_time', value: 'Ngày tạo'},
-      {key: 'value_prize', value: 'Giải thưởng'},
+      { key: 'title', value: 'Chủ đề' },
+      { key: 'description', value: 'Mô tả' },
+      { key: 'category_name', value: 'Chủ đề' },
+      { key: 'status_name', value: 'Lĩnh vực' },
+      { key: 'created_time', value: 'Ngày tạo' },
+      { key: 'value_prize', value: 'Giải thưởng' },
     ];
   }
 
@@ -69,7 +70,7 @@ export class IdeasReviewDetailPage implements OnInit {
         this.createHeader();
         // console.log(this.reviewDetail);
       })
-      .catch(err => console.log('Lỗi lấy chi tiết', err))
+      .catch(err => console.log('Lỗi lấy chi tiết', err));
   }
 
   // Hiển thị tìm kiếm
@@ -95,7 +96,7 @@ export class IdeasReviewDetailPage implements OnInit {
           type: "details",
           details: [
             {
-              name: "Chủ đề #" + el.id ,
+              name: "Chủ đề #" + el.id,
               value: el.title
             },
             {
@@ -110,9 +111,9 @@ export class IdeasReviewDetailPage implements OnInit {
         },
         { type: "hidden", key: "idea_id", value: el.id }
         , { type: "hidden", key: "review_id", value: this.reviewId }
-        , { type: "text", key: "value_prize", value: "", name: "Nhập giải thưởng?", hint: "Nhập giá trị của giải thưởng (vd: 200k)", input_type: "text", icon: "md-help", validators: [{ required: true}] }
-        , { type: "text_area", key: "description", value: "", name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
-        , { type: "select", key: "idea_status", value: ""+el.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
+        , { type: "select", key: "idea_status", value: "" + el.status, name: "Chuyển trạng thái", icon: "clock", options: statusOptions, color: "secondary" }
+        , { type: "text", key: "value_prize", value: el.value_prize, name: "Nhập giải thưởng?", hint: "Nhập giá trị của giải thưởng (vd: 200k)", input_type: "text", icon: "md-help", validators: [{ required: true }] }
+        , { type: "text_area", key: "description", value: el.description, name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
         , {
           type: 'button'
           , options: [
@@ -147,7 +148,24 @@ export class IdeasReviewDetailPage implements OnInit {
       if (res.error) {
         //If error 
         this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
-
+      } else if (res.ajax) {
+        // console.log(res);
+        // this.dynamicCallback(res.ajax);
+        let selectOption = res.ajax.options.find(x => "" + x.value === "" + res.ajax.value);
+        let ajaxReturnPrize = {
+          key: 'value_prize',
+          property_name: 'value',
+          new_data: selectOption && selectOption.ajax_default ? selectOption.ajax_default.value_prize : ""
+        }
+        let ajaxReturnDesc = {
+          key: 'description',
+          property_name: 'value',
+          new_data: selectOption && selectOption.ajax_default ? selectOption.ajax_default.description : ""
+        }
+        // let testArr = [ajaxReturnPrize, ajaxReturnDesc];
+        // console.log(testArr);
+        resolve([ajaxReturnPrize, ajaxReturnDesc]);
+        return;
       } else if (res.response_data) {
         // Data return when server response or sqlite app respone
         // next="CALLBACK", url="http://..." [,token: true | wzI...]
@@ -163,4 +181,5 @@ export class IdeasReviewDetailPage implements OnInit {
 
     });
   }.bind(this);
+
 }

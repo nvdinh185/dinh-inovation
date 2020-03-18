@@ -24,7 +24,11 @@
 -->
 <ion-list>
   <ion-item *ngFor="let rev of reviewList">
-    {{ rev.name }}
+    <ion-label class="ion-text-wrap" style="text-align: justify;">
+      <h2>{{ rev.name }}</h2>
+      <p [innerHTML]="rev.description | newline | safe"></p>
+      <ion-note>{{rev.created_time | timeAgo}}</ion-note>
+    </ion-label>
     <ion-button (click)="onClickEvaluate(rev)" slot="end" color="secondary" shape="round">
       Đánh giá
     </ion-button>

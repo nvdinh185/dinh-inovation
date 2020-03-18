@@ -45,7 +45,7 @@ const saveAttachFiles = (files, userId) => {
 class ReviewHandler {
 
     /**
-     * 1. Tạo mới kỳ họp
+     * 1. Tạo mới kỳ họp hoặc sửa
      */
     async addReview(req, res, next) {
 
@@ -64,19 +64,34 @@ class ReviewHandler {
 
         // xóa cột gia tăng file nếu có
         delete reviewInfo["count_file"];
-
-        db.insert(arrObj.convertSqlFromJson("ideas_reviews", reviewInfo))
-            .then(data => {
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(arrObj.getJsonStringify({ status: "OK", message: "Tạo mới thành công" }));
-            })
-            .catch(err => {
-                console.log('Lỗi tạo user mới', err);
-                res.status(401).json({
-                    message: 'Lỗi tạo user mới, liên hệ quản trị hệ thống',
-                    error: err
+        if (reviewInfo.id > 0) {
+            // Trường hợp sửa
+            db.update(arrObj.convertSqlFromJson("ideas_reviews", reviewInfo, ['id']))
+                .then(data => {
+                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                    res.end(arrObj.getJsonStringify({ status: "OK", message: "Tạo mới thành công" }));
                 })
-            });
+                .catch(err => {
+                    console.log('Lỗi sửa kỳ họp', err);
+                    res.status(401).json({
+                        message: 'Lỗi sửa kỳ họp, liên hệ quản trị hệ thống',
+                        error: err
+                    })
+                });
+        } else {
+            db.insert(arrObj.convertSqlFromJson("ideas_reviews", reviewInfo))
+                .then(data => {
+                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                    res.end(arrObj.getJsonStringify({ status: "OK", message: "Tạo mới thành công" }));
+                })
+                .catch(err => {
+                    console.log('Lỗi tạo kỳ họp mới', err);
+                    res.status(401).json({
+                        message: 'Lỗi tạo kỳ họp mới, liên hệ quản trị hệ thống',
+                        error: err
+                    })
+                });
+        }
 
     }
 
@@ -118,7 +133,7 @@ class ReviewHandler {
                         LEFT JOIN ideas_prizes b
                         on a.id = b.idea_id
                         and b.review_id = ${(req.paramS.id ? req.paramS.id : 0)} -- kỳ họp hội đồng
-                        ${(req.paramS.show_all ? ``: `where a.status_type in (2,3)`)} -- chỉ hiển thị các trạng thái còn triển khai tiếp
+                        ${(req.paramS.show_all ? `` : `where a.status_type in (2,3)`)} -- chỉ hiển thị các trạng thái còn triển khai tiếp
                         order by b.created_time desc
                     `)
             .then(data => {
@@ -158,20 +173,24 @@ class ReviewHandler {
         }
         let ideaRow;
         try {
-            ideaRow = await db.getRst(` select status_chain
+            ideaRow = await db.getRst(` select status_chain, status
                                             from ideas
                                             where id = ${(ideaPrize.idea_id)}
                                             `)
 
         } catch { }
         let oldStatusChain = ideaRow && ideaRow.status_chain ? JSON.parse(ideaRow.status_chain) : [];
-        oldStatusChain.push({
-            user_name: req.user.username,
-            description: ideaPrize.description,
-            value_prize: ideaPrize.value_prize,
-            changed_time: Date.now(),
-            status: ideaPrize.idea_status
-        })
+        // Nếu trong trường hợp bản ghi cuối (trong status_chain) mà trạng thái = trạng thái muốn thay đổi
+        // => 
+        if (ideaRow.status === ideaPrize.idea_status) {
+            oldStatusChain.push({
+                user_name: req.user.username,
+                description: ideaPrize.description,
+                value_prize: ideaPrize.value_prize,
+                changed_time: Date.now(),
+                status: ideaPrize.idea_status
+            })
+        }
         // Lưu vài bảng ideas 
         let ideaJson = {
             id: ideaPrize.idea_id,
@@ -182,7 +201,7 @@ class ReviewHandler {
             changed_username: req.user.username,
             status_chain: JSON.stringify(oldStatusChain)
         }
-        
+
         try {
             let res = await db.update(db.convertSqlFromJson('ideas', ideaJson, ['id']))
             // console.log(res, ideaJson.id);
