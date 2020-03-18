@@ -8,6 +8,7 @@ import { IdeasReviewDetailPageRoutingModule } from './ideas-review-detail-routin
 
 import { IdeasReviewDetailPage } from './ideas-review-detail.page';
 import { SharedModule } from 'src/app/shared.module';
+import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { SharedModule } from 'src/app/shared.module';
     IonicModule,
     IdeasReviewDetailPageRoutingModule,
     SharedModule,
+    Ngxi4DynamicServiceModule
   ],
   declarations: [IdeasReviewDetailPage]
 })

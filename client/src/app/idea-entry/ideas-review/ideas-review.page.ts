@@ -55,7 +55,46 @@ export class IdeasReviewPage implements OnInit {
   }
 
   onClickEdit(rev) {
-
+    let form: any = {
+      title: 'Sửa thông tin kỳ họp'
+      , buttons: [
+        { color: 'danger', icon: 'close', next: 'CLOSE' }
+      ]
+      ,
+      items: [
+        // Danh sách các trường nhập liệu
+        { type: "hidden", key: "id", value: rev.id }
+        , { type: "text", key: "name", value: rev.name, name: "Tên kỳ họp", hint: "Nhập tên kỳ họp (5-200 ký tự)", input_type: "text", icon: "md-help", validators: [{ required: true, min: 5, max: 200 }] }
+        , { type: "text_area", key: "description", value: rev.description, name: "Mô tả đợt đánh giá: thành phần, hội đồng? Gõ nội dung nhận xét của hội đồng", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
+        , {
+          type: "upload-files", name: "Thêm file đính kèm"
+          , multiple: "multiple"
+          , accept: `image/gif, image/jpeg, image/png
+                , application/pdf
+                , .txt, .md, .zip, .tar
+                , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel
+                , application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document`}
+        , {
+          type: 'button'
+          , options: [
+            {
+              name: 'Sửa kỳ họp'    // button name
+              , next: 'CALLBACK'         // callback get resulte or json
+              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/add-review', type: "FORM-DATA", token: true
+              , command: 'EDIT-REVIEW'          // extra parameter for callback process
+            }
+          ]
+        }
+      ]
+    }
+    // call popup window for form login
+    this.apiCommons.openModal(DynamicFormMobilePage,
+      {
+        parent: this,  // for dismiss child component
+        callback: this.callbackProcess, //function for callback process result of form
+        form: form    // form dynamic 
+      }
+    );
   }
 
   /**
