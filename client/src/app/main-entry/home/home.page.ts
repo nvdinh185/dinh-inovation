@@ -42,10 +42,12 @@ export class HomePage implements OnInit {
     , private mainService: MainService
   ) { }
 
+  // khi trang bắt đầu load
   ngOnInit() {
     this.init();
   }
 
+  // khởi tạo trang chủ ban đầu
   init() {
 
     setTimeout(()=>{
@@ -63,8 +65,14 @@ export class HomePage implements OnInit {
       });
   }
 
+  // gọi đến trang login
   onClickLogin(){
     this.router.navigate(['/login']);
+  }
+  
+  // Gọi đến trang chat-bot
+  onClickChatbot(){
+    this.router.navigate(['/chat-bot']);
   }
 
 }

@@ -5,6 +5,7 @@
 *.sw[mnpcod]
 *.log
 *.tmp
+*.bin
 *.tmp.*
 log.txt
 *.sublime-project
@@ -67,3 +68,6 @@ UserInterfaceState.xcuserstate
 #.gitignore
 
 package-lock.json
+
+
+Quan-ly-y-tuong- MobiFone.*.xlsx

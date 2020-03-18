@@ -28,6 +28,14 @@ export class UpgradePage implements OnInit {
   maxShow: number = 10;   // hiển thị tối đa 10 bảng ghi
   totalCount: number = 0; // Số lượng bảng ghi còn ẩn không view
 
+  selectedDbLink: string = this.apiAuth.serviceUrls.RESOURCE_SERVER;
+
+  // các link cơ sở dữ liệu có chức năng nâng cấp
+  dbLinks = [
+    {name:'CSDL ý tưởng', value: this.apiAuth.serviceUrls.RESOURCE_SERVER},
+    {name:'CSDL chatbot', value: this.apiAuth.serviceUrls.SOCKET_SERVER}
+  ]
+
   constructor(
     private router: Router
     , private apiAuth: AuthService
@@ -72,7 +80,7 @@ export class UpgradePage implements OnInit {
     this.returnArray = undefined
     this.returnHeader = undefined
 
-    this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/upgrade-database', { sql: this.sqlString }, true)
+    this.apiAuth.postDynamicJson(this.selectedDbLink + '/upgrade-database', { sql: this.sqlString }, true)
       .then(data => {
         if (data && data.status === "OK" && data.message) {
           this.returnMessage = data.message
@@ -87,7 +95,7 @@ export class UpgradePage implements OnInit {
           } else {
             this.returnArrayViewer = this.returnArray
           }
-        } else {
+        } else if (data && Array.isArray(data)){
           // console.log(data);
           this.returnMessage = "Không tìm thấy bảng ghi nào"
         }

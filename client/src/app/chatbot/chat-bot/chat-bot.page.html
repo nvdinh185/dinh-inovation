@@ -1,0 +1,176 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>AI-Trò chuyên với máy</ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item lines="none" class="idea-created">
+    <ion-avatar slot="start">
+      <img src="{{chatbot?.avatar}}">
+    </ion-avatar>
+    <ion-label class="ion-text-wrap">
+      <strong slot="start">
+        {{chatbot?.username}}
+      </strong>
+      <br>
+      {{chatbot?.fullname}}
+      <br>
+      <ion-note>{{chatbot?.created_time | timeAgo}}</ion-note>
+    </ion-label>
+    <ion-button (click)="onClickMore($event)" slote="end" shape="round" fill="clear" size="small">
+      <ion-icon slot="icon-only" name="ios-more"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+
+
+  <!-- Nhập nội dung câu hỏi yêu cầu cho máy -->
+  <ion-card *ngIf="!isRepairing" class="input-comment">
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
+      </ion-avatar>
+      <ion-textarea autosize type="text" placeholder="Bạn có yêu cầu gì?" [(ngModel)]="message"
+        (keyup.enter)="keyInput()">
+      </ion-textarea>
+      <ion-button color="{{(message?'secondary':'light')}}" (click)="onClickSend()" fill="clear" shape="round">
+        <ion-icon slot="icon-only" name="send"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-card>
+
+  <!-- Lịch sử chatbot ở đây -->
+  <ion-list class="comment-list">
+    <!-- Hiển thị khi người dùng vừa gõ enter gửi đi máy chủ chưa trả lời -->
+    <div *ngIf="!conversion?.response && !isRepairing && conversion?.request">
+      <ion-item lines="none">
+        <ion-avatar slot="end">
+          <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
+        </ion-avatar>
+        <ion-label class="ion-text-wrap user-backgound">
+          <strong slot="start">
+            {{userInfo?.fullname}}
+          </strong>
+          <br>
+          <ion-label class="ion-text-wrap">
+            <div [innerHTML]="conversion.request | newline | safe"></div>
+          </ion-label>
+        </ion-label>
+      </ion-item>
+      <ion-note [style.padding-left]="'100px'"> {{conversion?.created_time | timeAgo}} </ion-note>
+    </div>
+
+    <!-- Nhập nội dung trả lời sửa lại -->
+    <ion-card *ngIf="isRepairing" class="input-train">
+
+      <!-- Nút đóng không chỉnh sửa nằm ở góc trái trên cùng -->
+      <div class='close-button' tappable>
+				<ion-icon slot="icon-only" name="close" color="danger" (click)="onClickClose()"></ion-icon>
+      </div>
+
+      <ion-item color="primary">
+        <ion-label color="light">DẠY CHO MÁY:</ion-label>
+      </ion-item>
+
+      <!-- Hiển thị lại nội dung câu hỏi của bạn -->
+      <ion-item>
+        <ion-avatar slot="end">
+          <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
+        </ion-avatar>
+        <ion-label class="ion-text-wrap user-backgound">
+          <strong slot="start">
+            {{userInfo?.fullname}}
+          </strong>
+          <br>
+          <ion-label class="ion-text-wrap">
+            <div [innerHTML]="conversion?.request | newline | safe"></div>
+          </ion-label>
+        </ion-label>
+      </ion-item>
+
+      <!-- Lựa chọn ý định hoặc nhập ý định -->
+      <ion-item class="background-item-round">
+        <ion-icon slot="start" color="primary" name="logo-reddit"></ion-icon>
+        <ion-label position="stacked" class="ion-text-wrap" color="{{(conversion.invalid?'danger':'')}}"
+          style="text-align: justify;">
+          Ý định này là gì?(*)
+        </ion-label>
+        <ion-input type="text" placeholder="Nhập ý định" [(ngModel)]="conversion.intent_name"></ion-input>
+      </ion-item>
+
+      <!-- Nhập câu trả lời -->
+      <ion-item>
+        <ion-label class="form-title-item" color="tertiary">Câu trả lời dạy cho máy (*):</ion-label>
+      </ion-item>
+      <ion-item class="background-item-round">
+        <ion-avatar slot="start">
+          <img src="{{chatbot?.avatar}}">
+        </ion-avatar>
+        <ion-textarea autosize type="text" placeholder="Nhập câu trả lời" color="{{(conversion?.response?'':'danger')}}"
+          [(ngModel)]="conversion.response">
+        </ion-textarea>
+        <ion-button color="{{(conversion?.response?'danger':'light')}}" (click)="onClickRepair()" fill="clear"
+          shape="round">
+          <ion-icon slot="icon-only" name="save"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+
+
+    </ion-card>
+
+    <!-- Khi máy chủ trả lời thì mặt nhiên nó sẽ ẩn đi và thông tin trả lời đã hiển thị ở mảng rồi -->
+    <div *ngFor="let comment of conversations">
+
+      <div *ngIf="comment?.response && (!isRepairing || conversion.created_time !== comment.created_time)">
+        <ion-item lines="none">
+          <ion-avatar slot="start">
+            <img src="{{chatbot?.avatar}}">
+          </ion-avatar>
+          <ion-label class="ion-text-wrap bot-backgound">
+            <strong slot="start">
+              {{chatbot?.username}}
+            </strong>
+            <br>
+            <ion-label class="ion-text-wrap">
+              <div [innerHTML]="comment.response | newline | safe"></div>
+            </ion-label>
+          </ion-label>
+          <!-- Nút này chỉ xuất hiện ở câu chat cuối thôi nhé -->
+          <ion-button *ngIf="conversion.created_time === comment.created_time" (click)="onClickRepair()" slote="end"
+            shape="round" fill="clear" size="small">
+            <ion-icon slot="icon-only" name="{{isRepairing?'save':'ios-create'}}"
+              color="{{isRepairing?'danger':'secondary'}}"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </div>
+
+      <div *ngIf="comment?.request && (!isRepairing || conversion.created_time !== comment.created_time)">
+        <ion-item lines="none">
+          <ion-avatar slot="end">
+            <img src="{{(userInfo?.avatar?userInfo.avatar:'assets/imgs/avatar.jpg')}}">
+          </ion-avatar>
+          <ion-label class="ion-text-wrap user-backgound">
+            <strong slot="start">
+              {{userInfo?.fullname}}
+            </strong>
+            <br>
+            <ion-label class="ion-text-wrap">
+              <div [innerHTML]="comment.request | newline | safe"></div>
+            </ion-label>
+          </ion-label>
+        </ion-item>
+        <ion-note [style.padding-left]="'100px'"> {{comment.created_time | timeAgo}} </ion-note>
+      </div>
+    </div>
+  </ion-list>
+
+</ion-content>

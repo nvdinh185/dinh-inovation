@@ -23,6 +23,22 @@ const routes: Routes = [
   {
     path: 'user-activity',
     loadChildren: () => import('./main-entry/home/user-activity/user-activity.module').then( m => m.UserActivityPageModule)
+  },
+  {
+    path: 'chat-bot',
+    loadChildren: () => import('./chatbot/chat-bot/chat-bot.module').then( m => m.ChatBotPageModule)
+  },
+  {
+    path: 'ideas-review',
+    loadChildren: () => import('./idea-entry/ideas-review/ideas-review.module').then( m => m.IdeasReviewPageModule)
+  },
+  {
+    path: 'ideas-review-detail',
+    loadChildren: () => import('./idea-entry/ideas-review-detail/ideas-review-detail.module').then( m => m.IdeasReviewDetailPageModule)
+  },
+  {
+    path: 'my-idea',
+    loadChildren: () => import('./idea-entry/my-idea/my-idea.module').then( m => m.MyIdeaPageModule)
   }
 ];
 

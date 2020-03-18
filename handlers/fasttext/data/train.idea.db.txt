@@ -1,0 +1,15 @@
+__label__Idea#1 Chủ đề thảo luận số 1
+__label__Idea#1 chủ đề thảo luận số 1
+__label__Idea#1 CHỦ ĐỀ THẢO LUẬN SỐ 1
+__label__Idea#3 chủ đề 2
+__label__Idea#3 chủ đề 2
+__label__Idea#3 CHỦ ĐỀ 2
+__label__Idea#4 chủ đề 3 thêm file
+__label__Idea#4 chủ đề 3 thêm file
+__label__Idea#4 CHỦ ĐỀ 3 THÊM FILE
+__label__Idea#5 kèm file thật rồi
+__label__Idea#5 kèm file thật rồi
+__label__Idea#5 KÈM FILE THẬT RỒI
+__label__Idea#6 Nhập nội dung file đính kèm ý tưởng thêm vào
+__label__Idea#6 nhập nội dung file đính kèm ý tưởng thêm vào
+__label__Idea#6 NHẬP NỘI DUNG FILE ĐÍNH KÈM Ý TƯỞNG THÊM VÀO

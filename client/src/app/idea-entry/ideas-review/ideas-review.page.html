@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Họp hội đồng</ion-title>
+
+    <ion-buttons slot="end" *ngIf="userInfo">
+      <ion-button shape="round" (click)="onClickAdd()">
+        <ion-icon slot="{{(isMobile?'icon-only':'start')}}" name="add"></ion-icon>
+        {{(isMobile?'':'Tạo kỳ họp')}}
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<!-- Liệt kê 20 kỳ đánh giá gần nhất, nếu kéo xuống nữa thì đọc tiếp csdl và bổ sung vào 
+     Mỗi dòng liệt kê sẽ bố trí các thông tin file đính kèm (nếu có), số lượng idea được đánh giá
+     và kết quả khen thưởng 
+-->
+<ion-list>
+  <ion-item *ngFor="let rev of reviewList">
+    {{ rev.name }}
+    <ion-button (click)="onClickEvaluate(rev)" slot="end" color="secondary" shape="round">
+      Đánh giá
+    </ion-button>
+    <ion-button (click)="onClickEdit(rev)" slot="end" color="danger" shape="round">
+      Sửa
+    </ion-button>
+  </ion-item>
+</ion-list>
+</ion-content>

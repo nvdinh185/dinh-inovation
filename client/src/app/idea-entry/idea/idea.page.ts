@@ -105,6 +105,9 @@ export class IdeaPage implements OnInit {
     // Đã có danh sách ý tưởng mới lấy được từ csdl rồi
   }
 
+  onClickChatbot(){
+    this.router.navigate(['/chat-bot']);
+  }
 
   // Hàm gọi trang login
   onClickLogin(){

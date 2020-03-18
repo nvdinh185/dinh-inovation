@@ -89,6 +89,8 @@ const getJsonStringify = (jsonObj) => {
                 || key === "cur_organization_history"
                 || key === "attach_id_list"
                 || key === "status_chain"
+                || key === "intent_ids"
+                || key === "machine_response"
                 )
                 && value !== null
                 && value.length > 0) return JSON.parse(value)

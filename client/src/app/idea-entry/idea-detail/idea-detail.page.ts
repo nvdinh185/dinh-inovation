@@ -4,7 +4,6 @@ import { AuthService, CommonsService, PopoverCardComponent, DynamicFormMobilePag
 import { MainService } from 'src/app/services/main.service';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-idea-detail',
@@ -47,9 +46,7 @@ export class IdeaDetailPage implements OnInit {
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea?id=' + id, true)
       .then(ideaDetail => {
         this.ideaInfo = ideaDetail
-        // console.log('chi tiết', this.ideaInfo);
         this.refreshUserAction()
-        console
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
