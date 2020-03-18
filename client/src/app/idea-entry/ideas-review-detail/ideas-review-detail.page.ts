@@ -46,7 +46,7 @@ export class IdeasReviewDetailPage implements OnInit {
 
 
   createHeader() {
-    let returnHeader = Object.keys(this.reviewDetail[0]);
+    // let returnHeader = Object.keys(this.reviewDetail[0]);
     this.returnHeader = [
       { key: 'title', value: 'Chủ đề' },
       { key: 'description', value: 'Mô tả' },
@@ -101,6 +101,10 @@ export class IdeasReviewDetailPage implements OnInit {
             {
               name: "Chủ đề #" + el.id,
               value: el.title
+            },
+            {
+              name: "Tác giả:",
+              value: el.fullname
             },
             {
               name: "Lĩnh vực:",
