@@ -79,11 +79,14 @@ export class IdeasReviewDetailPage implements OnInit {
   }
 
   async onClickEvaluate(el) {
+    // console.log(el);
+    
     try {
       this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
     } catch{ }
 
     let statusOptions = this.parameters && this.parameters.ideas_statuses ? this.parameters.ideas_statuses : [];
+
     let form: any = {
       title: 'Đánh giá ý tưởng'
       , buttons: [
@@ -113,7 +116,7 @@ export class IdeasReviewDetailPage implements OnInit {
         , { type: "hidden", key: "review_id", value: this.reviewId }
         , { type: "select", key: "idea_status", value: "" + el.status, name: "Chuyển trạng thái", icon: "clock", options: statusOptions, color: "secondary" }
         , { type: "text", key: "value_prize", value: el.value_prize, name: "Nhập giải thưởng?", hint: "Nhập giá trị của giải thưởng (vd: 200k)", input_type: "text", icon: "md-help", validators: [{ required: true }] }
-        , { type: "text_area", key: "description", value: el.description, name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
+        , { type: "text_area", key: "description", value: el.old_review_result, name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
         , {
           type: 'button'
           , options: [
