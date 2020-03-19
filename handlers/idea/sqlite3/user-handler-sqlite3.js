@@ -12,6 +12,22 @@ const defaultOrganizationId = 3; // default tổ chức được tạo
 
 class UserHandler {
 
+    // hàm này sẽ lưu lại phiên login 
+    // ghi đường dẫn mà user đang vào
+    saveUserLogin(req, res, next){
+        // biến vào
+        // lưu vào bảng users
+        //`update users  where username='${(req.user ? req.user.username : ``)}'`
+        
+        next()
+    }
+
+    // save history user đã login ở đường dẫn
+    saveUserFocusFunction(req, res, next){
+        next()
+    }
+
+
     // lấy thông tin user
     getUserInfo(req, res, next) {
         db.getRst(`select * from users where username='${(req.user ? req.user.username : ``)}'`)

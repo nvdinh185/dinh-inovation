@@ -31,16 +31,22 @@ router.get('/get-all-users'
     , userHandler.getAllUsers       // dựa vào giá trị req.user.username trả thông tin user
 )
 
+// hàm này được gọi khi login thành công
+// hoặc token được lưu và gọi được thành công
+// 
 router.get('/get-user-info'
     , jwtTokenVerify                // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    // đoạn này lưu lại log của user khi login thành công
+    , userHandler.saveUserLogin     // Lưu thông tin login của user lần đầu
     , userHandler.getUserInfo       // dựa vào giá trị req.user.username trả thông tin user
-)
-
-// 2. Trang login mở ra form nhập thông tin cá nhân để tạo user mới
-router.post('/create-user'
+    )
+    
+    // 2. Trang login mở ra form nhập thông tin cá nhân để tạo user mới
+    router.post('/create-user'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
     , userHandler.createNewUser     // tạo user mới
+    , userHandler.saveUserLogin     // Lưu thông tin login lần đầu
     , userHandler.getUserInfo       // trả thông tin user đã đăng ký
 )
 
