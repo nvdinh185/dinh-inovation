@@ -9,6 +9,7 @@ import { MyIdeaPageRoutingModule } from './my-idea-routing.module';
 import { MyIdeaPage } from './my-idea.page';
 import { SharedModule } from 'src/app/shared.module';
 import { SortByTimePipe } from './sort-by-time.pipe';
+import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { SortByTimePipe } from './sort-by-time.pipe';
     FormsModule,
     IonicModule,
     SharedModule,
+    Ngxi4DynamicServiceModule,
     MyIdeaPageRoutingModule
   ],
   declarations: [MyIdeaPage, SortByTimePipe]

@@ -370,10 +370,15 @@ class ListHandler {
                             SELECT DISTINCT idea_id, user_id, created_time, 3 AS filter_type FROM ideas_comments WHERE user_id = ${(req.user.id)}
                             UNION
                             SELECT DISTINCT idea_id, user_id, created_time, 4 AS filter_type FROM ideas_marks WHERE user_id = ${(req.user.id)})
-                    SELECT 	DISTINCT a.id, a.*, c.avatar, c.fullname || '(' || c.nickname || ')' as username
+                    SELECT 	DISTINCT a.id, 
+                            a.*
+                            , c.avatar
+                            , c.fullname || '(' || c.nickname || ')' as username
+                            , d.name as status_name
                     FROM ideas as a
                     LEFT JOIN users c ON a.user_id = c.id
                     LEFT JOIN my_interact b ON a.id = b.idea_id
+                    LEFT JOIN ideas_statuses d ON a.status = d.id
                     WHERE b.filter_type in ${(filterStr)}                    
                     ORDER BY b.created_time DESC
                     `)

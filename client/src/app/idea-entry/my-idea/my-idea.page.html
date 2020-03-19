@@ -5,7 +5,7 @@
     </ion-buttons>
 
     <ion-title>Ý tưởng của tôi</ion-title>
-    
+
     <ion-buttons slot="end" *ngIf="userInfo">
       <ion-button shape="round" (click)="onClickFilter()">
         <ion-icon slot="start" name="more"></ion-icon>
@@ -18,35 +18,64 @@
 <ion-content>
   <ion-grid>
     <ion-row class="colHoder">
+      <ion-col size-md="6" size-lg="6" size-sm="12" size-xs="12"> </ion-col>
       <ion-col size-md="6" size-lg="6" size-sm="12" size-xs="12">
-      </ion-col>
-      <ion-col size-md="6" size-lg="6" size-sm="12" size-xs="12">
-        <ion-searchbar placeholder="Tìm ý tưởng" class="topBar" (ionChange)="onUserEnterSearch($event)"></ion-searchbar>
+        <ion-searchbar
+          placeholder="Tìm ý tưởng"
+          class="topBar"
+          (ionChange)="onUserEnterSearch($event)"
+        ></ion-searchbar>
       </ion-col>
     </ion-row>
     <ion-list>
-      <ion-item *ngFor="let idea of myIdeaFilterList | sortByTime : 'created_time' : 'desc' " >
-        <ion-avatar slot="start" >
-          <img src="{{idea.avatar}}" (click)="onViewUserPage($event, idea)"/>
+      <ion-item
+        *ngFor="let idea of myIdeaFilterList | sortByTime : 'created_time' : 'desc' "
+      >
+        <ion-avatar slot="start">
+          <img
+            src="{{idea.avatar?idea.avatar:'assets/imgs/avatar.jpg'}}"
+            (click)="onViewUserPage($event, idea)"
+          />
         </ion-avatar>
-        <ion-label class="ion-text-wrap" (click)="onViewIdeaDetail($event, idea)">
-          <h2 class="text-to-wrap">
-            <b>#{{idea.id}}</b> {{idea.title}}
-          </h2>
-          <h4 class="text-to-wrap">
-            {{idea.description}}
-          </h4>
-          <p>{{idea.created_time | timeAgo}} {{"  "}} {{idea.status_name}}</p>
-          <ion-badge color="secondary"><ion-icon name="thumbs-up"></ion-icon>{{"  "+idea.voted_count}}</ion-badge>
-          <ion-badge color="medium"><ion-icon name="chatbubbles"></ion-icon>{{"  "+idea.commented_count}}</ion-badge>
-          <ion-badge color="warning"><ion-icon name="switch"></ion-icon>{{"  "+idea.total_point}}</ion-badge>
+        <ion-label
+          class="ion-text-wrap"
+          (click)="onViewIdeaDetail($event, idea)"
+        >
+          <h2 class="text-to-wrap"><b>#{{idea.id}}</b>. {{idea.title}}</h2>
+          <p
+            [innerHTML]="idea.description | newline | safe"
+            class="text-to-wrap"
+          ></p>
+          <p>
+            <ion-note>
+              <strong>{{idea.status_name}}</strong>
+              {{(idea.changed_time?idea.changed_time:idea.created_time) |
+              timeAgo}}
+            </ion-note>
+          </p>
+          <ion-badge color="secondary"
+            ><ion-icon name="thumbs-up"></ion-icon>{{"
+            "+idea.voted_count}}</ion-badge
+          >
+          <ion-badge color="medium"
+            ><ion-icon name="chatbubbles"></ion-icon>{{"
+            "+idea.commented_count}}</ion-badge
+          >
+          <ion-badge color="warning"
+            ><ion-icon name="switch"></ion-icon>{{"
+            "+idea.total_point}}</ion-badge
+          >
         </ion-label>
-        <ion-button (click)="onClickMore($event)" slot="end" shape="round" fill="clear" size="small">
+        <ion-button
+          (click)="onClickMore($event)"
+          slot="end"
+          shape="round"
+          fill="clear"
+          size="small"
+        >
           <ion-icon slot="icon-only" name="ios-more"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-list>
   </ion-grid>
-  
 </ion-content>
-
