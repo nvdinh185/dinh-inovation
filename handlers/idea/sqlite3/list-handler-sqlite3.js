@@ -166,15 +166,15 @@ class ListHandler {
         db.getRsts(`SELECT * FROM ideas_questions
                     where status > 0
                     order by order_1`)
-        .then(result => {
-            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(arrObj.getJsonStringify(result));
-        })
-        .catch(err => {
-            res.status(401).json({
-                message: 'Lỗi truy vấn csdl getQuestions'
+            .then(result => {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify(result));
             })
-        });
+            .catch(err => {
+                res.status(401).json({
+                    message: 'Lỗi truy vấn csdl getQuestions'
+                })
+            });
     }
 
     // lấy danh sách log sql
@@ -183,15 +183,15 @@ class ListHandler {
                     where sql like '%'
                     order by created_time desc
                     LIMIT 10`)
-        .then(result => {
-            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(arrObj.getJsonStringify(result));
-        })
-        .catch(err => {
-            res.status(401).json({
-                message: 'Lỗi truy vấn csdl getQuestions'
+            .then(result => {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify(result));
             })
-        });
+            .catch(err => {
+                res.status(401).json({
+                    message: 'Lỗi truy vấn csdl getQuestions'
+                })
+            });
     }
 
     // lấy các đường dẫn file đính kèm
@@ -257,7 +257,7 @@ class ListHandler {
                 })
             });
     }
-    
+
     getCatIdeaTotal(req, res, next) {
         db.getRsts(`select  c.id
                             , c.name
@@ -298,6 +298,56 @@ class ListHandler {
             .catch(err => {
                 res.status(401).json({
                     message: 'Lỗi lấy tổng ý tưởng theo cat'
+                })
+            });
+    }
+
+    getMyIdea(req, res, next) {
+        let username = req.paramS.username ? req.paramS.username : req.user.username;
+        db.getRsts(`
+                    with
+                        my_user as 
+                            (select id, username from users where username = '${(username)}')
+                        ,
+                        my_ideas as 
+                            (select a.id from ideas a, my_user b where a.user_id = b.id)
+                        ,
+                        my_likes as 
+                            (select DISTINCT a.idea_id from ideas_interactives a, my_user b where a.user_id = b.id)
+                        ,
+                        my_comments as
+                            (select DISTINCT a.idea_id from ideas_comments a, my_user b where a.user_id = b.id)
+                        ,
+                        my_marks as
+                            (select DISTINCT a.idea_id from ideas_marks a, my_user b where a.user_id = b.id)
+                        select 
+                                d.avatar
+                                , d.fullname || '(' || d.nickname || ')' as username
+                                , c.name as status_name
+                                , b.name as category_name
+                                , b.background
+                                , a.* 
+                        from ideas a
+                        
+                        left join ideas_categories b
+                        on a.category_id = b.id
+                        left join ideas_statuses c
+                        on a.status = c.id
+                        left join users d
+                        on a.user_id = d.id
+                        where 
+                            (a.id in (SELECT * from my_ideas)
+                            or a.id in (SELECT * from my_likes)
+                            or a.id in (SELECT * from my_comments)
+                            or a.id in (SELECT * from my_marks))
+                        order by IFNULL(a.changed_time, a.created_time) desc
+                `).then(data => {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(arrObj.getJsonStringify(data));
+        })
+            .catch(err => {
+                res.status(401).json({
+                    message: 'Lỗi lấy my idea'
                 })
             });
     }

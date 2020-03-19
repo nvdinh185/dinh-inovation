@@ -229,4 +229,10 @@ router.post('/add-idea-prize'
     , reviewIdeaHandler.addIdeaPrize        // thêm đánh giá ý tưởng
 )
 
+router.get('/get-my-idea'
+    , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getMyIdea
+)
+
+
 module.exports = router;

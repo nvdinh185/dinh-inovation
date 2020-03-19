@@ -1,22 +1,51 @@
 <ion-header>
   <ion-toolbar color="primary">
-
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
 
     <ion-title>Ý tưởng của tôi</ion-title>
-
+    
     <ion-buttons slot="end" *ngIf="userInfo">
       <ion-button shape="round" (click)="onClickMore()">
         <ion-icon slot="start" name="more"></ion-icon>
         Lọc ý tưởng
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-grid>
+    <ion-row class="colHoder">
+      <ion-col size-md="6" size-lg="6" size-sm="12" size-xs="12">
+      </ion-col>
+      <ion-col size-md="6" size-lg="6" size-sm="12" size-xs="12">
+        <ion-searchbar placeholder="Tìm ý tưởng" class="topBar" (ionChange)="onUserEnterSearch($event)"></ion-searchbar>
+      </ion-col>
+    </ion-row>
+    <ion-list>
+      <ion-item *ngFor="let idea of myIdeaFilterList" >
+        <ion-avatar slot="start">
+          <img src="{{idea.avatar}}" />
+        </ion-avatar>
+        <ion-label class="ion-text-wrap comment-backgound" (click)="onViewIdeaDetail($event, idea)">
+          <h2 class="text-to-wrap">
+            {{idea.title}}
+          </h2>
+          <h3 class="text-to-wrap">
+            {{idea.description}}
+          </h3>
+          <p>{{idea.created_time | timeAgo}}{{" "+idea.status_name}}</p>
+          <p></p>
+        </ion-label>
+        <ion-button color="success">
+          Prize
+        </ion-button>
+      </ion-item>
+      
+    </ion-list>
+  </ion-grid>
+  
 </ion-content>
+

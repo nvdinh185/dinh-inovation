@@ -1,0 +1,53 @@
+.colHolder {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative; 
+}
+
+.topBar {
+    position: relative;
+    top: 10px;
+    left: 10px;
+    width: auto;
+}
+
+.comment-backgound{
+    position: relative;
+    width: 100%;
+    border-radius: 1em;
+    opacity: 0.9;
+    padding: 8px;
+    background: whitesmoke;
+}
+
+/* mixin for multiline */
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: whitesmoke){
+    overflow: hidden;
+    position: relative;
+    line-height: $lineHeight;
+    max-height: $lineHeight * $lineCount; 
+    text-align: justify;
+    margin-right: -1em;
+    padding-right: 1em;
+    &:before {
+      content: '...';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 1em;
+      height: 1em;
+      margin-top: 0.2em;
+      background: $bgColor;
+    }
+  }
+  
+  .text-to-wrap {
+    @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: whitesmoke);  
+  }

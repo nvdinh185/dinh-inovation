@@ -191,7 +191,7 @@ class ReviewHandler {
                 status: ideaPrize.idea_status
             })
         }
-        // Lưu vài bảng ideas 
+        // Lưu vào bảng ideas 
         let ideaJson = {
             id: ideaPrize.idea_id,
             last_review_id: ideaPrize.review_id,
