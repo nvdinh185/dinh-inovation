@@ -7,7 +7,7 @@
     <ion-title>Ý tưởng của tôi</ion-title>
     
     <ion-buttons slot="end" *ngIf="userInfo">
-      <ion-button shape="round" (click)="onClickMore()">
+      <ion-button shape="round" (click)="onClickFilter()">
         <ion-icon slot="start" name="more"></ion-icon>
         Lọc ý tưởng
       </ion-button>
@@ -25,22 +25,24 @@
       </ion-col>
     </ion-row>
     <ion-list>
-      <ion-item *ngFor="let idea of myIdeaFilterList" >
+      <ion-item *ngFor="let idea of myIdeaFilterList | sortByTime : 'created_time' : 'desc' " >
         <ion-avatar slot="start" >
           <img src="{{idea.avatar}}" (click)="onViewUserPage($event, idea)"/>
         </ion-avatar>
-        <ion-label class="ion-text-wrap comment-backgound" (click)="onViewIdeaDetail($event, idea)">
+        <ion-label class="ion-text-wrap" (click)="onViewIdeaDetail($event, idea)">
           <h2 class="text-to-wrap">
-            {{idea.title}}
+            <b>#{{idea.id}}</b> {{idea.title}}
           </h2>
-          <h3 class="text-to-wrap">
+          <h4 class="text-to-wrap">
             {{idea.description}}
-          </h3>
-          <p>{{idea.created_time | timeAgo}}{{" "+idea.status_name}}</p>
-          <p></p>
+          </h4>
+          <p>{{idea.created_time | timeAgo}} {{"  "}} {{idea.status_name}}</p>
+          <ion-badge color="secondary"><ion-icon name="thumbs-up"></ion-icon>{{"  "+idea.voted_count}}</ion-badge>
+          <ion-badge color="medium"><ion-icon name="chatbubbles"></ion-icon>{{"  "+idea.commented_count}}</ion-badge>
+          <ion-badge color="warning"><ion-icon name="switch"></ion-icon>{{"  "+idea.total_point}}</ion-badge>
         </ion-label>
-        <ion-button color="success">
-          Prize
+        <ion-button (click)="onClickMore($event)" slot="end" shape="round" fill="clear" size="small">
+          <ion-icon slot="icon-only" name="ios-more"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-list>

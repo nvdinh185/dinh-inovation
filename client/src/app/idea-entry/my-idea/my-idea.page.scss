@@ -13,13 +13,9 @@
     width: auto;
 }
 
-.comment-backgound{
-    position: relative;
-    width: 100%;
-    border-radius: 1em;
-    opacity: 0.9;
-    padding: 8px;
-    background: whitesmoke;
+ion-badge {
+  margin-right: 0.5em;
+  width: 50px;
 }
 
 /* mixin for multiline */
@@ -30,7 +26,7 @@
     max-height: $lineHeight * $lineCount; 
     text-align: justify;
     margin-right: -1em;
-    padding-right: 1em;
+    padding-right: 2em;
     &:before {
       content: '...';
       position: absolute;
@@ -48,6 +44,6 @@
     }
   }
   
-  .text-to-wrap {
-    @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: whitesmoke);  
-  }
+  // .text-to-wrap {
+  //   @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: whitesmoke);  
+  // }

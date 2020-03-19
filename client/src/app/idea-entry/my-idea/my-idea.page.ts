@@ -19,6 +19,7 @@ export class MyIdeaPage implements OnInit {
   isMyIdeaOnly: boolean;
   myIdeaFilterList: any;
   parameters: any;
+  filterSelected: any = [];
 
   constructor(
     private router: Router,
@@ -49,7 +50,6 @@ export class MyIdeaPage implements OnInit {
     try {
       this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
     } catch{ }
-    console.log(this.parameters);
   }
 
   onUserEnterSearch(evt) {
@@ -76,33 +76,47 @@ export class MyIdeaPage implements OnInit {
     // Xử lý click Avatar user và render page user người khác
     // this.router.navigate(['/my-idea'], { queryParams: {id:idea.user_id} });
   }
-  
+
   onViewIdeaDetail(evt, idea) {
-    this.router.navigate(['/idea-detail'], { queryParams: {id:idea.id} });
+    this.router.navigate(['/idea-detail'], { queryParams: { id: idea.id } });
   }
 
-  onClickMore(ev) {
+  onClickMore(evt) {
+
+  }
+
+  onClickFilter(ev) {
     const settingsMenu = [
       {
         id: 1
         , name: "Ý tưởng của tôi"
+        , isChecked: this.filterSelected.includes(1)
         , value: "MYIDEA"
       }
       ,
       {
         id: 2
         , name: "Ý tưởng tôi thích"
+        , isChecked: this.filterSelected.includes(2)
         , value: "LIKE"
       }
       ,
       {
         id: 3
         , name: "Ý tưởng tôi bình luận"
+        , isChecked: this.filterSelected.includes(3)
         , value: "COMMENT"
       }
       ,
       {
         id: 4
+        , name: "Ý tưởng tôi đánh giá"
+        , isChecked: this.filterSelected.includes(3)
+        , value: "MARK"
+      }
+      ,
+      {
+        id: 5
         , name: "Chọn tất cả"
         , value: "ALL"
       }
@@ -130,44 +144,33 @@ export class MyIdeaPage implements OnInit {
   }
 
   processDetails(data: any) {
-    if (data.length === 0) { // Xử lý khi user không chọn gì cả
+    // console.log(data);
+    this.filterSelected = [];
+    let isAll = false;
+    data.forEach(el => {
+      if (el.value != "ALL") {
+        this.filterSelected.push(el.id);
+      } else {
+        isAll = true;
+      }
+    });
+    // Xử lý khi user không chọn gì cả
+    if (data.length === 0) { 
       return;
-    } else {
-      // Tạo 3 mảng riêng chứa thông tin theo từng select filter
-      let myIdeaArr = [];
-      let myLikeArr = [];
-      let myCommentArr = [];
-      for (let el of this.myIdeas) {
-        if (el.user_id === this.userInfo.id) {
-          myIdeaArr.push(el);
-        }
-        if (el.voted_users && el.voted_users.includes(this.userInfo.id)) {
-          myLikeArr.push(el);
-        }
-        if (el.commented_users && el.commented_users.includes(this.userInfo.id)) {
-          myCommentArr.push(el);
-        }
-      }
-      // Push tất cả vào mảng filter chung nếu user có chọn
-      let filteredArr = []
-      for (let select of data) {
-        console.log(select);
-        if (select.value === "MYIDEA") {
-          filteredArr.push(...myIdeaArr);
-        }
-        if (select.value === "LIKE") {
-          filteredArr.push(...myLikeArr);
-        }
-        if (select.value === "COMMENT") {
-          filteredArr.push(...myCommentArr);
-        }
-        if (select.value === "ALL") {
-          filteredArr = this.myIdeas;
-        }
-      }
-      // Lấy ra mảng filter chứa idea đã lọc
-      this.myIdeaFilterList = [...new Set(filteredArr)];
     }
+    // Xử lý khi user có chọn tất cả
+    if (isAll) {
+      this.myIdeaFilterList = this.myIdeas;
+    } else {
+      /* POST dữ liệu lên server query tìm thông tin */
+      this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/my-idea-filter', { selected: this.filterSelected }, true)
+      .then(data => {
+        console.log(data)
+        this.myIdeaFilterList = data;
+      })
+      .catch(err => console.log(err))
+    }
+    
   }
 
 }

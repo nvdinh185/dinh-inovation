@@ -8,6 +8,7 @@ import { MyIdeaPageRoutingModule } from './my-idea-routing.module';
 
 import { MyIdeaPage } from './my-idea.page';
 import { SharedModule } from 'src/app/shared.module';
+import { SortByTimePipe } from './sort-by-time.pipe';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { SharedModule } from 'src/app/shared.module';
     SharedModule,
     MyIdeaPageRoutingModule
   ],
-  declarations: [MyIdeaPage]
+  declarations: [MyIdeaPage, SortByTimePipe]
 })
 export class MyIdeaPageModule {}
