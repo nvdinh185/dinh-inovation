@@ -186,7 +186,7 @@ class ReviewHandler {
         let oldStatusChain = ideaRow && ideaRow.status_chain ? JSON.parse(ideaRow.status_chain) : [];
         // Nếu trong trường hợp bản ghi cuối (trong status_chain) mà trạng thái = trạng thái muốn thay đổi
         // => 
-        if (ideaRow.status === ideaPrize.idea_status) {
+        if (ideaRow.status !== ideaPrize.idea_status) {
             oldStatusChain.push({
                 user_name: req.user.username,
                 description: ideaPrize.description,
