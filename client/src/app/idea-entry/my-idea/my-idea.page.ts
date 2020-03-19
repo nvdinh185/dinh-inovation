@@ -74,6 +74,7 @@ export class MyIdeaPage implements OnInit {
 
   onViewUserPage(evt, idea) {
     // Xử lý click Avatar user và render page user người khác
+    // this.router.navigate(['/my-idea'], { queryParams: {id:idea.user_id} });
   }
   
   onViewIdeaDetail(evt, idea) {

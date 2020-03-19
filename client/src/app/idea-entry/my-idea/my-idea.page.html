@@ -26,8 +26,8 @@
     </ion-row>
     <ion-list>
       <ion-item *ngFor="let idea of myIdeaFilterList" >
-        <ion-avatar slot="start">
-          <img src="{{idea.avatar}}" />
+        <ion-avatar slot="start" >
+          <img src="{{idea.avatar}}" (click)="onViewUserPage($event, idea)"/>
         </ion-avatar>
         <ion-label class="ion-text-wrap comment-backgound" (click)="onViewIdeaDetail($event, idea)">
           <h2 class="text-to-wrap">
@@ -43,7 +43,6 @@
           Prize
         </ion-button>
       </ion-item>
-      
     </ion-list>
   </ion-grid>
   
