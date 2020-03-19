@@ -13,8 +13,11 @@ const defaultOrganizationId = 3; // default tổ chức được tạo
 class UserHandler {
 
     // lấy thông tin user
+    // ưu tiên lấy user của tham số gửi vào
+    // nếu không có thì lấy user của token
     getUserInfo(req, res, next) {
-        db.getRst(`select * from users where username='${(req.user ? req.user.username : ``)}'`)
+        let sqlWhere = req.paramS.id ? `where id='${req.paramS.id}'` : `where username='${(req.user ? req.user.username : ``)}'`
+        db.getRst(`select * from users ${sqlWhere}`)
             .then(result => {
                 // console.log('result: ', result);
                 if (result && result.status === 0) {

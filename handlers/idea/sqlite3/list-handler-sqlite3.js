@@ -302,8 +302,39 @@ class ListHandler {
             });
     }
 
+    // bộ lọc sẽ truyền lên ở ?username=abc & filters=1,2,3,4 & pagesize=10 & page=0
     getMyIdea(req, res, next) {
+        // lấy ý tưởng của username truyền lên nếu có, nếu không thì lấy ý tưởng của token
         let username = req.paramS.username ? req.paramS.username : req.user.username;
+        let inFilters = req.paramS.filters ? req.paramS.filters.split(',') : []
+
+        let filters = {
+            MYIDEA: "MYIDEA",
+            LIKE: "LIKE",
+            COMMENT: "COMMENT",
+            MARK: "MARK"
+        }
+
+        // mệnh đề where mặc định là không lọc, lấy hết
+        let sqlWhere = `where 
+           (a.id in (SELECT * from my_ideas)
+           or a.id in (SELECT * from my_likes)
+           or a.id in (SELECT * from my_comments)
+           or a.id in (SELECT * from my_marks))`
+
+        if (inFilters.length > 0) {
+            sqlWhere = `where 
+                            (`;
+            inFilters.forEach((el, idx) => {
+                if (idx > 0) sqlWhere += ` or `;
+                if (el === filters.MYIDEA) sqlWhere += ` a.id in (SELECT * from my_ideas) `;
+                if (el === filters.LIKE) sqlWhere += ` a.id in (SELECT * from my_likes) `;
+                if (el === filters.COMMENT) sqlWhere += ` a.id in (SELECT * from my_comments) `;
+                if (el === filters.MARK) sqlWhere += ` a.id in (SELECT * from my_marks) `;
+            })
+            sqlWhere+=`)`
+        }
+
         db.getRsts(`
                     with
                         my_user as 
@@ -328,18 +359,13 @@ class ListHandler {
                                 , b.background
                                 , a.* 
                         from ideas a
-                        
-                        left join ideas_categories b
-                        on a.category_id = b.id
-                        left join ideas_statuses c
-                        on a.status = c.id
-                        left join users d
-                        on a.user_id = d.id
-                        where 
-                            (a.id in (SELECT * from my_ideas)
-                            or a.id in (SELECT * from my_likes)
-                            or a.id in (SELECT * from my_comments)
-                            or a.id in (SELECT * from my_marks))
+                            left join ideas_categories b
+                            on a.category_id = b.id
+                            left join ideas_statuses c
+                            on a.status = c.id
+                            left join users d
+                            on a.user_id = d.id
+                        ${sqlWhere}
                         order by IFNULL(a.changed_time, a.created_time) desc
                 `).then(data => {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -352,10 +378,11 @@ class ListHandler {
             });
     }
 
+    // hàm này ý nghĩa là gì??? không có nghĩa ở lọc này
     getMyIdeaFiltered(req, res, next) {
         let filterStr = "(";
         req.json_data.selected.forEach((select, idx) => {
-            if (idx === req.json_data.selected.length-1) {
+            if (idx === req.json_data.selected.length - 1) {
                 filterStr += select + ")";
             } else {
                 filterStr += select + ",";

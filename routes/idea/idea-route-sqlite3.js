@@ -229,18 +229,20 @@ router.post('/add-idea-prize'
     , reviewIdeaHandler.addIdeaPrize        // thêm đánh giá ý tưởng
 )
 
+// lấy ý tưởng về theo bộ lọc
 router.get('/get-my-idea'
     , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , listHandler.getMyIdea
 )
 
-router.post('/my-idea-filter'
+// hàm này tích hợp ở get-my-idea nhé, không dùng hàm này
+/* router.post('/my-idea-filter'
     , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
     , userHandler.getUserId                 // trả về req.user.id và req.user.username
     // dữ liệu lấy câu lệnh ở đây
     , postHandler.jsonProcess               // lay json_data
     , listHandler.getMyIdeaFiltered         // thực thi lệnh sql
 );
-
+ */
 
 module.exports = router;

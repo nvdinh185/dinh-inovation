@@ -2,11 +2,16 @@
  * Trang này sẽ hiển thị tất cả các ý tưởng mà tôi đã tương tác
  * Bao gồm: ý tưởng của tôi, ý tưởng tôi thích, ý tưởng tôi comment,
  * 
+ * Không chỉ xem ý tưởng của tôi mà còn xem ý tưởng của bất kỳ ai
+ * 
+ * userInfo không phải là user login vào mà sẽ lấy user từ tham số yêu cầu chuyển sang
+ * 
  */
 import { Component, OnInit } from '@angular/core';
 import { MainService } from 'src/app/services/main.service';
 import { AuthService, CommonsService, PopoverCardComponent } from 'ngxi4-dynamic-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-my-idea',
@@ -14,46 +19,85 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./my-idea.page.scss'],
 })
 export class MyIdeaPage implements OnInit {
-  userInfo: any;
+
+  // danh sách bộ lọc cần lọc nếu lấy chừng này dữ liệu thôi
+  filters = {
+    MYIDEA: "MYIDEA",
+    LIKE: "LIKE",
+    COMMENT: "COMMENT",
+    MARK: "MARK"
+  }
+
+  userId: number;  // user lấy được khi người dùng yêu cầu
+
+  userInfo: any;   // ghi thông tin user của người muốn xem hiển thị trên trang này
+
   myIdeas: any;
   isMyIdeaOnly: boolean;
   myIdeaFilterList: any;
-  parameters: any;
+
   filterSelected: any = [];
 
+  isMobile: boolean;
+
+  isSearch: boolean = false;
+  searchString: string;
+
   constructor(
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
+    , private route: ActivatedRoute
     , private apiCommons: CommonsService
     , private apiAuth: AuthService
-    , private mainService: MainService
-  ) {
-    this.userInfo = this.mainService.getUserInfo();
-  }
+  ) { this.init() }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(item => {
+    this.route.queryParams.subscribe(async item => {
       // console.log('item = queryParams = { id : 1}', item);
+      this.userId = item ? item.id : 0;
+      // lấy thông tin người dùng cần xem ý tưởng của họ
+      try {
+        let getData = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', true)
+        this.userInfo = getData ? getData.data : {}; // nếu không lấy được thì trả về null
+      } catch{ }
       // đọc để lấy danh sách ý tưởng mà user đó quan tâm ra
+      // console.log('user',this.userInfo);
       this.refresh();
     });
   }
 
-  async refresh() {
-    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-my-idea?username=' + this.userInfo.username, true)
+  init() {
+    this.isMobile = this.apiCommons.isMobile();
+  }
+
+  // lấy thông tin user và đọc ý tưởng của tôi
+  async refresh(filters?: string) {
+
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER
+      + '/get-my-idea?username=' + this.userInfo.username
+      + (filters ? `&filters=${filters}` : ``)
+      , true)
       .then(data => {
+        // có thể dùng bộ lọc ở client khi lấy về hết
         this.myIdeas = data;
         this.myIdeaFilterList = data;
-        console.log(this.myIdeaFilterList);
+        // console.log(this.myIdeaFilterList);
       })
       .catch(err => console.log('Lỗi lấy thông tin người dùng', err))
-    try {
-      this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
-    } catch{ }
+  }
+
+
+  // hiển thị ô tìm kiếm để 
+  goSearch() {
+    this.isSearch = true;
+  }
+
+  searchEnter() {
+    this.isSearch = false;
+    this.searchString = "";
   }
 
   onUserEnterSearch(evt) {
-    console.log(evt.detail.value);
+    // console.log(evt.detail.value);
     const searchTxt = evt.detail.value;
     let matches = [];
     if (searchTxt.length === 0) {
@@ -90,40 +134,31 @@ export class MyIdeaPage implements OnInit {
       {
         id: 1
         , name: "Ý tưởng của tôi"
-        , isChecked: this.filterSelected.includes(1)
-        , value: "MYIDEA"
+        , isChecked: this.filterSelected.includes(this.filters.MYIDEA)
+        , value: this.filters.MYIDEA
       }
       ,
       {
         id: 2
         , name: "Ý tưởng tôi thích"
-        , isChecked: this.filterSelected.includes(2)
-        , value: "LIKE"
+        , isChecked: this.filterSelected.includes(this.filters.LIKE)
+        , value: this.filters.LIKE
       }
       ,
       {
         id: 3
         , name: "Ý tưởng tôi bình luận"
-        , isChecked: this.filterSelected.includes(3)
-        , value: "COMMENT"
+        , isChecked: this.filterSelected.includes(this.filters.COMMENT)
+        , value: this.filters.COMMENT
       }
       ,
       {
         id: 4
         , name: "Ý tưởng tôi đánh giá"
-        , isChecked: this.filterSelected.includes(3)
-        , value: "MARK"
+        , isChecked: this.filterSelected.includes(this.filters.MARK)
+        , value: this.filters.MARK
       }
-      ,
-      {
-        id: 5
-        , name: "Chọn tất cả"
-        , value: "ALL"
-      }
-      ,
     ]
-
-    // console.log(this.ideaInfo.idea, this.userInfo);
 
     this.apiCommons.presentPopover(
       ev
@@ -135,7 +170,6 @@ export class MyIdeaPage implements OnInit {
         menu: settingsMenu
       })
       .then(data => {
-        // console.log(data);
         this.processDetails(data);
       })
       .catch(err => {
@@ -144,33 +178,35 @@ export class MyIdeaPage implements OnInit {
   }
 
   processDetails(data: any) {
-    // console.log(data);
+    // lọc lấy bộ lọc để lấy dữ liệu, nếu bộ lọc đó không lọc thì xem như lấy hết
     this.filterSelected = [];
-    let isAll = false;
     data.forEach(el => {
-      if (el.value != "ALL") {
-        this.filterSelected.push(el.id);
-      } else {
-        isAll = true;
-      }
+      this.filterSelected.push(el.value);
     });
+    // ta sẽ có một bộ mảng ["MYIDEA",...] hoặc bộ [] 
+    // cần chuyển đổi mảng này thành chuổi cách nhau bởi dấu , để đưa lên máy chủ
+    this.refresh(this.filterSelected.toString(','))
+
+
+    // không xử lý gì phức tạp ở đây cả, chỉ là gửi bộ lọc lên để query như fresh là xong
+    /* // console.log(data);
+    
     // Xử lý khi user không chọn gì cả
-    if (data.length === 0) { 
+    if (data.length === 0) {
       return;
     }
     // Xử lý khi user có chọn tất cả
     if (isAll) {
       this.myIdeaFilterList = this.myIdeas;
     } else {
-      /* POST dữ liệu lên server query tìm thông tin */
       this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/my-idea-filter', { selected: this.filterSelected }, true)
-      .then(data => {
-        console.log(data)
-        this.myIdeaFilterList = data;
-      })
-      .catch(err => console.log(err))
+        .then(data => {
+          console.log(data)
+          this.myIdeaFilterList = data;
+        })
+        .catch(err => console.log(err))
     }
-    
+ */
   }
 
 }
