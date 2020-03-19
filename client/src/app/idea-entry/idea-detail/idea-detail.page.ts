@@ -171,6 +171,7 @@ export class IdeaDetailPage implements OnInit {
         id: 1
         , name: "Đánh giá ý tưởng này"
         , value: "MARK"
+        // , isChecked: true // khai báo chọn mặt định ý tưởng này???
         , icon: {
           name: "microphone"
           , color: "warning"
@@ -254,7 +255,7 @@ export class IdeaDetailPage implements OnInit {
       ev
       , PopoverCardComponent
       , {
-        type: 'single-choice',
+        type: 'single-choice', // multi-choice | single-choice
         title: "Thực thi",
         color: "primary",
         menu: settingsMenu

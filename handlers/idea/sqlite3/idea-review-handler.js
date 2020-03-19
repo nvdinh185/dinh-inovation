@@ -117,7 +117,9 @@ class ReviewHandler {
         db.getRsts(`with 
                         ideas_eval as
                             (select 
-                            c.name as status_type_name
+                            d.fullname
+                            , d.avatar
+                            , c.name as status_type_name
                             , b.status_type
                             , b.name as status_name
                             , cat.name as category_name
@@ -128,13 +130,15 @@ class ReviewHandler {
                             on a.status = b.id
                             LEFT JOIN ideas_status_type c
                             on b.status_type = c.id
+                            LEFT JOIN users d
+                            on a.user_id = d.id
                             )
                         select b.value_prize, b.description as old_review_result ,a.* from ideas_eval a
                         LEFT JOIN ideas_prizes b
                         on a.id = b.idea_id
                         and b.review_id = ${(req.paramS.id ? req.paramS.id : 0)} -- kỳ họp hội đồng
                         ${(req.paramS.show_all ? `` : `where a.status_type in (2,3)`)} -- chỉ hiển thị các trạng thái còn triển khai tiếp
-                        order by b.created_time desc
+                        order by IFNULL(a.changed_time, a.created_time)
                     `)
             .then(data => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
