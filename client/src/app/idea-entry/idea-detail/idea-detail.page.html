@@ -23,8 +23,8 @@
       <br>
       <ion-note>{{ideaInfo?.idea?.created_time | timeAgo}}</ion-note>
     </ion-label>
-    <ion-button (click)="onClickMore($event)" slote="end" shape="round" fill="clear" size="small">
-      <ion-icon slot="icon-only" name="ios-more"></ion-icon>
+    <ion-button (click)="onClickMore($event)" slot="end" shape="round" fill="clear" size="small">
+      <ion-icon slot="icon-only" name="more"></ion-icon>
     </ion-button>
   </ion-item>
   <ion-list>
@@ -80,12 +80,14 @@
 
   <!-- Hiển thị nội dung file và image đính kèm của ý tưởng -->
   <div [style.padding-left]="'20px'">
-    <img tappable *ngFor="let image of ideaInfo?.idea?.images;" src="{{image.src}}" (click)="onClickViewImage(image.id)" class="image-comment-size">
+    <img tappable *ngFor="let image of ideaInfo?.idea?.images;" src="{{image.src}}" (click)="onClickViewImage(image.id)"
+      class="image-comment-size">
   </div>
   <ion-item [style.padding-left]="'20px'" *ngIf="ideaInfo?.idea?.attachs?.length>0" lines="none">
     <ion-label class="ion-text-wrap">
       <span *ngFor="let file of ideaInfo?.idea?.attachs;">
-        <ion-button color="primary" (click)="onClickViewFile(file.id)" fill="outline" shape="round" style="text-transform:none!important;">
+        <ion-button color="primary" (click)="onClickViewFile(file.id)" fill="outline" shape="round"
+          style="text-transform:none!important;">
           {{file.file_name}}
           <ion-icon slot="end" name="eye"></ion-icon>
         </ion-button>
@@ -117,7 +119,8 @@
     <ion-item *ngIf="uploadingFiles?.length>0" lines="none">
       <ion-label class="ion-text-wrap">
         <span *ngFor="let file of uploadingFiles; let idx=index;">
-          <ion-button *ngIf="!file.isImage" color="secondary" (click)="onClickRemoveFile(idx)" fill="outline" shape="round" style="text-transform:none!important;">
+          <ion-button *ngIf="!file.isImage" color="secondary" (click)="onClickRemoveFile(idx)" fill="outline"
+            shape="round" style="text-transform:none!important;">
             {{file.name}}
             <ion-icon slot="end" name="close"></ion-icon>
           </ion-button>
@@ -152,12 +155,14 @@
       <ion-note [style.padding-left]="comment.parent_id?'100px':'80px'"> {{comment.created_time | timeAgo}} </ion-note>
       <br>
       <div [style.padding-left]="comment.parent_id?'80px':'60px'">
-        <img tappable *ngFor="let image of comment.images;" src="{{image.src}}" (click)="onClickViewImage(image.id)" class="image-comment-size">
+        <img tappable *ngFor="let image of comment.images;" src="{{image.src}}" (click)="onClickViewImage(image.id)"
+          class="image-comment-size">
       </div>
       <ion-item [style.padding-left]="comment.parent_id?'80px':'60px'" *ngIf="comment.attachs?.length>0" lines="none">
         <ion-label class="ion-text-wrap">
           <span *ngFor="let file of comment.attachs; let idx=index;">
-            <ion-button color="dark" (click)="onClickViewFile(file.id)" fill="outline" shape="round" style="text-transform:none!important;">
+            <ion-button color="dark" (click)="onClickViewFile(file.id)" fill="outline" shape="round"
+              style="text-transform:none!important;">
               {{file.file_name}}
               <ion-icon slot="end" name="eye"></ion-icon>
             </ion-button>

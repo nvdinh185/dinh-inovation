@@ -34,7 +34,7 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
         // thực hiện bind -- nếu thành công thì login thành công
         try {
             // nếu ko thành công thì login fail
-            client.bind(email, password, function (err) {
+            client.bind(email, password, err => {
                 if (err) {
                     console.log('Bind failed with error: ', err.lde_message);
                     rj(new Error('Email or password invalid!'))
@@ -46,7 +46,7 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
                 }
 
                 // trả lại phiên kết nối cổng ldap
-                client.unbind(function (err) {
+                client.unbind(err => {
                     if (err) {
                         console.log('UnBind failed with error: ', err.lde_message);
                         return;

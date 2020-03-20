@@ -120,6 +120,7 @@ export class AppComponent {
     this.mainService.getTokenInfo()
       .then(userInfo => {
         this.userInfo = userInfo;
+        // console.log(this.userInfo);
         this.refresh();
       })
       .catch(err => {
