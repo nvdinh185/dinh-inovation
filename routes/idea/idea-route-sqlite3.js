@@ -212,10 +212,10 @@ router.post('/add-review'
     // dữ liệu lấy câu lệnh ở đây
     , postHandler.formProcess               // lay form_data
     //chèn yêu cầu phân quyền để thực hiện việc này
-    , adminHandler.setFunctionFromPath //thiet lap chuc nang tu pathName
-    , adminHandler.checkFunctionRole   //kiem tra quyen co khong de cho phep
+    , adminHandler.setFunctionFromPath      //thiet lap chuc nang tu pathName
+    , adminHandler.checkFunctionRole        //kiem tra quyen co khong de cho phep
     // Gửi câu lệnh sql trực tiếp lên csdl để thực thi
-    , reviewIdeaHandler.addReview // thực thi lệnh sql
+    , reviewIdeaHandler.addReview           // thực thi lệnh sql
 );
 
 router.get('/get-reviews'
@@ -234,5 +234,21 @@ router.post('/add-idea-prize'
     , postHandler.jsonProcess               // trả về req.json_data {thông tin của idea}
     , reviewIdeaHandler.addIdeaPrize        // thêm đánh giá ý tưởng
 )
+
+// lấy ý tưởng về theo bộ lọc
+router.get('/get-my-idea'
+    , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , listHandler.getMyIdea
+)
+
+// hàm này tích hợp ở get-my-idea nhé, không dùng hàm này
+/* router.post('/my-idea-filter'
+    , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
+    , userHandler.getUserId                 // trả về req.user.id và req.user.username
+    // dữ liệu lấy câu lệnh ở đây
+    , postHandler.jsonProcess               // lay json_data
+    , listHandler.getMyIdeaFiltered         // thực thi lệnh sql
+);
+ */
 
 module.exports = router;

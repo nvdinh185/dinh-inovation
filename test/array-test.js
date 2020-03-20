@@ -6,3 +6,9 @@ var nameMatch = str.match(/^([^@]*)@/);
 var name = nameMatch ? nameMatch[1] : null;
 
 console.log(name);
+
+
+let filters = `1,2,3,4`
+console.log(filters.split(','));
+
+        

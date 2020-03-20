@@ -258,6 +258,7 @@ export class AppComponent {
    * Trường hợp người dùng bấm bất kỳ thông tin user nào thì trả qua đúng user_id đó luôn
    */
   onClickUser() {
+    this.menuCtrl.close();
     this.router.navigate(['/my-idea'], { queryParams: { id: this.userInfo.id } });
   }
 
@@ -266,6 +267,7 @@ export class AppComponent {
    * Thay đổi ảnh đại diện
    */
   onClickUserImage(type: string) {
+    this.menuCtrl.close();
     this.router.navigate(['/login']);
   }
 
