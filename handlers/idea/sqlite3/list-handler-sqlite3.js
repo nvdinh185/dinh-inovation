@@ -353,7 +353,7 @@ class ListHandler {
                             (select DISTINCT a.idea_id from ideas_marks a, my_user b where a.user_id = b.id)
                         select 
                                 d.avatar
-                                , d.fullname || '(' || d.nickname || ')' as username
+                                , d.fullname || '(' || d.nickname || ')' as fullname
                                 , c.name as status_name
                                 , b.name as category_name
                                 , b.background
@@ -377,48 +377,7 @@ class ListHandler {
                 })
             });
     }
-
-    // hàm này ý nghĩa là gì??? không có nghĩa ở lọc này
-    getMyIdeaFiltered(req, res, next) {
-        let filterStr = "(";
-        req.json_data.selected.forEach((select, idx) => {
-            if (idx === req.json_data.selected.length - 1) {
-                filterStr += select + ")";
-            } else {
-                filterStr += select + ",";
-            }
-        })
-        db.getRsts(`WITH 
-                        my_interact AS (
-                            SELECT DISTINCT id AS idea_id, user_id, created_time, 1 AS filter_type FROM ideas WHERE user_id = ${(req.user.id)}
-                            UNION 
-                            SELECT DISTINCT idea_id, user_id, created_time, 2 AS filter_type FROM ideas_interactives WHERE user_id = ${(req.user.id)}
-                            UNION
-                            SELECT DISTINCT idea_id, user_id, created_time, 3 AS filter_type FROM ideas_comments WHERE user_id = ${(req.user.id)}
-                            UNION
-                            SELECT DISTINCT idea_id, user_id, created_time, 4 AS filter_type FROM ideas_marks WHERE user_id = ${(req.user.id)})
-                    SELECT 	DISTINCT a.id, 
-                            a.*
-                            , c.avatar
-                            , c.fullname || '(' || c.nickname || ')' as username
-                            , d.name as status_name
-                    FROM ideas as a
-                    LEFT JOIN users c ON a.user_id = c.id
-                    LEFT JOIN my_interact b ON a.id = b.idea_id
-                    LEFT JOIN ideas_statuses d ON a.status = d.id
-                    WHERE b.filter_type in ${(filterStr)}                    
-                    ORDER BY b.created_time DESC
-                    `)
-            .then(data => {
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(arrObj.getJsonStringify(data));
-            })
-            .catch(err => {
-                res.status(401).json({
-                    message: 'Lỗi lấy my idea'
-                })
-            });
-    }
+   
 }
 
 module.exports = new ListHandler();

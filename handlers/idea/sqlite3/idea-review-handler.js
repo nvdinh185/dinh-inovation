@@ -187,7 +187,7 @@ class ReviewHandler {
         // Nếu trong trường hợp bản ghi cuối (trong status_chain) mà trạng thái = trạng thái muốn thay đổi
         // => 
         if (ideaRow.status !== ideaPrize.idea_status) {
-            oldStatusChain.push({
+            oldStatusChain.unshift({
                 user_name: req.user.username,
                 description: ideaPrize.description,
                 value_prize: ideaPrize.value_prize,

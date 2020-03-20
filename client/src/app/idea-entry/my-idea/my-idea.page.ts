@@ -42,6 +42,8 @@ export class MyIdeaPage implements OnInit {
 
   isSearch: boolean = false;
   searchString: string;
+  parameters: any;
+  statusConfigs: any = {};
 
   constructor(
     private router: Router
@@ -56,7 +58,7 @@ export class MyIdeaPage implements OnInit {
       this.userId = item ? item.id : 0;
       // lấy thông tin người dùng cần xem ý tưởng của họ
       try {
-        let getData = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', true)
+        let getData = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info?id=' + this.userId, true)
         this.userInfo = getData ? getData.data : {}; // nếu không lấy được thì trả về null
       } catch{ }
       // đọc để lấy danh sách ý tưởng mà user đó quan tâm ra
@@ -67,6 +69,18 @@ export class MyIdeaPage implements OnInit {
 
   init() {
     this.isMobile = this.apiCommons.isMobile();
+
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
+      .then(data => {
+        this.parameters = data;
+        let statusOptions = this.parameters && this.parameters.ideas_statuses ? this.parameters.ideas_statuses : [];
+        statusOptions.forEach(el => {
+          Object.defineProperty(this.statusConfigs, el.id, { value: el, writable: true, enumerable: true, configurable: true });
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   // lấy thông tin user và đọc ý tưởng của tôi
@@ -80,7 +94,6 @@ export class MyIdeaPage implements OnInit {
         // có thể dùng bộ lọc ở client khi lấy về hết
         this.myIdeas = data;
         this.myIdeaFilterList = data;
-        // console.log(this.myIdeaFilterList);
       })
       .catch(err => console.log('Lỗi lấy thông tin người dùng', err))
   }
@@ -97,7 +110,6 @@ export class MyIdeaPage implements OnInit {
   }
 
   onUserEnterSearch(evt) {
-    // console.log(evt.detail.value);
     const searchTxt = evt.detail.value;
     let matches = [];
     if (searchTxt.length === 0) {
@@ -116,17 +128,17 @@ export class MyIdeaPage implements OnInit {
 
   }
 
-  onViewUserPage(evt, idea) {
+  onViewUserPage(idea) {
     // Xử lý click Avatar user và render page user người khác
-    // this.router.navigate(['/my-idea'], { queryParams: {id:idea.user_id} });
+    this.router.navigate(['/my-idea'], { queryParams: { id: idea.user_id } });
   }
 
   onViewIdeaDetail(evt, idea) {
     this.router.navigate(['/idea-detail'], { queryParams: { id: idea.id } });
   }
 
-  onClickMore(evt) {
-
+  onClickMore(idea) {
+    idea.isShowHistory = ! idea.isShowHistory;
   }
 
   onClickFilter(ev) {
@@ -186,27 +198,6 @@ export class MyIdeaPage implements OnInit {
     // ta sẽ có một bộ mảng ["MYIDEA",...] hoặc bộ [] 
     // cần chuyển đổi mảng này thành chuổi cách nhau bởi dấu , để đưa lên máy chủ
     this.refresh(this.filterSelected.toString(','))
-
-
-    // không xử lý gì phức tạp ở đây cả, chỉ là gửi bộ lọc lên để query như fresh là xong
-    /* // console.log(data);
-    
-    // Xử lý khi user không chọn gì cả
-    if (data.length === 0) {
-      return;
-    }
-    // Xử lý khi user có chọn tất cả
-    if (isAll) {
-      this.myIdeaFilterList = this.myIdeas;
-    } else {
-      this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/my-idea-filter', { selected: this.filterSelected }, true)
-        .then(data => {
-          console.log(data)
-          this.myIdeaFilterList = data;
-        })
-        .catch(err => console.log(err))
-    }
- */
   }
 
 }

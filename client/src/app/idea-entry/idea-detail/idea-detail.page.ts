@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, CommonsService, PopoverCardComponent, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
 
@@ -19,7 +19,8 @@ export class IdeaDetailPage implements OnInit {
   uploadingFiles: any = [];
 
   constructor(
-    private route: ActivatedRoute
+    private router: Router
+    , private route: ActivatedRoute
     , private apiCommons: CommonsService
     , private apiAuth: AuthService
     , private mainService: MainService
@@ -49,6 +50,13 @@ export class IdeaDetailPage implements OnInit {
         this.refreshUserAction()
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
+  }
+
+
+
+  onViewUserPage(item) {
+    // Xử lý click Avatar user và render page user người khác
+    this.router.navigate(['/my-idea'], { queryParams: { id: item.user_id } });
   }
 
   refreshUserAction() {
