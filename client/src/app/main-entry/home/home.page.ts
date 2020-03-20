@@ -50,9 +50,9 @@ export class HomePage implements OnInit {
   // khởi tạo trang chủ ban đầu
   init() {
 
-    setTimeout(()=>{
+    setTimeout(() => {
       this.userInfo = this.mainService.getUserInfo();
-    },1000)
+    }, 1000)
 
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-top-actions")
       .then(data => {
@@ -66,12 +66,12 @@ export class HomePage implements OnInit {
   }
 
   // gọi đến trang login
-  onClickLogin(){
+  onClickLogin() {
     this.router.navigate(['/login']);
   }
-  
+
   // Gọi đến trang chat-bot
-  onClickChatbot(){
+  onClickChatbot() {
     this.router.navigate(['/chat-bot']);
   }
 

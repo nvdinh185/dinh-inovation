@@ -60,26 +60,27 @@ class IdeaHandler {
     // Chỉ những ý tưởng của mình quan tâm (tức là các ý tưởng của mình,...)
     getIdeas(req, res, next) {
         db.getRsts(`select 
-                        d.fullname || '(' || d.nickname || ')' as username
-                        , c.name as status_name
-                        , b.name as category_name
-                        , b.background
-                        , a.* 
-                        from ideas a
-                        left join ideas_categories b
-                        on a.category_id = b.id
-                        left join ideas_statuses c
-                        on a.status = c.id
-                        left join users d
-                        on a.user_id = d.id
-                        where c.status_type >1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
+                    d.fullname || '(' || d.nickname || ')' as username
+                    , c.name as status_name
+                    , b.name as category_name
+                    , b.background
+                    , a.* 
+                    from ideas a
+                    left join ideas_categories b
+                    on a.category_id = b.id
+                    left join ideas_statuses c
+                    on a.status = c.id
+                    left join users d
+                    on a.user_id = d.id
+                    where c.status_type >1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
                     order by IFNULL(a.changed_time, a.created_time) desc`)
             .then(result => {
+                // console.log('result: ', result);
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(arrObj.getJsonStringify(result));
             })
             .catch(err => {
-                // console.log('Lỗi: ', err);
+                console.log('Lỗi: ', err);
                 res.status(401).json({
                     message: 'Lỗi truy vấn csdl getIdeaInfo'
                 })
@@ -234,6 +235,7 @@ class IdeaHandler {
             }));
 
         } catch (err) {
+            console.log(err);
             res.status(401).json({
                 message: 'Lỗi update idea, liên hệ quản trị hệ thống',
                 error: err

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonsService, AuthService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
+import { AuthService } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
-import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,12 +18,9 @@ export class IdeaPage implements OnInit {
   // tham số để chọn tùy chọn nhập mới ý tưởng
   parameters: any;
 
-  // danh sách ý tưởng
-
   dynamicFormInput: string;
   dynamicFormValue: string;
   dynamicCallback: any;
-
 
   isCardNewShow: boolean = false;
 
@@ -34,14 +30,12 @@ export class IdeaPage implements OnInit {
     private router: Router
     , private apiAuth: AuthService
     , private mainService: MainService
-    , private modalController: ModalController
   ) { }
 
   ngOnInit() {
     this.init();
     this.refresh();
   }
-
 
   async init() {
     // lấy thông tin user đang login có chưa?
@@ -57,7 +51,7 @@ export class IdeaPage implements OnInit {
 
     // form nhập liệu này
     this.dynamicFormInput = JSON.stringify({ // Form mẫu hiển thị nhập liệu tạo đối tượng jon_data
-      okButton: { icon: "save", name: "Ý tưởng mới của bạn là gì?", color: "secondary", next: "CALLBACK", command: "ADD",  url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/create-idea', type: "FORM-DATA", token: true }
+      okButton: { icon: "save", name: "Ý tưởng mới của bạn là gì?", color: "secondary", next: "CALLBACK", command: "ADD", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/create-idea', type: "FORM-DATA", token: true }
       ,
       cancelButton: { icon: "close", next: "CLOSE" }
       ,
@@ -67,9 +61,10 @@ export class IdeaPage implements OnInit {
         , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
-        , { type: "upload-files", name: "Files đính kèm"
-                                , multiple: "multiple"
-                                , accept:`image/gif, image/jpeg, image/png
+        , {
+          type: "upload-files", name: "Files đính kèm"
+          , multiple: "multiple"
+          , accept: `image/gif, image/jpeg, image/png
                                         , application/pdf
                                         , .txt, .md, .zip, .tar
                                         , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel
@@ -101,16 +96,19 @@ export class IdeaPage implements OnInit {
           if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
         });
       }
-    } catch{ }
+      console.log(this.formIdea.ideas);
+    } catch (err) {
+      console.log(err);
+    }
     // Đã có danh sách ý tưởng mới lấy được từ csdl rồi
   }
 
-  onClickChatbot(){
+  onClickChatbot() {
     this.router.navigate(['/chat-bot']);
   }
 
   // Hàm gọi trang login
-  onClickLogin(){
+  onClickLogin() {
     this.router.navigate(['/login']);
   }
 
@@ -134,17 +132,14 @@ export class IdeaPage implements OnInit {
 
   // hàm trả kết quả của form nhập mới ý tưởng
   onSelectedFinish(evt) {
-    // this.formIdea.ideas = evt && evt.response_data ? evt.response_data : this.formIdea.ideas;
     this.refresh();        // làm mới ý tưởng mới
     this.isCardNewShow = false;
   }
-
 
   // thêm mới ý tưởng
   onClickAddNew() {
     this.isCardNewShow = true;
   }
-
 
   // Đọc lại các ý tưởng mới
   doRefresh(evt) {
@@ -157,6 +152,7 @@ export class IdeaPage implements OnInit {
   // sự kiện bấm ở card ý tưởng
   // có mấy tình huống sinh ra bằng command
   onClickIdeaCard(evt) {
+    console.log(evt);
     if (evt) {
       if (evt.command === 'VIEW') {
         this.viewIdea(evt.idea);
@@ -175,10 +171,9 @@ export class IdeaPage implements OnInit {
   viewIdea(item) {
     // mở ra một component để hiển thị thông tin ý tưởng, các chức năng như comment, like, share, edit, ... nằm ở component này
     // Chuyển tham số kiểu queryParams --> { queryParams: { page: pageNum } }
-    this.router.navigate(['/idea-detail'], { queryParams: {id:item.id} });
+    this.router.navigate(['/idea-detail'], { queryParams: { id: item.id } });
 
   }
-
 
   // Người dùng bấm nút like
   // Gửi lên máy chủ lệnh like từ token này
@@ -194,16 +189,6 @@ export class IdeaPage implements OnInit {
 
   // người dùng bấm nút comment
   commentIdea(item) {
-    this.router.navigate(['/idea-detail'], { queryParams: {id:item.id} });
-  }
-
-
-  async openModal(componentPage, navParams) {
-    const myModal = await this.modalController.create({
-      component: componentPage,
-      componentProps: navParams,
-      cssClass: 'cng-custom-modal-css'
-    });
-    return await myModal.present();
+    this.router.navigate(['/idea-detail'], { queryParams: { id: item.id } });
   }
 }

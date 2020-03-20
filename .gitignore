@@ -29,7 +29,7 @@ pdf/invoice_*.pdf
 
 db/excel/~$*.*
 # khong truyen database
-db/database/
+db/
  
 #khong truyen file bao cao
 user-outputs/

@@ -52,8 +52,6 @@ export class IdeaDetailPage implements OnInit {
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
 
-
-
   onViewUserPage(item) {
     // Xử lý click Avatar user và render page user người khác
     this.router.navigate(['/my-idea'], { queryParams: { id: item.user_id } });

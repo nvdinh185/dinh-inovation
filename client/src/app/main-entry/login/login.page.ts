@@ -358,6 +358,7 @@ export class LoginPage implements OnInit {
   callbackLogin = function (res) {
     // allway return Promise for callback
     return new Promise<any>((resolve, reject) => {
+      console.log(res);
       if (res.error) {
         // console.log('res', res.error.message , res.message,'Error:<br>' + (res.error.message!=undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))))
         this.apiCommons.presentAlert('Error:<br>' + (res.error.message != undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))));
