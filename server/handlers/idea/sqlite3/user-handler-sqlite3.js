@@ -33,9 +33,9 @@ class UserHandler {
     // nếu không có thì lấy user của token
     getUserInfo(req, res, next) {
         let sqlWhere = req.paramS.id ? `where id='${req.paramS.id}'` : `where username='${(req.user ? req.user.username : ``)}'`
+        // console.log('result: ', sqlWhere);
         db.getRst(`select * from users ${sqlWhere}`)
             .then(result => {
-                // console.log('result: ', result);
                 if (result && result.status === 0) {
                     res.status(401).json({
                         message: 'User đã bị khóa, vui lòng liên hệ Quản trị hệ thống'

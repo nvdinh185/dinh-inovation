@@ -28,7 +28,7 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
     });
 
     let email = usernameOremail.indexOf('@') > 0 ? usernameOremail : usernameOremail += domainNameEmail
-
+    
     // thực hiện kiểm tra ldap trong 2 giây
     setTimeout(() => {
         // thực hiện bind -- nếu thành công thì login thành công
@@ -96,8 +96,8 @@ class LDAPHandler {
         const nameMatch = username.match(/^([^@]*)@/);
         let shortName = nameMatch ? nameMatch[1] : username;
 
-        // fakeLoginLdap(username, password)
-        loginLdapMobifone(username, password)
+        fakeLoginLdap(username, password)
+        // loginLdapMobifone(username, password)
             .then(user => {
                 res.status(200).send({
                     status: 200,
