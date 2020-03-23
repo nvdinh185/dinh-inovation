@@ -31,12 +31,13 @@ export class IdeaPage implements OnInit {
     , private apiAuth: AuthService
     , private mainService: MainService
   ) { }
-  //Đợi 3 giây sau để lấy token
+
+  //Đợi 1 giây sau để lấy token
   ngOnInit() {
     setTimeout(() => {
       this.init();
       this.refresh();
-    }, 3000);
+    }, 1000);
   }
 
   async init() {
@@ -61,8 +62,8 @@ export class IdeaPage implements OnInit {
       ,
       items: [
         // Danh sách các trường nhập liệu
-        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "md-help", validators: [{ required: true, min: 5, max: 200 }] }
-        , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
+        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 5, max: 200 }] }
+        , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 10 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
         , {
@@ -156,7 +157,7 @@ export class IdeaPage implements OnInit {
   // sự kiện bấm ở card ý tưởng
   // có mấy tình huống sinh ra bằng command
   onClickIdeaCard(evt) {
-    console.log(evt);
+    // console.log(evt);
     if (evt) {
       if (evt.command === 'VIEW') {
         this.viewIdea(evt.idea);

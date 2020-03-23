@@ -7,7 +7,7 @@
 
     <ion-title>{{(formIdea?.title?formIdea.title:'')}}</ion-title>
 
-    <ion-buttons slot="end" *ngIf="userInfo" >
+    <ion-buttons slot="end" *ngIf="userInfo">
       <ion-button shape="round" (click)="onClickLogin()">
         <ion-icon slot="start" name="{{userInfo?'contact':'log-in'}}"></ion-icon>
         {{userInfo?.username}}
@@ -31,7 +31,7 @@
     </ion-fab-button>
     <ion-fab-list>
       <ion-fab-button color="warning" (click)="onClickChatbot()">
-        <ion-icon name="ios-chatbubbles"></ion-icon>
+        <ion-icon name="chatbubbles"></ion-icon>
       </ion-fab-button>
       <ion-fab-button color="primary">
         <ion-icon name="logo-facebook"></ion-icon>
@@ -54,8 +54,7 @@
   <!-- Hiển thị danh sách các ý tưởng ra trên trang này sắp xếp thành các card theo các màu sắc ý tưởng khác nhau -->
   <ion-grid *ngIf="!isCardNewShow">
     <ion-row>
-      <ion-col *ngFor="let it of formIdea?.ideas" size="12" size-sm="6" size-md="4" size-lg="4"
-        size-xl="3">
+      <ion-col *ngFor="let it of formIdea?.ideas" size="12" size-sm="6" size-md="4" size-lg="4" size-xl="3">
         <app-idea-card [cardData]="it" (onClickSub)="onClickIdeaCard($event)"></app-idea-card>
       </ion-col>
     </ion-row>

@@ -16,56 +16,56 @@ export class IdeaCardComponent implements OnInit {
   @Output() onClickSub = new EventEmitter();
 
   demoCard: any = {
-      background: "#ffffff", // màu nền của card 
-      // nếu truyền vào là image thì ưu tiên lấy image làm nền nhé
-      // image:"/assets/imgs/icon.png",
-      color: "black", // màu chữ sẽ tương phản với màu nền
-      //- tùy thuộc vào nền mà chữ sẽ lấy theo các tông màu khác nhau
-      //, tùy vào bộ màu đưa vào mà chọn hợp lý
-      title: 'Nhân sự',
-      items: [
-          {
-              icon: 'wifi',
-              title: '12 Nhân sự',
-              color: 'light' // màu trong theme
-          }
-          ,
-          {
-              icon: 'wifi',
-              title: '1 psc',
-              color: 'light'
-          }
-          ,
-          {
-              icon: 'wifi',
-              title: '7 C',
-              color: 'light'
-          }
-          ,
-          {
-              icon: 'wifi',
-              title: '6 s',
-              color: 'light'
-          }
-      ]
-      ,
-      button: {
-          color: 'secondary',
-          icon: {
-              name: 'book',
-              color: 'light'
-          }
+    background: "#ffffff", // màu nền của card 
+    // nếu truyền vào là image thì ưu tiên lấy image làm nền nhé
+    // image:"/assets/imgs/icon.png",
+    color: "black", // màu chữ sẽ tương phản với màu nền
+    //- tùy thuộc vào nền mà chữ sẽ lấy theo các tông màu khác nhau
+    //, tùy vào bộ màu đưa vào mà chọn hợp lý
+    title: 'Nhân sự',
+    items: [
+      {
+        icon: 'wifi',
+        title: '12 Nhân sự',
+        color: 'light' // màu trong theme
       }
+      ,
+      {
+        icon: 'wifi',
+        title: '1 psc',
+        color: 'light'
+      }
+      ,
+      {
+        icon: 'wifi',
+        title: '7 C',
+        color: 'light'
+      }
+      ,
+      {
+        icon: 'wifi',
+        title: '6 s',
+        color: 'light'
+      }
+    ]
+    ,
+    button: {
+      color: 'secondary',
+      icon: {
+        name: 'book',
+        color: 'light'
+      }
+    }
   }
 
-  commandCardForm: any; // form biến đổi để có màu nền và màu chũ hợp lý
+  commandCardForm: any; // form biến đổi để có màu nền hợp lý
 
   constructor() { }
 
   ngOnInit() {
-      this.commandCardForm = this.cardData? this.cardData: this.demoCard;
-      // console.log('form',this.commandCardForm);
-      this.commandCardForm.background = this.commandCardForm.background?this.commandCardForm.background:'red';
+    this.commandCardForm = this.cardData ? this.cardData : this.demoCard;
+    // console.log('form',this.commandCardForm);
+    this.commandCardForm.background = this.commandCardForm.background ? this.commandCardForm.background : 'red';
   }
 
   /**
@@ -74,26 +74,26 @@ export class IdeaCardComponent implements OnInit {
    */
   onClickCommand(item) {
     //   if (this.callback) this.callback(item);
-      this.onClickSub.emit({
-        idea: item,
-        command: 'VIEW' 
-      });
+    this.onClickSub.emit({
+      idea: item,
+      command: 'VIEW'
+    });
   }
 
   onClickLike(item) {
     //   if (this.callback) this.callback(item);
-      this.onClickSub.emit({
-        idea: item,
-        command: 'LIKE' 
-      });
+    this.onClickSub.emit({
+      idea: item,
+      command: 'LIKE'
+    });
   }
 
   onClickComment(item) {
     //   if (this.callback) this.callback(item);
-      this.onClickSub.emit({
-        idea: item,
-        command: 'COMMENT' 
-      });
+    this.onClickSub.emit({
+      idea: item,
+      command: 'COMMENT'
+    });
   }
 
 }

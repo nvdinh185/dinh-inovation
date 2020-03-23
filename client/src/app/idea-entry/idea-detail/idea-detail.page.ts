@@ -48,6 +48,7 @@ export class IdeaDetailPage implements OnInit {
       .then(ideaDetail => {
         this.ideaInfo = ideaDetail
         this.refreshUserAction()
+        console.log(this.ideaInfo);
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
@@ -355,17 +356,17 @@ export class IdeaDetailPage implements OnInit {
     let userMarkIdea;
     try {
       questions = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-questions', true)
-      userMarkIdea = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/user-mark-idea?id='+idea.id, true)
+      userMarkIdea = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/user-mark-idea?id=' + idea.id, true)
     } catch{ }
 
     // Chuyển json trả về thành dạng mảng chứa phần tử của dynamic form
     let arrayTestDemo = [];
     for (let ques of questions) {
       let oldMarkQues = userMarkIdea.find(x => x.question_id === ques.id);
-      let oldMark = oldMarkQues? oldMarkQues.point : 0;
+      let oldMark = oldMarkQues ? oldMarkQues.point : 0;
       let obj = {
         type: "range-text",
-        key: "question_"+ques.id,
+        key: "question_" + ques.id,
         name: ques.question,
         icon: "help",
         disabled: true,

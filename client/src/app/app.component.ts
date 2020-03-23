@@ -121,7 +121,6 @@ export class AppComponent {
       .then(userInfo => {
         this.userInfo = userInfo;
         // console.log(this.userInfo);
-        // console.log(this.apiAuth.token);
         this.refresh();
       })
       .catch(err => {
@@ -263,7 +262,6 @@ export class AppComponent {
     this.menuCtrl.close();
     this.router.navigate(['/my-idea'], { queryParams: { id: this.userInfo.id } });
   }
-
 
   /**
    * Thay đổi ảnh đại diện
