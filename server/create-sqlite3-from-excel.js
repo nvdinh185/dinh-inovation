@@ -1,22 +1,17 @@
-/**
- * Tao database sqlite from excel
- * file nay chay mot lan bang tay khi muon tao mot csdl bang file exel
- * Thuc hien doc cau truc file excel roi tao database ban dau
- * sau do cac service se lay de handle db sau
- */
-
 const excel_db = require('./db/sqlite3/excel-2-sqlite');
 
 const excelFilename = "./db/excel/sqlite-inovation-manager-ver-7.1.xlsx";   //ten file excel cau hinh
 const dbFilename = "./db/database/inovation-manager.v7.1.db";                 //ten database muon tao
 
-//xoa file csdl cu neu co
 const fs = require('fs');
 try {
-    if (fs.existsSync(dbFilename)) fs.unlinkSync(dbFilename);
-    console.error("Xoa file cu thanh cong");
-} catch(err) {
-    console.error("Loi xoa file",err);
+    //xoa file csdl cu neu co
+    if (fs.existsSync(dbFilename)) {
+        fs.unlinkSync(dbFilename);
+        console.error("Xoa file cu thanh cong");
+    }
+    //Dùng service để đọc file excel và tạo csdl sqlite3
+    excel_db(dbFilename, excelFilename);
+} catch (err) {
+    console.error("Loi tao moi file", err);
 }
-
-excel_db(dbFilename, excelFilename);

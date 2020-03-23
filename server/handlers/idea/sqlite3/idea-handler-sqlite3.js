@@ -19,14 +19,14 @@ const arrObj = require('../../../utils/array-object');
 } */
 
 /**
- * 
+ * Lưu file chọn trong ý tưởng vào csdl
  * @param {*} files 
  * @param {*} userId 
  */
 const saveAttachFiles = (files, userId) => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async resolve => {
         let fileIds;
-        // so luong file >0
+        // so luong file > 0
         let filePaths = [];
         for (let key in files) {
             filePaths.push(files[key].path_name);
@@ -39,7 +39,7 @@ const saveAttachFiles = (files, userId) => {
                 , user_id: userId
             }
             try {
-                await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach, []))
+                await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach))
             } catch{ }
         }
         try {
@@ -123,6 +123,7 @@ class IdeaHandler {
             });
 
     }
+
     /**
      * 3. sửa thông tin ý tưởng
      */
@@ -433,7 +434,7 @@ class IdeaHandler {
                 res.status(401).json({
                     message: 'Lỗi lấy user chấm điểm ý tưởng'
                 })
-            })        
+            })
     }
 
 }
