@@ -1,19 +1,12 @@
 {
-  "name": "m-inovation",
+  "name": "dinh-inovation",
   "version": "1.0.0",
-  "description": "Inovation (Idea) Managerment Sofware from cuong.dq",
+  "description": "An Ionic project",
   "main": "server.js",
   "scripts": {
     "test": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://token:12345@c3.mobifone.vn/git-server/m-inovation.git"
-  },
-  "keywords": [
-    "m-inovation"
-  ],
-  "author": "Doan Quoc Cuong",
+  "author": "NVDinh",
   "license": "ISC",
   "dependencies": {
     "crypto-js": "^3.2.0",
@@ -23,7 +16,6 @@
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "ldapjs": "^1.0.2",
-    "ngxi4-dynamic-service": "^2.0.0",
     "node-cron": "^2.0.3",
     "node-fasttext": "^1.0.0-alpha.1",
     "node-rsa": "^1.0.7",

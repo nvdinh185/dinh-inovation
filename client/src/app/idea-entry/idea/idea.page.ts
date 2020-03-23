@@ -31,10 +31,12 @@ export class IdeaPage implements OnInit {
     , private apiAuth: AuthService
     , private mainService: MainService
   ) { }
-
+  //Đợi 3 giây sau để lấy token
   ngOnInit() {
-    this.init();
-    this.refresh();
+    setTimeout(() => {
+      this.init();
+      this.refresh();
+    }, 3000);
   }
 
   async init() {
@@ -43,7 +45,9 @@ export class IdeaPage implements OnInit {
 
     try {
       this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
-    } catch{ }
+    } catch (err) {
+      console.log(err);
+    }
 
     let categoryOptions = this.parameters && this.parameters.ideas_categories ? this.parameters.ideas_categories : [];
 

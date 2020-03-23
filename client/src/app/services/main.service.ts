@@ -27,10 +27,11 @@ export class MainService {
       } else {
         // this.apiStorage.delete("TOKEN");
         let token = this.apiStorage.read("TOKEN");
-        console.log(token);
+        // console.log(token);
         if (token) {
           try {
             let result = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', token)
+            // console.log(result);
             if (result && result.status === 'OK' && result.data) {
               this.userInfo = result.data;
               this.token = token;

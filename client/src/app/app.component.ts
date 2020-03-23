@@ -121,6 +121,7 @@ export class AppComponent {
       .then(userInfo => {
         this.userInfo = userInfo;
         // console.log(this.userInfo);
+        // console.log(this.apiAuth.token);
         this.refresh();
       })
       .catch(err => {
