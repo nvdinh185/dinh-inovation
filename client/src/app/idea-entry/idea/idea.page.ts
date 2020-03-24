@@ -32,7 +32,7 @@ export class IdeaPage implements OnInit {
     , private mainService: MainService
   ) { }
 
-  //Đợi 1 giây sau để lấy token
+  //Đợi 1 giây sau để có token
   ngOnInit() {
     setTimeout(() => {
       this.init();
@@ -63,7 +63,7 @@ export class IdeaPage implements OnInit {
       items: [
         // Danh sách các trường nhập liệu
         { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 5, max: 200 }] }
-        , { type: "text_area", key: "description", name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 10 }] }
+        , { type: "text_area", key: "description", hint: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", name: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 10 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
         , {

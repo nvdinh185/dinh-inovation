@@ -72,7 +72,7 @@ export class IdeaCardComponent implements OnInit {
    * Lệnh khi click vào lệnh chính, và các lệnh con
    * @param item 
    */
-  onClickCommand(item) {
+  onClickView(item) {
     //   if (this.callback) this.callback(item);
     this.onClickSub.emit({
       idea: item,

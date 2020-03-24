@@ -99,6 +99,7 @@
 
   <!-- Nhập nội dung comment để góp ý ở ô này -->
   <ion-card class="input-comment">
+    <!-- Hiện thị form để comment -->
     <ion-item lines="none">
       <ion-avatar slot="start">
         <img src="{{userInfo?.avatar}}">
@@ -117,6 +118,7 @@
         <ion-icon slot="icon-only" name="send"></ion-icon>
       </ion-button>
     </ion-item>
+    <!-- Hiển thị những file, hình ảnh kèm theo trong commment -->
     <ion-item *ngIf="uploadingFiles?.length>0" lines="none">
       <ion-label class="ion-text-wrap">
         <span *ngFor="let file of uploadingFiles; let idx=index;">

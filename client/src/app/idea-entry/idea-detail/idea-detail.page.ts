@@ -58,9 +58,11 @@ export class IdeaDetailPage implements OnInit {
     this.router.navigate(['/my-idea'], { queryParams: { id: item.user_id } });
   }
 
+  //Lấy file cho ý tưởng và comment
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
 
+      //Lấy file cho các ý tưởng
       if (this.ideaInfo.idea && this.ideaInfo.idea.attach_id_list) {
         // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
         this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(this.ideaInfo.idea.attach_id_list), true)
@@ -83,8 +85,8 @@ export class IdeaDetailPage implements OnInit {
       }
       this.ideaInfo.isUserVoted = this.ideaInfo.likes.findIndex(x => x.user_id === this.userInfo.id && x.activities_type > 0) >= 0
       this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
+      //Lấy file cho các bình luận
       this.ideaInfo.comments.forEach(el => {
-        // if (!el.content) el.content = "Co noi dung nay";
         if (el.attach_id_list) {
           // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
           this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(el.attach_id_list), true)
@@ -275,7 +277,7 @@ export class IdeaDetailPage implements OnInit {
       });
   }
 
-  // Thực thi lệnh của end user chọn menu setting
+  // Thực thi lệnh khi chọn nút more
   processDetails(itemOrItems: any) {
     let cmd = itemOrItems.value;
     // console.log('lenh', cmd);
@@ -317,7 +319,7 @@ export class IdeaDetailPage implements OnInit {
       .catch(err => console.log(err))
   }
 
-  // Sự kiện khi người dùng chọn file lên để upload
+  // Sự kiện người dùng chọn file để upload khi comment
   uploadFilesEvent(evt) {
     if (!evt.target || !evt.target.files || !evt.target.files.length) return
     for (let file of evt.target.files) {
@@ -334,19 +336,19 @@ export class IdeaDetailPage implements OnInit {
     }
   }
 
+  //Xóa file đã chọn
   onClickRemoveFile(idx) {
     this.uploadingFiles.splice(idx, 1);
   }
 
-
   // Đọc hiển thị file ra
   onClickViewFile(fileId) {
-    const browser = this.iab.create(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + fileId, `_system`);
+    this.iab.create(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + fileId, `_system`);
   }
 
   // Hiển thị ảnh thật
   onClickViewImage(fileId) {
-    const browser = this.iab.create(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + fileId, `_system`);
+    this.iab.create(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + fileId, `_system`);
   }
 
   // chấm điểm ý tưởng này theo các tiêu chí định nghĩa
@@ -426,7 +428,7 @@ export class IdeaDetailPage implements OnInit {
 
     let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
 
-    // Chấm điểm ý tưởng - popup cửa sổ chấm điểm
+    // Chỉnh sửa ý tưởng - popup cửa sổ chỉnh sửa
     let form: any = {
       title: 'Sửa ý tưởng'
       , buttons: [
@@ -464,8 +466,6 @@ export class IdeaDetailPage implements OnInit {
         form: form    // form dynamic 
       }
     );
-
-
   }
 
   // Chuyển trạng thái của ý tưởng
