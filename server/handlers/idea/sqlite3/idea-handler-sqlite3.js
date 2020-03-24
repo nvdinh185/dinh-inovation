@@ -72,7 +72,7 @@ class IdeaHandler {
                     on a.status = c.id
                     left join users d
                     on a.user_id = d.id
-                    where c.status_type >1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
+                    where c.status_type > 1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
                     order by IFNULL(a.changed_time, a.created_time) desc`)
             .then(result => {
                 // console.log('result: ', result);
@@ -155,7 +155,7 @@ class IdeaHandler {
                 res.end(arrObj.getJsonStringify({ status: "OK", message: "Sửa thành công" }));
             })
             .catch(err => {
-                // console.log('Lỗi update user', err);
+                console.log('Lỗi update user', err);
                 res.status(401).json({
                     message: 'Lỗi update idea, liên hệ quản trị hệ thống',
                     error: err
@@ -186,8 +186,8 @@ class IdeaHandler {
                             on a.status = c.id
                             left join users d
                             on a.user_id = d.id
-                        order by a.changed_time desc, a.created_time desc
-                    `);
+                            order by a.changed_time desc, a.created_time desc
+                            `);
 
             let likes = await db.getRsts(`with 
                                 likes_idea as
@@ -198,9 +198,9 @@ class IdeaHandler {
                                 b.fullname || '(' || b.nickname || ')' as username
                                 , b.avatar
                                 , a.* 
-                            from likes_idea a
-                            left join users b
-                            on a.user_id = b.id`);
+                                from likes_idea a
+                                left join users b
+                                on a.user_id = b.id`);
 
             let comments = await db.getRsts(`with 
                                 comments_ideas as
@@ -211,9 +211,9 @@ class IdeaHandler {
                                 b.fullname || '(' || b.nickname || ')' as username
                                 , b.avatar
                                 , a.* 
-                            from comments_ideas a
-                            left join users b
-                            on a.user_id = b.id`);
+                                from comments_ideas a
+                                left join users b
+                                on a.user_id = b.id`);
             let marks = await db.getRsts(`with 
                                 marks_ideas as
                                 (select * from ideas_marks
@@ -223,9 +223,9 @@ class IdeaHandler {
                                 b.fullname || '(' || b.nickname || ')' as username
                                 , b.avatar
                                 , a.* 
-                            from marks_ideas a
-                            left join users b
-                            on a.user_id = b.id`);
+                                from marks_ideas a
+                                left join users b
+                                on a.user_id = b.id`);
 
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(arrObj.getJsonStringify({
@@ -259,8 +259,8 @@ class IdeaHandler {
         db.getRst(`select activities_type from ideas_interactives where idea_id=${req.ideaId} and user_id=${req.user.id}`)
             .then(async result => {
                 if (result) {
-                    // có tồn tại 1 bảng ghi rồi của user này chỉ được đếm 1 lần thôi
-                    // nếu like thì unlike
+                    // có tồn tại 1 bản ghi rồi của user này chỉ được đếm 1 lần thôi
+                    // nếu đã like thì unlike
                     if (result.activities_type !== 0) jsonLike.activities_type = 0;
                     await db.update(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'idea_id']))
                 } else {
@@ -278,11 +278,10 @@ class IdeaHandler {
             .catch(err => {
                 console.log('loi', err);
                 res.status(401).json({
-                    message: 'Lỗi truy vấn csdl interactives'
+                    message: 'Lỗi trong quá trình like'
                 })
             });
     }
-
 
     // comment ý tưởng
     async commentIdea(req, res, next) {
@@ -303,7 +302,7 @@ class IdeaHandler {
             attach_id_list: fileIds ? JSON.stringify(fileIds) : undefined,
             created_time: Date.now()
         }
-        db.insert(db.convertSqlFromJson('ideas_comments', jsonComment, []))
+        db.insert(db.convertSqlFromJson('ideas_comments', jsonComment))
             .then(async result => {
                 let commentedUsers = await db.getRsts(`select 
                                                         distinct user_id as user_id 
@@ -321,7 +320,6 @@ class IdeaHandler {
                 })
             });
     }
-
 
     // đánh giá ý tưởng
     async markIdea(req, res, next) {
@@ -418,9 +416,7 @@ class IdeaHandler {
         }
     }
 
-
-
-    // xóa bỏ ý tưởng
+    // lấy user chấm điểm ý tưởng
     getUserMarkIdea(req, res, next) {
         db.getRsts(`select * from ideas_marks
                         where user_id = ${req.user.id}

@@ -39,10 +39,10 @@ router.get('/get-user-info'
     // đoạn này lưu lại log của user khi login thành công
     , userHandler.saveUserLogin     // Lưu thông tin login của user lần đầu
     , userHandler.getUserInfo       // dựa vào giá trị req.user.username trả thông tin user
-    )
-    
-    // 2. Trang login mở ra form nhập thông tin cá nhân để tạo user mới
-    router.post('/create-user'
+)
+
+// 2. Trang login mở ra form nhập thông tin cá nhân để tạo user mới
+router.post('/create-user'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
     , userHandler.createNewUser     // tạo user mới
@@ -65,7 +65,6 @@ router.get('/get-idea-parameters'
     // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , listHandler.getListParameters       // trả về danh mục tham số của user đang thuộc tổ chức đó
 )
-
 
 // -- các chức năng cho ý tưởng chính -----
 
@@ -99,14 +98,11 @@ router.post('/edit-idea'
     // , ideaHandler.getIdeas       // trả thông tin idea
 )
 
-
-
 // lấy chỉ tiết một ý tưởng để tương tác
 router.get('/get-idea'
     , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , ideaHandler.getIdea                // trả về chi tiết của ý tưởng đó
 )
-
 
 // like ý tưởng
 router.post('/like-idea'
@@ -180,7 +176,6 @@ router.get('/get-file-id'
     , listHandler.getFileAttach              // trả về dữ liệu file thực tế
 )
 
-
 //------ thực thi lệnh trực tiếp không cho phân quyền --- chỉ dev mới thực thi được
 //1. Thực hiện nâng cấp csdl bằng các câu lệnh sql trực tiếp vào csdl
 router.post('/upgrade-database'
@@ -230,7 +225,7 @@ router.get('/get-review-detail'
 
 router.post('/add-idea-prize'
     , jwtTokenVerify                        // nhúng xác thực token trước khi cho xử lý tiếp
-    , userHandler.getUserId                 
+    , userHandler.getUserId
     , postHandler.jsonProcess               // trả về req.json_data {thông tin của idea}
     , reviewIdeaHandler.addIdeaPrize        // thêm đánh giá ý tưởng
 )
