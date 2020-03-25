@@ -62,7 +62,7 @@ export class MyIdeaPage implements OnInit {
         this.userInfo = getData ? getData.data : {}; // nếu không lấy được thì trả về null
       } catch{ }
       // đọc để lấy danh sách ý tưởng mà user đó quan tâm ra
-      // console.log('user',this.userInfo);
+      // console.log('user', this.userInfo);
       this.refresh();
     });
   }
@@ -84,7 +84,7 @@ export class MyIdeaPage implements OnInit {
   }
 
   // lấy thông tin user và đọc ý tưởng của tôi
-  async refresh(filters?: string) {
+  refresh(filters?: string) {
 
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER
       + '/get-my-idea?username=' + this.userInfo.username
@@ -94,10 +94,10 @@ export class MyIdeaPage implements OnInit {
         // có thể dùng bộ lọc ở client khi lấy về hết
         this.myIdeas = data;
         this.myIdeaFilterList = data;
+        // console.log(this.myIdeaFilterList);
       })
       .catch(err => console.log('Lỗi lấy thông tin người dùng', err))
   }
-
 
   // hiển thị ô tìm kiếm để 
   goSearch() {
@@ -138,7 +138,7 @@ export class MyIdeaPage implements OnInit {
   }
 
   onClickMore(idea) {
-    idea.isShowHistory = ! idea.isShowHistory;
+    idea.isShowHistory = !idea.isShowHistory;
   }
 
   onClickFilter(ev) {

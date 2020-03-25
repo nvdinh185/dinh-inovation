@@ -332,7 +332,7 @@ class ListHandler {
                 if (el === filters.COMMENT) sqlWhere += ` a.id in (SELECT * from my_comments) `;
                 if (el === filters.MARK) sqlWhere += ` a.id in (SELECT * from my_marks) `;
             })
-            sqlWhere+=`)`
+            sqlWhere += `)`
         }
 
         db.getRsts(`
@@ -377,7 +377,7 @@ class ListHandler {
                 })
             });
     }
-   
+
 }
 
 module.exports = new ListHandler();

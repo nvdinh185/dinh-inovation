@@ -64,8 +64,8 @@ export class IdeaPage implements OnInit {
         // Danh sách các trường nhập liệu
         { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 5, max: 200 }] }
         , { type: "text_area", key: "description", hint: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", name: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 10 }] }
-        , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
-        , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
+        , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions }
+        , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions }
         , {
           type: "upload-files", name: "Files đính kèm"
           , multiple: "multiple"
@@ -97,8 +97,8 @@ export class IdeaPage implements OnInit {
       this.formIdea.ideas = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-ideas', true)
       if (Array.isArray(this.formIdea.ideas)) {
         this.formIdea.ideas.forEach(el => {
-          if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
-          if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
+          if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true; //Kiểm tra xem userInfo này có thực hiện like không?
+          if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true; //Kiểm tra xem userInfo này có thực hiện comment không?
         });
       }
       console.log(this.formIdea.ideas);

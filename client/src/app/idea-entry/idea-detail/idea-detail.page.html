@@ -42,7 +42,7 @@
         Nội dung:
       </strong>
       <ion-label class="ion-text-wrap">
-        <div [innerHTML]="ideaInfo?.idea?.description | newline | safe"></div>
+        <div [innerHTML]="ideaInfo?.idea?.description | newline | safe"></div><!-- Hai pipe newline và safe chưa cần thiết -->
       </ion-label>
     </ion-item>
     <ion-item>
@@ -100,7 +100,7 @@
   <!-- Nhập nội dung comment để góp ý ở ô này -->
   <ion-card class="input-comment">
     <!-- Hiện thị form để comment -->
-    <ion-item lines="none">
+    <ion-item>
       <ion-avatar slot="start">
         <img src="{{userInfo?.avatar}}">
       </ion-avatar>

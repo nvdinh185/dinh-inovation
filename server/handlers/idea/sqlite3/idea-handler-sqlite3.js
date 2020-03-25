@@ -238,7 +238,7 @@ class IdeaHandler {
         } catch (err) {
             console.log(err);
             res.status(401).json({
-                message: 'Lỗi update idea, liên hệ quản trị hệ thống',
+                message: 'Lỗi lấy chi tiết ý tưởng',
                 error: err
             })
         }
@@ -264,14 +264,15 @@ class IdeaHandler {
                     if (result.activities_type !== 0) jsonLike.activities_type = 0;
                     await db.update(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'idea_id']))
                 } else {
-                    await db.insert(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'idea_id']))
+                    // chèn thêm một dòng like vào bảng ideas_interactives
+                    await db.insert(db.convertSqlFromJson('ideas_interactives', jsonLike))
                 }
                 // update số lượng like cho bảng gốc
                 let votedUsers = await db.getRsts(`select distinct user_id as user_id
                                                     from ideas_interactives
                                                     where idea_id = ${req.ideaId}
-                                                    and activities_type>0`);
-                votedUsers = votedUsers.map(o => o["user_id"]);
+                                                    and activities_type>0`);//[ { user_id: 779 }, { user_id: 2 } ]
+                votedUsers = votedUsers.map(o => o["user_id"]);//[ 779, 2 ]
                 await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, voted_count: votedUsers.length, voted_users: JSON.stringify(votedUsers) }, ["id"]))
                 next()
             })
@@ -314,6 +315,7 @@ class IdeaHandler {
                 next()
             })
             .catch(err => {
+                console.log('Lỗi tạo comment:', err);
                 res.status(401).json({
                     error: err,
                     message: 'Lỗi tạo comment'

@@ -59,6 +59,7 @@ export class IdeaDetailPage implements OnInit {
   }
 
   //Lấy file cho ý tưởng và comment
+  // Kiểm tra userInfo này đã like và comment chưa?
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
 
@@ -83,7 +84,9 @@ export class IdeaDetailPage implements OnInit {
           });
 
       }
+      // Kiểm tra this.userInfo này đã like chưa?
       this.ideaInfo.isUserVoted = this.ideaInfo.likes.findIndex(x => x.user_id === this.userInfo.id && x.activities_type > 0) >= 0
+      // Kiểm tra this.userInfo này đã comment chưa?
       this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
       //Lấy file cho các bình luận
       this.ideaInfo.comments.forEach(el => {
@@ -187,6 +190,7 @@ export class IdeaDetailPage implements OnInit {
         }
       }
       ,
+      //Chỉnh sửa ý tưởng
       {
         id: 2
         , name: "Sửa ý tưởng này"
@@ -260,6 +264,28 @@ export class IdeaDetailPage implements OnInit {
 
     }
 
+    //Giả sử thêm chức năng đánh giá và xóa
+    settingsMenu.push(
+      {
+        id: 1
+        , name: "Đánh giá ý tưởng này"
+        , value: "MARK"
+        // , isChecked: true // khai báo chọn mặt định ý tưởng này???
+        , icon: {
+          name: "microphone"
+          , color: "warning"
+        }
+      },
+      {
+        id: 5
+        , name: "Chưa phù hợp"
+        , value: "TRASH"
+        , icon: {
+          name: "trash"
+          , color: "danger"
+        }
+      }
+    )
     this.apiCommons.presentPopover(
       ev
       , PopoverCardComponent
@@ -326,7 +352,7 @@ export class IdeaDetailPage implements OnInit {
       if (file.type.indexOf('image') >= 0) {
         file.isImage = true;
         const fr = new FileReader();
-        fr.onloadend = (loadEvent) => {
+        fr.onloadend = () => {
           file.image = fr.result;
         };
         fr.readAsDataURL(file);
@@ -334,6 +360,7 @@ export class IdeaDetailPage implements OnInit {
       if (!this.uploadingFiles.find(x => x.name === file.name))
         this.uploadingFiles.push(file)
     }
+    // console.log(this.uploadingFiles);
   }
 
   //Xóa file đã chọn
@@ -370,8 +397,6 @@ export class IdeaDetailPage implements OnInit {
         type: "range-text",
         key: "question_" + ques.id,
         name: ques.question,
-        icon: "help",
-        disabled: true,
         value: oldMark,
         min: ques.min_point,
         max: ques.max_point
