@@ -33,10 +33,10 @@ export class IdeasReviewPage implements OnInit {
     this.refresh();
   }
 
-
   init() {
     // lấy thông tin user đang login có chưa?
     this.userInfo = this.mainService.getUserInfo();
+    // màn hình có độ rộng < 576px
     this.isMobile = this.apiCommons.isMobile();
   }
 
@@ -149,7 +149,7 @@ export class IdeasReviewPage implements OnInit {
     // allway return Promise for callback
     return new Promise<any>((resolve, reject) => {
 
-      // console.log(res);
+      console.log(res);
 
       if (res.error) {
         //If error 

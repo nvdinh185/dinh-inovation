@@ -264,28 +264,6 @@ export class IdeaDetailPage implements OnInit {
 
     }
 
-    //Giả sử thêm chức năng đánh giá và xóa
-    settingsMenu.push(
-      {
-        id: 1
-        , name: "Đánh giá ý tưởng này"
-        , value: "MARK"
-        // , isChecked: true // khai báo chọn mặt định ý tưởng này???
-        , icon: {
-          name: "microphone"
-          , color: "warning"
-        }
-      },
-      {
-        id: 5
-        , name: "Chưa phù hợp"
-        , value: "TRASH"
-        , icon: {
-          name: "trash"
-          , color: "danger"
-        }
-      }
-    )
     this.apiCommons.presentPopover(
       ev
       , PopoverCardComponent

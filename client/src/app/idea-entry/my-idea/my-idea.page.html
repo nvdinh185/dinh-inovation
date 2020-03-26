@@ -2,6 +2,7 @@
   <ion-toolbar color="primary">
     <ion-buttons *ngIf="!isSearch" slot="start">
       <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
       <ion-button shape="round" (click)="goSearch()">
         <ion-icon slot="icon-only" name="search"></ion-icon>
       </ion-button>
@@ -28,7 +29,7 @@
     <ion-item *ngFor="let idea of myIdeaFilterList | sortByTime : 'created_time' : 'desc' ">
 
       <ion-label class="ion-text-wrap">
-        <ion-item lines="none" (click)="onViewUserPage(idea)">
+        <ion-item lines="none">
           <ion-avatar slot="start">
             <img src="{{idea.avatar?idea.avatar:'assets/imgs/avatar.jpg'}}" />
           </ion-avatar>
@@ -36,7 +37,7 @@
             {{idea.fullname}}
           </ion-label>
         </ion-item>
-        <h2 class="text-to-wrap" (click)="onViewIdeaDetail($event, idea)">
+        <h2 class="text-to-wrap" tappable (click)="onViewIdeaDetail(idea)">
           <strong>#{{idea.id}}</strong>. {{idea.title}}
         </h2>
         <p [innerHTML]="idea.description | newline | safe" class="text-to-wrap"></p>
@@ -75,9 +76,9 @@
           </ion-item>
           <ion-item lines="none">
             <div slot="end" class='card-button' tappable (click)="onClickMore(idea)">
-              <ion-icon *ngIf="isMobile" slot="ion-only" color="medium" name="ios-arrow-dropup-circle"></ion-icon>
+              <ion-icon *ngIf="isMobile" slot="ion-only" color="medium" name="arrow-dropup-circle"></ion-icon>
               <ion-button *ngIf="!isMobile" shape="round" fill="outline">
-                <ion-icon slot="start" name="ios-arrow-dropup-circle"></ion-icon>
+                <ion-icon slot="start" name="arrow-dropup-circle"></ion-icon>
                 Thu Gọn
               </ion-button>
             </div>

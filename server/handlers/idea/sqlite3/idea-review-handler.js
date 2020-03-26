@@ -69,7 +69,7 @@ class ReviewHandler {
             db.update(arrObj.convertSqlFromJson("ideas_reviews", reviewInfo, ['id']))
                 .then(data => {
                     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(arrObj.getJsonStringify({ status: "OK", message: "Tạo mới thành công" }));
+                    res.end(arrObj.getJsonStringify({ status: "OK", message: "Sửa thành công" }));
                 })
                 .catch(err => {
                     console.log('Lỗi sửa kỳ họp', err);
@@ -141,6 +141,7 @@ class ReviewHandler {
                         order by IFNULL(a.changed_time, a.created_time)
                     `)
             .then(data => {
+                // console.log(data);
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(arrObj.getJsonStringify(data));
             })

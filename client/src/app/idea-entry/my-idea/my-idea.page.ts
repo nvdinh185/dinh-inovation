@@ -38,7 +38,7 @@ export class MyIdeaPage implements OnInit {
 
   filterSelected: any = [];
 
-  isMobile: boolean;
+  isMobile: boolean = false;
 
   isSearch: boolean = false;
   searchString: string;
@@ -61,13 +61,14 @@ export class MyIdeaPage implements OnInit {
         let getData = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info?id=' + this.userId, true)
         this.userInfo = getData ? getData.data : {}; // nếu không lấy được thì trả về null
       } catch{ }
-      // đọc để lấy danh sách ý tưởng mà user đó quan tâm ra
       // console.log('user', this.userInfo);
+      // đọc để lấy danh sách ý tưởng mà user đó quan tâm ra
       this.refresh();
     });
   }
 
   init() {
+    // màn hình có độ rộng < 576px
     this.isMobile = this.apiCommons.isMobile();
 
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
@@ -94,12 +95,12 @@ export class MyIdeaPage implements OnInit {
         // có thể dùng bộ lọc ở client khi lấy về hết
         this.myIdeas = data;
         this.myIdeaFilterList = data;
-        // console.log(this.myIdeaFilterList);
+        console.log(this.myIdeaFilterList);
       })
-      .catch(err => console.log('Lỗi lấy thông tin người dùng', err))
+      .catch(err => console.log('Lỗi lấy thông tin ý tưởng của tôi', err))
   }
 
-  // hiển thị ô tìm kiếm để 
+  // hiển thị ô tìm kiếm
   goSearch() {
     this.isSearch = true;
   }
@@ -109,16 +110,17 @@ export class MyIdeaPage implements OnInit {
     this.searchString = "";
   }
 
+  // Tìm kiếm theo title của ý tưởng
   onUserEnterSearch(evt) {
     const searchTxt = evt.detail.value;
     let matches = [];
     if (searchTxt.length === 0) {
       this.myIdeaFilterList = this.myIdeas;
     } else {
-      this.myIdeas.forEach((entry) => {
+      this.myIdeas.forEach(entry => {
         if (
           entry.title.toLowerCase().indexOf(searchTxt.toLowerCase()) !== -1
-          || entry.username.toLowerCase().indexOf(searchTxt.toLowerCase()) !== -1
+          // || entry.username.toLowerCase().indexOf(searchTxt.toLowerCase()) !== -1
         ) {
           matches.push(entry);
         }
@@ -128,12 +130,7 @@ export class MyIdeaPage implements OnInit {
 
   }
 
-  onViewUserPage(idea) {
-    // Xử lý click Avatar user và render page user người khác
-    this.router.navigate(['/my-idea'], { queryParams: { id: idea.user_id } });
-  }
-
-  onViewIdeaDetail(evt, idea) {
+  onViewIdeaDetail(idea) {
     this.router.navigate(['/idea-detail'], { queryParams: { id: idea.id } });
   }
 
@@ -197,7 +194,7 @@ export class MyIdeaPage implements OnInit {
     });
     // ta sẽ có một bộ mảng ["MYIDEA",...] hoặc bộ [] 
     // cần chuyển đổi mảng này thành chuổi cách nhau bởi dấu , để đưa lên máy chủ
-    this.refresh(this.filterSelected.toString(','))
+    this.refresh(this.filterSelected.toString(',')) //ví dụ: COMMENT,MARK
   }
 
 }

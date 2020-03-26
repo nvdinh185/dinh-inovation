@@ -28,10 +28,12 @@ export class IdeasReviewDetailPage implements OnInit {
   reviewId: any;
   ajaxReturn: any;
 
-  constructor(private route: ActivatedRoute
+  constructor(
+    private route: ActivatedRoute
     , private apiCommons: CommonsService
     , private apiAuth: AuthService
-    , private mainService: MainService) { }
+    , private mainService: MainService) {
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(item => {
@@ -43,7 +45,6 @@ export class IdeasReviewDetailPage implements OnInit {
     this.init();
     // this.refresh();
   }
-
 
   createHeader() {
     // let returnHeader = Object.keys(this.reviewDetail[0]);
@@ -60,6 +61,7 @@ export class IdeasReviewDetailPage implements OnInit {
   init() {
     // lấy thông tin user đang login có chưa?
     this.userInfo = this.mainService.getUserInfo();
+    // màn hình có độ rộng < 576px
     this.isMobile = this.apiCommons.isMobile();
   }
 
@@ -68,7 +70,7 @@ export class IdeasReviewDetailPage implements OnInit {
       .then(data => {
         this.reviewDetail = data;
         this.createHeader();
-        // console.log(this.reviewDetail);
+        console.log(this.reviewDetail);
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err));
   }
@@ -80,7 +82,7 @@ export class IdeasReviewDetailPage implements OnInit {
 
   async onClickEvaluate(el) {
     // console.log(el);
-    
+
     try {
       this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
     } catch{ }
