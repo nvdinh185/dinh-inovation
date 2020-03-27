@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService, CommonsService, PopoverCardComponent, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { IonTextarea } from '@ionic/angular';
 
 @Component({
   selector: 'app-idea-detail',
@@ -12,11 +13,17 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 })
 export class IdeaDetailPage implements OnInit {
 
+  // khai báo biến để focus vào ô nhập liệu
+  @ViewChild('textComment', { static: false }) textAreaElement: IonTextarea;
   userInfo: any;
   ideaInfo: any;
   message: string;
 
   uploadingFiles: any = [];
+  isMobile: boolean = false;
+  statusConfigs: any = {};
+
+  reviewId: any; // mã review chấm điểm của hội đồng truyền sang thì cho chấm điểm ở đây luôn
 
   constructor(
     private router: Router
@@ -25,21 +32,30 @@ export class IdeaDetailPage implements OnInit {
     , private apiAuth: AuthService
     , private mainService: MainService
     , private iab: InAppBrowser
-  ) { }
+  ) { this.init() }
 
   ngOnInit() {
-
-    this.init();
-
     this.route.queryParams.subscribe(item => {
-      // console.log('item', item);
+      console.log('item', item);
+      this.reviewId = item.review_id;
       // đọc chi tiết để hiển thị nội dung chi tiết ra
       this.refresh(item.id)
     });
   }
 
   init() {
+    this.isMobile = this.apiCommons.isMobile();
     this.userInfo = this.mainService.getUserInfo();
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
+      .then(parameters => {
+        let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
+        statusOptions.forEach(el => {
+          Object.defineProperty(this.statusConfigs, el.id, { value: el, writable: true, enumerable: true, configurable: true });
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   // làm mới ý tưởng này
@@ -53,13 +69,14 @@ export class IdeaDetailPage implements OnInit {
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
 
+  // chuyển sang trang ý tưởng cá nhân
   onViewUserPage(item) {
     // Xử lý click Avatar user và render page user người khác
     this.router.navigate(['/my-idea'], { queryParams: { id: item.user_id } });
   }
 
   //Lấy file cho ý tưởng và comment
-  // Kiểm tra userInfo này đã like và comment chưa?
+  // Kiểm tra userInfo này đã like, comment và chấm điểm chưa?
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
 
@@ -84,10 +101,12 @@ export class IdeaDetailPage implements OnInit {
           });
 
       }
-      // Kiểm tra this.userInfo này đã like chưa?
+      // Kiểm tra this.userInfo này đã like ý tưởng này chưa?
       this.ideaInfo.isUserVoted = this.ideaInfo.likes.findIndex(x => x.user_id === this.userInfo.id && x.activities_type > 0) >= 0
-      // Kiểm tra this.userInfo này đã comment chưa?
+      // Kiểm tra this.userInfo này đã comment ý tưởng này chưa?
       this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
+      //Kiểm tra this.userInfo này đã chấm điểm ý tưởng này chưa?
+      this.ideaInfo.isUserMarked = this.ideaInfo.marks.findIndex(x => x.user_id === this.userInfo.id) >= 0
       //Lấy file cho các bình luận
       this.ideaInfo.comments.forEach(el => {
         if (el.attach_id_list) {
@@ -110,6 +129,25 @@ export class IdeaDetailPage implements OnInit {
             });
         }
       })
+    }
+  }
+
+  // focus đến ô comments
+  focusCommentIdea() {
+    this.textAreaElement.setFocus();
+  }
+
+  // hiển thị lịch sử đánh giá ý tưởng này
+  onClickShowStatusChain(idea) {
+    idea.isShowHistory = !idea.isShowHistory;
+  }
+
+  // thực hiện đánh giá ý tưởng này
+  // chỉ giành riêng cho các role của hội đồng thôi
+  reviewIdea(idea) {
+    console.log(this.userInfo, idea);
+    if (this.userInfo && this.userInfo.role > 1) {
+      // chỉ những user có vai trò đánh giá của hội đồng mới đánh giá được ý tưởng này
     }
   }
 
@@ -148,49 +186,35 @@ export class IdeaDetailPage implements OnInit {
   onClickMore(ev) {
 
     // kiểm tra quyền của userInfo mà hiển thị menu khác nhau
-
-    // nếu user không thuộc ý tưởng, thì có quyền đánh giá và khảo sát mức độ của ý tưởng này
-    // menu đánh giá (cho điểm ý tưởng này - mỗi người chỉ được đánh giá cho điểm --)
-    // hiển thị các tiêu chí để đánh giá .... khảo sát như là biên bản khảo sát đánh giá cho điểm vậy
-
-    // nếu là ý tưởng thuộc user thì cho phép sửa nội dung
-
-    // nếu user có quyền role như sau
+    // nếu user không thuộc ý tưởng, thì có quyền chấm điểm cho ý tưởng này
+    // nếu là ý tưởng thuộc user thì cho phép sửa nội dung, chuyển trạng thái
+    // cụ thể như sau: Nếu role là
     /**
-     * 
-      1	User thường	User -- hiển thị mỗi một menu đánh giá
+      1	User thường	User  -- hiển thị mỗi một menu chấm điểm (nếu không phải ý tưởng của mình)
+                          -- Hoặc menu sửa ý tưởng, chuyển trạng thái (nếu là ý tưởng của mình)
       
-      --- hiển thị menu đánh giá -- ý tưởng này - cho điểm theo từng tiêu chí
-      2	Chủ tịch hội đồng KHCN	Chủ tịch hội đồng KHCN
-      3	Thành viên Hội đồng KHCN	Thành viên Hội đồng KHCN
-
-      -- hiển thị tất cả các menu
-      98	Admin	Quản trị hệ thống -- hiển thị hết menu
+      2	Chủ tịch hội đồng KHCN
+      3	Thành viên Hội đồng KHCN
+      98	Admin	Quản trị hệ thống -- hiển thị hết menu (trừ sửa và chuyển trạng thái)
       99	Developper	Người phát triển -- hiển thị hết menu
-
-      -- xem kết quả đánh giá khảo sát ý tưởng này ....
-
-
      */
 
     let settingsMenu = [];
     // menu đầy đủ
     // trường hợp nào thì sẽ xóa bỏ menu tương ứng
     const allMenu = [
-      //  chỉ cho admin 98,99 và user_id của ý tưởng trùng với nó
       // Cho tất cả mọi người trừ userInfo==idea
       {
         id: 1
-        , name: "Đánh giá ý tưởng này"
+        , name: "Chấm điểm ý tưởng này"
         , value: "MARK"
-        // , isChecked: true // khai báo chọn mặt định ý tưởng này???
         , icon: {
           name: "microphone"
           , color: "warning"
         }
       }
       ,
-      //Chỉnh sửa ý tưởng
+      //Chỉnh sửa ý tưởng (cho user_id của ý tưởng đó)
       {
         id: 2
         , name: "Sửa ý tưởng này"
@@ -201,7 +225,7 @@ export class IdeaDetailPage implements OnInit {
         }
       }
       ,
-      // chỉ cho admin 98,99, và user_id của ý tưởng trùng với nó
+      // chỉ cho admin 99, và user_id của ý tưởng trùng với nó
       {
         id: 3
         , name: "Chuyển trạng thái"
@@ -212,7 +236,7 @@ export class IdeaDetailPage implements OnInit {
         }
       }
       ,
-      // chỉ cho admin 98,99 soát và merge
+      // chỉ cho admin 98, 99
       {
         id: 4
         , name: "Ghép với ..."
@@ -223,10 +247,10 @@ export class IdeaDetailPage implements OnInit {
         }
       }
       ,
-      // chỉ cho admin 98,99 soát và merge
+      // chỉ cho admin 98, 99
       {
         id: 5
-        , name: "Chưa phù hợp"
+        , name: "Xóa ý tưởng này"
         , value: "TRASH"
         , icon: {
           name: "trash"
@@ -238,30 +262,35 @@ export class IdeaDetailPage implements OnInit {
     // console.log(this.ideaInfo.idea, this.userInfo);
 
     if (this.userInfo && this.ideaInfo && this.ideaInfo.idea) {
+      //user_id của ý tưởng trùng với id của userInfo
       if (this.ideaInfo.idea.user_id === this.userInfo.id) {
+        // cho phép sửa hoặc chuyển trạng thái
         settingsMenu = allMenu.filter(x => x.id === 2 || x.id === 3)
       } else {
+        // chỉ cho phép chấm điểm
         settingsMenu = allMenu.filter(x => x.id === 1)
       }
 
-      if (
-        this.userInfo.role === 98
-      ) {
+      if (this.userInfo.role === 98) {
+        // cho phép chấm điểm, ghép và xóa
         settingsMenu = settingsMenu.concat(allMenu.filter(x => x.id !== 1 && x.id !== 2 && x.id !== 3))
       } else if (this.userInfo.role === 99) {
+        // toàn quyền
         settingsMenu = allMenu
-      } else if (
-        this.userInfo.role === 2
-        ||
-        this.userInfo.role === 3
-      ) {
-
-      } else {
-
       }
-
-    } else {
-
+      if (this.userInfo.role > 1 && this.reviewId) {
+        // cho phép đánh giá
+        settingsMenu.splice(settingsMenu.length, 0
+          , {
+            id: 6
+            , name: "HĐ KHCN đánh giá"
+            , value: "REVIEW"
+            , icon: {
+              name: "eye"
+              , color: "success"
+            }
+          })
+      }
     }
 
     this.apiCommons.presentPopover(
@@ -287,9 +316,9 @@ export class IdeaDetailPage implements OnInit {
     // console.log('lenh', cmd);
     if (this.ideaInfo && this.ideaInfo.idea) {
       if (cmd === 'MARK') {
-        // kiểm tra user đã đánh giá hay chưa
+        // kiểm tra user đã chấm điểm hay chưa
 
-        // gọi form đánh giá
+        // gọi form chấm điểm
         this.markIdea(this.ideaInfo.idea)
       }
       if (cmd === 'EDIT') {
@@ -358,6 +387,12 @@ export class IdeaDetailPage implements OnInit {
 
   // chấm điểm ý tưởng này theo các tiêu chí định nghĩa
   async markIdea(idea) {
+
+    if (this.ideaInfo.idea.user_id === this.userInfo.id) {
+      this.apiCommons.showToast('Bạn không tự chấm điểm cho mình được!', 2000, 'warning', 'middle')
+      return
+    }
+
     // popup cửa sổ này lên và cho phép chỉnh sửa ý tưởng này
     let questions;
     let userMarkIdea;
@@ -391,12 +426,12 @@ export class IdeaDetailPage implements OnInit {
       ]
       , items: [
         { type: 'title', name: idea.title, key: 'id', value: idea.id }
-        , ...arrayTestDemo // sử dụng spread operation ở đây để load động các questions đánh giá
+        , ...arrayTestDemo // sử dụng spread operation ở đây để load động các questions chấm điểm
         , {
           type: 'button'
           , options: [
             {
-              name: 'Gửi đánh giá'    // button name
+              name: 'Gửi chấm điểm'    // button name
               , next: 'CALLBACK'      // callback get resulte or json
               , id: idea.id
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/mark-idea'
@@ -590,5 +625,10 @@ export class IdeaDetailPage implements OnInit {
 
     });
   }.bind(this);
+
+  // chuyển link đến ý tưởng có liên kết
+  forwardLinkId(id) {
+    this.router.navigate(['/idea-detail'], { queryParams: { id: id } });
+  }
 
 }

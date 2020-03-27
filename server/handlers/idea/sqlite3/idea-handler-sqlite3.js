@@ -8,15 +8,14 @@
 const db = require('../../../db/sqlite3/db-pool');
 const arrObj = require('../../../utils/array-object');
 
-
-/* const returnErrorMessage = (res, err, message) => {
-    res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({
-        status: 'NOK'
-        , error: err
-        , message: message
-    }, null, 2));
-} */
+const orderList = {
+    ORDER_CHANGED: 'ORDER_CHANGED'     // được thay đổi gần đây nhất
+    , ORDER_CREATED: 'ORDER_CREATED'   // được tạo ra gần đây nhất
+    , ORDER_LIKES: 'ORDER_LIKES'       // được yêu thích nhất
+    , ORDER_COMMENTS: 'ORDER_COMMENTS' // được nhiều người bình luận nhất
+    , ORDER_MARKS: 'ORDER_MARKS'       // được chấm điểm cao nhất của mọi người
+    , ORDER_PRIZES: 'ORDER_PRIZES'     // được giải của hội đồng chọn cao nhất
+}
 
 /**
  * Lưu file chọn trong ý tưởng vào csdl
@@ -59,10 +58,36 @@ class IdeaHandler {
     // trường hợp người dùng chỉ lọc những ý tưởng liên quan thì truyền lên bộ lọc
     // Chỉ những ý tưởng của mình quan tâm (tức là các ý tưởng của mình,...)
     getIdeas(req, res, next) {
+
+        let { order_by, filter_category, filter_status, page_size, page } = req.paramS;
+        let orderBy = `order by IFNULL(a.changed_time, a.created_time) desc`;
+
+        if (orderList[order_by] === orderList.ORDER_CREATED)
+            orderBy = `order by a.created_time desc`;
+
+        if (orderList[order_by] === orderList.ORDER_COMMENTS)
+            orderBy = `order by a.commented_count desc`;
+
+        if (orderList[order_by] === orderList.ORDER_LIKES)
+            orderBy = `order by a.voted_count desc`;
+
+        if (orderList[order_by] === orderList.ORDER_MARKS)
+            orderBy = `order by a.total_point desc`
+
+        if (orderList[order_by] === orderList.ORDER_PRIZES)
+            orderBy = `order by a.last_value_prize desc`
+
+        let filterCategory = filter_category ? filter_category.split(",") : [];
+        let filterStatus = filter_status ? filter_status.split(",") : [];
+
+        let sqlCategory = filterCategory.length > 0 ? `and a.category_id in (${filterCategory.toString()})` : ``
+        let sqlStatus = filterStatus.length > 0 ? `and a.status in (${filterStatus.toString()})` : ``
+        // console.log(sqlCategory, sqlStatus, orderBy);
         db.getRsts(`select 
-                    d.fullname || '(' || d.nickname || ')' as username
+                    d.fullname || '(' || d.nickname || ')' as full_name
                     , c.name as status_name
                     , b.name as category_name
+                    , c.status_type
                     , b.background
                     , a.* 
                     from ideas a
@@ -72,8 +97,13 @@ class IdeaHandler {
                     on a.status = c.id
                     left join users d
                     on a.user_id = d.id
-                    where c.status_type > 1 -- chỉ lọc lấy các ý tưởng còn hiệu lực
-                    order by IFNULL(a.changed_time, a.created_time) desc`)
+                    where c.status_type >=0 -- chỉ lọc lấy các ý tưởng còn hiệu lực
+                    ${sqlCategory}
+                    ${sqlStatus}
+                    ${orderBy}
+                    LIMIT ${(page_size ? page_size : 30)}
+                    OFFSET ${(page ? page * (page_size ? page_size : 30) : 0)}
+                    `)
             .then(result => {
                 // console.log('result: ', result);
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -178,7 +208,9 @@ class IdeaHandler {
                             , d.avatar
                             , c.name as status_name
                             , b.name as category_name
-                            , a.* 
+                            , c.status_type
+                            , b.background
+                            , a.*  
                             from ideas_selected a
                             left join ideas_categories b
                             on a.category_id = b.id
@@ -186,7 +218,6 @@ class IdeaHandler {
                             on a.status = c.id
                             left join users d
                             on a.user_id = d.id
-                            order by a.changed_time desc, a.created_time desc
                             `);
 
             let likes = await db.getRsts(`with 

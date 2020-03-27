@@ -9,6 +9,8 @@ import { IdeaDetailPageRoutingModule } from './idea-detail-routing.module';
 import { IdeaDetailPage } from './idea-detail.page';
 import { SharedModule } from 'src/app/shared.module';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
+import { LinkUrlPipe } from './link.url.pipe';
+import { LinkIdeasPipe } from './link-ideas.pipe';
 
 @NgModule({
   imports: [
@@ -19,6 +21,6 @@ import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
     SharedModule,
     IdeaDetailPageRoutingModule
   ],
-  declarations: [IdeaDetailPage]
+  declarations: [IdeaDetailPage, LinkIdeasPipe, LinkUrlPipe]
 })
 export class IdeaDetailPageModule {}
