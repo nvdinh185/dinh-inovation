@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'ngxi4-dynamic-service';
 import { Router } from '@angular/router';
 import { MainService } from 'src/app/services/main.service';
 
@@ -31,48 +30,22 @@ export class HomePage implements OnInit {
       ]
     }
   }
-
-  topUsersActions: any;
-
   userInfo: any;
-
   constructor(
-    private apiAuth: AuthService
-    , private router: Router
+    private router: Router
     , private mainService: MainService
   ) { }
 
   // khi trang bắt đầu load
   ngOnInit() {
-    this.init();
-  }
-
-  // khởi tạo trang chủ ban đầu
-  init() {
-
     setTimeout(() => {
       this.userInfo = this.mainService.getUserInfo();
     }, 1000)
-
-    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-top-actions")
-      .then(data => {
-        // console.log('Data: ', data);
-        this.topUsersActions = data;
-        // console.log(this.topUsersActions);
-      })
-      .catch(err => {
-        // console.log('Lỗi: ', err);
-      });
   }
 
   // gọi đến trang login
   onClickLogin() {
     this.router.navigate(['/login']);
-  }
-
-  // Gọi đến trang chat-bot
-  onClickChatbot() {
-    this.router.navigate(['/chat-bot']);
   }
 
 }

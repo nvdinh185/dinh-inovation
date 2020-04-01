@@ -64,73 +64,6 @@ export class LoginPage implements OnInit {
   }
 
   /**
-   * xử lý upload ảnh mới
-   * @param evt 
-   */
-  imageUploadEvent(evt, item) {
-    if (!evt.target) { return; }
-    if (!evt.target.files) { return; }
-    if (evt.target.files.length !== 1) { return; }
-    const file = evt.target.files[0];
-    if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif' && file.type !== 'image/jpg') { return; }
-
-    //gán sự kiện chọn ảnh
-    //this.imageChangedEvent = evt;
-
-    //gán sự kiện chọn ảnh crop
-    // = evt;
-    this.apiCommons.openModal(Ionic4CroppieComponent, {
-      parent: this, // để gọi cắt
-      item: item,
-      event: evt,
-      options: item.options
-    })
-      .then(data => {
-        item.value = data ? data : item.value;
-      })
-  }
-
-  /**
-   * xử lý cắt ảnh
-   * @param item 
-   */
-  async cropImage(item) {
-    let imageBase64 = await this.apiImage.createBase64Image(item.value, 600);
-
-    this.apiCommons.openModal(Ionic4CroppieComponent, {
-      parent: this, // để gọi cắt
-      item: item,
-      // nếu giá trị là url thì chuyển thành base64 để crop
-      // giảm kích thước xuống còn 600x600 là tối đa nhé
-      image: imageBase64,
-      options: item.options
-    })
-      .then(data => {
-        item.value = data ? data : item.value;
-      })
-  }
-
-
-  /** mở webcam trên máy */
-  openCamera(item) {
-    this.apiCommons.openModal(CameraCardComponent, {
-      parent: this, // để gọi tắt cửa sổ
-    })
-      .then(data => {
-        // console.log('ảnh nhận được: ', data ? data.length : undefined);
-        item.value = data ? data : item.value;
-      })
-  }
-
-  /**
-   * Hiển thị ảnh thật
-   * @param item 
-   */
-  showImage(item) {
-    item.visible = !item.visible;
-  }
-
-  /**
    * Gọi chức năng login
    */
   login() {
@@ -153,9 +86,9 @@ export class LoginPage implements OnInit {
           , hint: 'Sử dụng user của email'
           , input_type: 'userName'          // input type as ionic
           , icon: 'ios-contact'      // icon of ionic list
-          , validators: [{ required: true, min: 3, max: 30, validators: [{ pattern: "^[a-z0-9._%+-]" }] }]
+          , validators: [{ required: true, min: 1, max: 30, validators: [{ pattern: "^[a-z0-9._%+-]" }] }]
         }
-        , { type: "password", key: "password", name: "password", hint: "Mật khẩu phải có chữ hoa, chữ thường, ký tự đặc biệt, số", input_type: "password", icon: "md-key", validators: [{ required: true, min: 3, max: 20 }] }
+        , { type: "password", key: "password", name: "password", hint: "Mật khẩu phải có chữ hoa, chữ thường, ký tự đặc biệt, số", input_type: "password", icon: "md-key", validators: [{ required: true, min: 1, max: 20 }] }
         ,
         {
           type: 'button'
@@ -182,8 +115,6 @@ export class LoginPage implements OnInit {
     );
 
   }
-
-
 
   /**
    * 5. Hiển thị thông tin sau khi đăng nhập thành công
@@ -351,7 +282,6 @@ export class LoginPage implements OnInit {
     );
   }
 
-
   /**
    * Hàm gọi lại cho form popup
    */
@@ -368,10 +298,12 @@ export class LoginPage implements OnInit {
         }
         if (res.button.command === "CREATE-USER") {
           this.saveToken(res.button.token, res.response_data.data);
+          this.apiCommons.showToast('Tạo mới thành công', 3000);
         }
         if (res.button.command === "EDIT-USER") {
           this.userInfo = res.response_data.data
           this.mainService.saveUserInfo(this.userInfo)
+          this.apiCommons.showToast('Cập nhật thành công', 3000);
           this.showUserInfo()
         }
       }

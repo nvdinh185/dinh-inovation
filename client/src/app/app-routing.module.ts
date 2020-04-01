@@ -17,18 +17,6 @@ const routes: Routes = [
     loadChildren: () => import('./idea-entry/idea-detail/idea-detail.module').then( m => m.IdeaDetailPageModule)
   },
   {
-    path: 'upgrade',
-    loadChildren: () => import('./admin-entry/upgrade/upgrade.module').then( m => m.UpgradePageModule)
-  },
-  {
-    path: 'user-activity',
-    loadChildren: () => import('./main-entry/home/user-activity/user-activity.module').then( m => m.UserActivityPageModule)
-  },
-  {
-    path: 'chat-bot',
-    loadChildren: () => import('./chatbot/chat-bot/chat-bot.module').then( m => m.ChatBotPageModule)
-  },
-  {
     path: 'ideas-review',
     loadChildren: () => import('./idea-entry/ideas-review/ideas-review.module').then( m => m.IdeasReviewPageModule)
   },

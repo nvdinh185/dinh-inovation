@@ -12,22 +12,6 @@ const defaultOrganizationId = 3; // default tổ chức được tạo
 
 class UserHandler {
 
-    // hàm này sẽ lưu lại phiên login 
-    // ghi đường dẫn mà user đang vào
-    saveUserLogin(req, res, next){
-        // biến vào
-        // lưu vào bảng users
-        //`update users  where username='${(req.user ? req.user.username : ``)}'`
-        
-        next()
-    }
-
-    // save history user đã login ở đường dẫn
-    saveUserFocusFunction(req, res, next){
-        next()
-    }
-
-
     // lấy thông tin user
     // ưu tiên lấy user của tham số gửi vào
     // nếu không có thì lấy user của token
@@ -112,6 +96,7 @@ class UserHandler {
             });
 
     }
+
     /**
      * 3. Sửa thông tin người dùng
      * Các thông tin cơ bản của user, không đẩy hình
@@ -137,30 +122,7 @@ class UserHandler {
                 })
             });
     }
-    // lấy thông tin user
-    getAllUsers(req, res, next) {
-        db.select('users')
-            .then(result => {
-                // console.log('result: ', result);
-                if (result && result.status === 0) {
-                    res.status(401).json({
-                        message: 'Lỗi!'
-                    })
-                    // res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
-                    // res.end(arrObj.getJsonStringify({ status: 'NOK', message: 'User đã bị khóa, vui lòng liên hệ Quản trị hệ thống' }));
-                } else {
-                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(arrObj.getJsonStringify({ status: 'OK', message: 'Thành công', data: result }));
-                }
-
-            })
-            .catch(err => {
-                console.log('Lỗi: ', err);
-                res.status(401).json({
-                    message: 'Lỗi truy vấn csdl admin_users'
-                })
-            });
-    }
+    
 }
 
 module.exports = new UserHandler();

@@ -68,7 +68,7 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
 // Đây là hàm giả lập login email ldap thành công
 const fakeLoginLdap = (email, password) => new Promise((rs, rj) => {
     setTimeout(() => {
-        if (email === 'abc' && password == 'xyz') {
+        if (email === 'a' && password == 'a') {
             rs({
                 email
             })
@@ -96,8 +96,8 @@ class LDAPHandler {
         const nameMatch = username.match(/^([^@]*)@/);
         let shortName = nameMatch ? nameMatch[1] : username;
 
-        // fakeLoginLdap(username, password)
-        loginLdapMobifone(username, password)
+        fakeLoginLdap(username, password)
+        // loginLdapMobifone(username, password)
             .then(user => {
                 res.status(200).send({
                     status: 200,

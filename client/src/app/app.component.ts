@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -15,19 +15,9 @@ import { environment } from './../environments/environment'
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  // Lấy độ rộng của cửa sổ để quyết định màn hình như nào nhé
-  width: number;
-  height: number;
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event?: Event) {
-    const win = !!event ? (event.target as Window) : window;
-    this.width = win.innerWidth;
-    this.height = win.innerHeight;
-  }
-
-  // giả lập lấy menu từ máy chủ về
-  defaultMenu: any = JSON.stringify([
+  // menu chưa login
+  defaultMenu: any = [
     {
       id: 1,
       name: 'Văn phòng sáng tạo',
@@ -44,30 +34,13 @@ export class AppComponent {
       url: '/login',     // bấm chuyển trang khai phần tử quản lý
       icon: 'log-in'
     }
-  ]);
-
-  rootPage: any;
-  //Khai báo cây menu được tổ chức cho ứng dụng này 
-
-  treeOrigin: any; // cây menu gốc lấy được sau khi login thành công
+  ];
 
   //cây này sẽ nhúng vào component treeView để hiển thị menu
-  treeMenu: any;
-
-  // Thông tin lưu trữ về thiết bị (tức cài ứng dụng trên thiết bị)
-  userDevice: any;
-
-  // Dữ liệu trang chủ đọc từ csdl ứng dụng ra được
-  // homeData: any; //cái này không cần lưu ở đây, lấy trực tiếp từ apiAuth.getHomeData() nhé
+  treeMenu: any = [];
 
   //Thông tin người dùng login vào chương trình
   userInfo: any;
-
-  //Cặp khóa riêng của thiết bị sử dụng để mã hóa dữ liệu riêng hoặc ký thông tin riêng
-  keyPair: any;
-
-  //Biến khai báo thêm để xác nhận trạng thái trả về của quyền đọc menu sau khi người dùng login
-  statusCallBack: any;
 
   constructor(
     private platform: Platform,
@@ -78,15 +51,11 @@ export class AppComponent {
     private apiAuth: AuthService,
     private apiCommons: CommonsService,
     private mainService: MainService
-  ) {
-    this.initializeApp();
-  }
+  ) { this.initializeApp(); }
 
   initializeApp() {
 
     this.platform.ready().then(() => {
-
-      this.onResize(); // lấy kích thước màn hình để xem
 
       this.statusBar.styleDefault();
       this.splashScreen.hide();
@@ -113,8 +82,7 @@ export class AppComponent {
 
     this.apiCommons.subscribe('event-logout-ok', () => {
       this.userInfo = null
-      // gọi tổ chức menu tùy vào login hay chưa
-      this.refresh();
+      this.treeMenu = this.defaultMenu;
     })
 
     this.mainService.getTokenInfo()
@@ -130,26 +98,32 @@ export class AppComponent {
   }
 
   /**
-   * Làm mới menu sau khi login hoặc thay đổi tham số gì đó
+   * Làm mới menu sau khi load hoặc login
    */
   refresh() {
-    // Khai báo menu Mặt định
-    // this.treeMenu = this.defaultMenu;
-
-    // menu này được lấy từ sự phân quyền trong csdl
-    // đọc lấy từ bảng admin_menu, sau đó thêm vào cây menu để hiển thị
-    let menuAfterlogin: any = [];
-
-    // menu dành cho người phát triển
-    let menuDeveloper: any = [];
-
-    // menu dành cho đội ngũ đánh giá ý tưởng
-    // gồm hội đồng khcn
-    let menuReviewTeam: any = [];
+    // Khai báo menu Mặc định
+    this.treeMenu = [
+      {
+        id: 1,
+        name: 'Văn phòng sáng tạo',
+        size: '1.1em',
+        type: 'route',     // chuyển trang theo routing
+        url: '/home',      // chuyển trang theo routing
+        icon: 'home'
+      }
+      ,
+      {
+        id: 2,
+        name: 'Login/Logout',
+        type: 'route',     // bấm chuyển trang theo routing
+        url: '/login',     // bấm chuyển trang khai phần tử quản lý
+        icon: 'log-in'
+      }
+    ];
 
     if (this.userInfo) {
       // thực hiện get menu from user
-      menuAfterlogin = [
+      this.treeMenu.push(
         {
           id: 3,
           name: 'Phòng ý tưởng',
@@ -157,116 +131,28 @@ export class AppComponent {
           type: 'route',     // chuyển trang theo routing
           url: '/idea',      // chuyển trang theo routing
           icon: 'md-alarm'
-        }
-      ]
+        })
 
-      if (this.userInfo.username === "cuong.dq" || this.userInfo.role === 99) {
-        menuDeveloper = [
+      if (this.userInfo.role === 99) {
+        this.treeMenu.push(
           {
             id: 99,
-            name: 'Nâng cấp CSDL (*)',
-            size: '1.1em',
-            type: 'route',        // chuyển trang theo routing
-            url: '/upgrade',      // chuyển trang theo routing
-            icon: 'cube'
-          }
-        ]
-      }
-
-      if (
-        this.userInfo.username === "cuong.dq" 
-      || this.userInfo.role === 2 
-      || this.userInfo.role === 3 
-      || this.userInfo.role === 98 
-      || this.userInfo.role === 99 
-      ) {
-        menuReviewTeam = [
-          {
-            id: 39,
             name: 'Họp xét duyệt',
             size: '1.1em',
             type: 'route',             // chuyển trang theo routing
             url: '/ideas-review',      // chuyển trang theo routing
             icon: 'ios-people'
           }
-        ]
-      }
-
-    }
-
-    let menuAll = JSON.parse(this.defaultMenu);
-
-    menuAfterlogin.forEach(el => {
-      if (!menuAll.find(x => x.id === el.id)) menuAll.splice(1, 0, el)
-    });
-
-    
-    menuReviewTeam.forEach(el => {
-      if (!menuAll.find(x => x.id === el.id)) menuAll.splice(menuAll.length, 0, el)
-    });
-    
-    menuDeveloper.forEach(el => {
-      if (!menuAll.find(x => x.id === el.id)) menuAll.splice(menuAll.length, 0, el)
-    });
-
-    // tạo cây menu trước khi thực hiện
-    this.treeMenu = this.apiCommons.createTreeMenu(menuAll, 'id', 'parent_id');
-
-  }
-
-  /**
-   * Sự kiện xãy ra khi người dùng bấm menu có thuộc tính 
-   * item.type = 'click'
-   * nó sẽ trả về dữ liệu gồm
-   * {item:node,index:idx,parent:parent}
-   * 
-   * @param event 
-   */
-  onClickItem(event) {
-
-    //console.log('emit trả về dữ liệu này', event.item.options);
-    this.menuCtrl.close();
-
-    if (event && event.item && event.item.url) {
-
-      if (event.item.options) {
-
-        // chuyên tham số kiểu ActivatedRoute sang event.item.options = { type: 'PARAM',icon:[1,2,3,4,5],it:JSON.stringify({o:'bb'})}
-        //this.router.navigate([event.item.url, event.item.options]);
-
-        // Chuyển tham số kiểu queryParams --> { queryParams: { page: pageNum } }
-        this.router.navigate([event.item.url], { queryParams: event.item.options });
-
-      } else {
-
-        this.router.navigate([event.item.url]);
-
+        )
       }
     }
+
   }
 
   /**
    * Bấm gọi trang login
    */
   onClickLogin() {
-    this.menuCtrl.close();
-    this.router.navigate(['/login']);
-  }
-
-  /**
-   * Bam goi user
-   * Trả thông tin user này cho trang ý tưởng của tôi
-   * Trường hợp người dùng bấm bất kỳ thông tin user nào thì trả qua đúng user_id đó luôn
-   */
-  onClickUser() {
-    this.menuCtrl.close();
-    this.router.navigate(['/my-idea'], { queryParams: { id: this.userInfo.id } });
-  }
-
-  /**
-   * Thay đổi ảnh đại diện
-   */
-  onClickUserImage(type: string) {
     this.menuCtrl.close();
     this.router.navigate(['/login']);
   }

@@ -36,7 +36,6 @@ export class MainService {
               this.userInfo = result.data;
               this.token = token;
               this.apiAuth.token = token;
-              this.apiCommons.publish('event-login-ok', this.userInfo);
               resolve(this.userInfo);
             } else {
               reject()
@@ -54,7 +53,6 @@ export class MainService {
 
   saveUserInfo(userInfo: any) {
     this.userInfo = userInfo;
-    this.apiCommons.publish('event-login-ok', this.userInfo);
   }
 
   /**

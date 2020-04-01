@@ -17,27 +17,9 @@ const jwtTokenVerify = require('../../handlers/jwt-token-verify');
 
 
 const adminHandler = require("../../handlers/idea/sqlite3/admin-handler");
-const upgradeIdeaHandler = require("../../handlers/upgrade-database/upgrade-idea-handler");
 
-// ------ dưới đây là các hàm dành cho admin -----//
-// 1. Sau khi người dùng login thành công, hàm này trả về thông tin user trong hệ thống
-// trường hợp chưa có user hoặc user đang bị khóa thì trả về 2 trạng thái, user đang bị khóa
-// và trường hợp user chưa có thì yêu cầu bật form khai báo thông tin
-// {status:'OK', message:'Login thành công', data: userInfo}
-// trường hợp userInfo không có dữ liệu thì phải yêu cầu khai báo form user
-// hoặc {status:'NOK', message:'User bị khóa liên hệ Quản trị hệ thống'}
-router.get('/get-all-users'
-    , jwtTokenVerify                // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , userHandler.getAllUsers       // dựa vào giá trị req.user.username trả thông tin user
-)
-
-// hàm này được gọi khi login thành công
-// hoặc token được lưu và gọi được thành công
-// 
 router.get('/get-user-info'
     , jwtTokenVerify                // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    // đoạn này lưu lại log của user khi login thành công
-    , userHandler.saveUserLogin     // Lưu thông tin login của user lần đầu
     , userHandler.getUserInfo       // dựa vào giá trị req.user.username trả thông tin user
 )
 
@@ -46,7 +28,6 @@ router.post('/create-user'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của user}
     , userHandler.createNewUser     // tạo user mới
-    , userHandler.saveUserLogin     // Lưu thông tin login lần đầu
     , userHandler.getUserInfo       // trả thông tin user đã đăng ký
 )
 
@@ -153,17 +134,6 @@ router.get('/get-questions'
     , listHandler.getQuestions
 )
 
-// thống kê hoạt động thường xuyên đưa vào tôn vinh
-router.get('/get-top-actions'
-    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , listHandler.getActionsList             // trả về danh sách ý tưởng
-)
-
-router.get('/get-all-actions'
-    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , listHandler.getAllUserActions             // trả về danh sách ý tưởng
-)
-
 // get file id array ?id_list=[1,2,3,4]
 router.get('/get-attach-files'
     , jwtTokenVerify                         // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
@@ -177,18 +147,7 @@ router.get('/get-file-id'
 )
 
 //------ thực thi lệnh trực tiếp không cho phân quyền --- chỉ dev mới thực thi được
-//1. Thực hiện nâng cấp csdl bằng các câu lệnh sql trực tiếp vào csdl
-router.post('/upgrade-database'
-    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
-    , userHandler.getUserId               // trả về req.user.id và req.user.username
-    // dữ liệu lấy câu lệnh ở đây
-    , postHandler.jsonProcess // lay json_data
-    //chèn yêu cầu phân quyền để thực hiện việc này
-    , adminHandler.setFunctionFromPath //thiet lap chuc nang tu pathName
-    , adminHandler.checkFunctionRole   //kiem tra quyen co khong de cho phep
-    // Gửi câu lệnh sql trực tiếp lên csdl để thực thi
-    , upgradeIdeaHandler.upgradeDatabase // thực thi lệnh sql
-);
+
 
 router.get('/get-cat-ideas-total'
     // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
@@ -235,15 +194,5 @@ router.get('/get-my-idea'
     , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , listHandler.getMyIdea
 )
-
-// hàm này tích hợp ở get-my-idea nhé, không dùng hàm này
-/* router.post('/my-idea-filter'
-    , jwtTokenVerify                        // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign) này)
-    , userHandler.getUserId                 // trả về req.user.id và req.user.username
-    // dữ liệu lấy câu lệnh ở đây
-    , postHandler.jsonProcess               // lay json_data
-    , listHandler.getMyIdeaFiltered         // thực thi lệnh sql
-);
- */
 
 module.exports = router;
