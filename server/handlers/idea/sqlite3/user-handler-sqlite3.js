@@ -1,10 +1,5 @@
 "use strict"
 
-/**
- * Bộ tương tác csdl để tạo, quản lý user, (quản lý user sử dụng hệ thống)
- */
-
-// Kết nối csdl oracle theo pool
 const db = require('../../../db/sqlite3/db-pool');
 const arrObj = require('../../../utils/array-object');
 
@@ -17,25 +12,22 @@ class UserHandler {
     // nếu không có thì lấy user của token
     getUserInfo(req, res, next) {
         let sqlWhere = req.paramS.id ? `where id='${req.paramS.id}'` : `where username='${(req.user ? req.user.username : ``)}'`
-        // console.log('result: ', sqlWhere);
+        // console.log('sqlWhere: ', sqlWhere);
         db.getRst(`select * from users ${sqlWhere}`)
             .then(result => {
                 if (result && result.status === 0) {
                     res.status(401).json({
                         message: 'User đã bị khóa, vui lòng liên hệ Quản trị hệ thống'
                     })
-                    // res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
-                    // res.end(arrObj.getJsonStringify({ status: 'NOK', message: 'User đã bị khóa, vui lòng liên hệ Quản trị hệ thống' }));
                 } else {
                     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(arrObj.getJsonStringify({ status: 'OK', message: 'Login thành công', data: result }));
+                    res.end(arrObj.getJsonStringify({ status: 'OK', data: result }));
                 }
-
             })
             .catch(err => {
                 console.log('Lỗi: ', err);
                 res.status(401).json({
-                    message: 'Lỗi truy vấn csdl admin_users'
+                    message: 'Lỗi truy vấn csdl users'
                 })
             });
     }
@@ -122,7 +114,7 @@ class UserHandler {
                 })
             });
     }
-    
+
 }
 
 module.exports = new UserHandler();

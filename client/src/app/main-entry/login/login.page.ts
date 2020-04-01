@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, CommonsService, DynamicFormMobilePage, Ionic4CroppieComponent, ImageService, CameraCardComponent } from 'ngxi4-dynamic-service';
+import { AuthService, CommonsService, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
 import { MainService } from '../../services/main.service';
 
 @Component({
@@ -19,7 +19,6 @@ export class LoginPage implements OnInit {
     private apiCommons: CommonsService
     , private apiAuth: AuthService
     , private mainService: MainService
-    , private apiImage: ImageService
   ) { }
 
   ngOnInit() {
@@ -59,8 +58,6 @@ export class LoginPage implements OnInit {
     if (btn.command === 'EDIT' && this.userInfo) {
       this.editUser();
     }
-
-
   }
 
   /**
@@ -77,48 +74,40 @@ export class LoginPage implements OnInit {
       , items: [
         { type: 'title', name: 'Nhập user của email @mobifone.vn' }
         ,
-        // form login gồm nhập số điện thoại username và pass
+        // form login gồm nhập username và password
         {
-          type: 'text'              // input text
-          , key: 'username'         // json_key + value input ==> {username:value}
-          , value: ''               // default value
-          , name: 'Tên đăng nhập:'
-          , hint: 'Sử dụng user của email'
-          , input_type: 'userName'          // input type as ionic
-          , icon: 'ios-contact'      // icon of ionic list
-          , validators: [{ required: true, min: 1, max: 30, validators: [{ pattern: "^[a-z0-9._%+-]" }] }]
+          type: 'text', key: 'username', name: 'Tên đăng nhập:', hint: 'Vui lòng nhập tên đăng nhập!', icon: 'contact', validators: [{ required: true, min: 1, max: 30 }]
         }
-        , { type: "password", key: "password", name: "password", hint: "Mật khẩu phải có chữ hoa, chữ thường, ký tự đặc biệt, số", input_type: "password", icon: "md-key", validators: [{ required: true, min: 1, max: 20 }] }
+        , { type: "password", key: "password", name: "Mật khẩu", hint: "Vui lòng nhập mật khẩu!", input_type: "password", icon: "key", validators: [{ required: true, min: 1, max: 20 }] }
         ,
         {
           type: 'button'
           , options: [
             {
-              name: 'Đăng nhập'        // button name
-              , next: 'CALLBACK'       // callback get resulte or json
+              name: 'Đăng nhập'
+              , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.AUTH_SERVER + '/login'
-              , token: true         // token login before interceptor or token string
-              , command: 'LOGIN'    // extra parameter for callback process
+              , token: true
+              , command: 'LOGIN'
             }
           ]
         }
       ]
     }
 
-    // call popup window for form login
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
-        parent: this,                 // for dismiss child component
-        callback: this.callbackLogin, // function for callback process result of form
-        form: form                    // form dynamic 
+        parent: this,
+        callback: this.callbackLogin,
+        form: form
       }
     );
 
   }
 
   /**
-   * 5. Hiển thị thông tin sau khi đăng nhập thành công
-   *  hiển thị dữ liệu cho chính form login này
+   * Nếu đã đăng nhập thì hiển thị thông tin user đăng nhập
+   * Nếu không thì hiện nút để kích vào gọi form đăng nhập
    */
   showUserInfo() {
 
@@ -127,11 +116,6 @@ export class LoginPage implements OnInit {
         title: "ĐÃ ĐĂNG NHẬP"
         , color: 'primary'
         , items: [
-          /* {
-            type: 'qrcode',
-            value: token
-          }
-          , */
           {
             type: 'barcode',
             value: this.userInfo.username
@@ -286,8 +270,7 @@ export class LoginPage implements OnInit {
    * Hàm gọi lại cho form popup
    */
   callbackLogin = function (res) {
-    // allway return Promise for callback
-    return new Promise<any>((resolve, reject) => {
+    return new Promise(resolve => {
       console.log(res);
       if (res.error) {
         // console.log('res', res.error.message , res.message,'Error:<br>' + (res.error.message!=undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))))

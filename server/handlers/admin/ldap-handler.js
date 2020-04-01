@@ -1,24 +1,9 @@
-/**
- * Class Ldap kết nối ldap server, xác thực và trả về token
- * User test thử 
- * var email = 'm-bill.c3@mobifone.vn'  hoặc nhập m-bill3 không có @mobifone.vn
- * var password = 'Abcxyz@12345'
- */
-const arrObj = require('../../utils/array-object');
-const secUtil = require('../../utils/secret-util');
-const { jwtToken, pareJwtToken } = require('../../utils/jwt-token');
+const { jwtToken } = require('../../utils/jwt-token');
 
 // sử dụng thành phần này để bind và unbind ldap
 const ldap = require('ldapjs');
 const ldapServerUrl = 'ldap://10.3.12.57:389';
 const domainNameEmail = '@mobifone.vn';
-
-// cơ sở dữ liệu sqlite phân quyền user được cấp phép vào không
-// const db = require('../../db/sqlite3/db-pool-admin');
-
-//cơ sở dũ liệu kế nối theo pool
-// oracle
-// const db = require('../../db/oracle/db-pool');
 
 // đây là hàm thực tế xác thực ldap mobifone
 const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) => {
@@ -83,16 +68,14 @@ class LDAPHandler {
 
     /**
      * Hàm login trả về trạng thái xác thực ldap thành công
-     * đọc csdl 
      * @param {*} req 
      * @param {*} res 
      * @param {*} next 
      */
-    async  login(req, res, next) {
-        // thay dữ liệu đã parse body thành json bằng công cụ ở utils by cuongdq
+    async login(req, res, next) {
         const { username, password } = req.json_data   // req.body
 
-        // cắt lấy user không thôi, không cho nhập @ vào username
+        // cắt lấy username không thôi, không cho nhập @ vào username
         const nameMatch = username.match(/^([^@]*)@/);
         let shortName = nameMatch ? nameMatch[1] : username;
 
@@ -115,8 +98,6 @@ class LDAPHandler {
                 })
             })
     }
-
-
 }
 
 module.exports = new LDAPHandler();

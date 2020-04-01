@@ -1,12 +1,7 @@
 const router = require('express').Router();
 
-// Đối tượng xử lý lệnh post lên bởi json_data hoặc form_data
-// Nếu post json thì sẽ trả về req.json_data
-// Nếu post form như upload file, hoặc upload binary... 
-// thì trả về req.form_data sau khi thực hiện ghi lên thưc mục ./upload_files/yyyymm/...
 const postHandler = require('../../utils/post-handler');
 
-// trường hợp nếu sử dụng csdl oracle thì thay handler này là được
 const userHandler = require('../../handlers/idea/sqlite3/user-handler-sqlite3')
 const listHandler = require('../../handlers/idea/sqlite3/list-handler-sqlite3')
 const ideaHandler = require('../../handlers/idea/sqlite3/idea-handler-sqlite3')
@@ -15,11 +10,10 @@ const reviewIdeaHandler = require('../../handlers/idea/sqlite3/idea-review-handl
 // thực hiện xác thực token user đã được cấp
 const jwtTokenVerify = require('../../handlers/jwt-token-verify');
 
-
 const adminHandler = require("../../handlers/idea/sqlite3/admin-handler");
 
 router.get('/get-user-info'
-    , jwtTokenVerify                // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , jwtTokenVerify                // xác thực token
     , userHandler.getUserInfo       // dựa vào giá trị req.user.username trả thông tin user
 )
 

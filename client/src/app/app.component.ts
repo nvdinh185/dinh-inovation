@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, MenuController } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService, CommonsService } from 'ngxi4-dynamic-service';
 import { MainService } from './services/main.service';
@@ -36,16 +34,13 @@ export class AppComponent {
     }
   ];
 
-  //cây này sẽ nhúng vào component treeView để hiển thị menu
+  //cây này sẽ nhúng vào component tree-menu để hiển thị menu
   treeMenu: any = [];
 
   //Thông tin người dùng login vào chương trình
   userInfo: any;
 
   constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
     private menuCtrl: MenuController,
     private router: Router,
     private apiAuth: AuthService,
@@ -54,15 +49,7 @@ export class AppComponent {
   ) { this.initializeApp(); }
 
   initializeApp() {
-
-    this.platform.ready().then(() => {
-
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-
-      this.init();
-
-    });
+    this.init();
   }
 
   /**
@@ -76,12 +63,13 @@ export class AppComponent {
 
     this.apiCommons.subscribe('event-login-ok', (userInfo) => {
       this.userInfo = userInfo
-      // gọi tổ chức menu tùy vào login hay chưa
+      // gọi tổ chức menu khi login thành công
       this.refresh();
     })
 
     this.apiCommons.subscribe('event-logout-ok', () => {
       this.userInfo = null
+      // Gán lại menu mặc định
       this.treeMenu = this.defaultMenu;
     })
 
@@ -122,7 +110,7 @@ export class AppComponent {
     ];
 
     if (this.userInfo) {
-      // thực hiện get menu from user
+      // thêm menu phòng ý tưởng
       this.treeMenu.push(
         {
           id: 3,
@@ -134,14 +122,15 @@ export class AppComponent {
         })
 
       if (this.userInfo.role === 99) {
+        // Thêm menu họp xét duyệt
         this.treeMenu.push(
           {
-            id: 99,
+            id: 4,
             name: 'Họp xét duyệt',
             size: '1.1em',
             type: 'route',             // chuyển trang theo routing
             url: '/ideas-review',      // chuyển trang theo routing
-            icon: 'ios-people'
+            icon: 'people'
           }
         )
       }
