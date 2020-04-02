@@ -1,5 +1,5 @@
 const { pathOr } = require('ramda');
-const { pareJwtToken } = require('../utils/jwt-token');
+const { pareJwtToken } = require('./jwt-token');
 const url = require('url');
 
 const jwtTokenVerify = (req, res, next) => {

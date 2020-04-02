@@ -3,11 +3,11 @@ const jwt = require("jsonwebtoken");
 const config = {
   SESSION: {
     jwtSecret: 'Mobifone3-m-Inovation-2020-02-15',
-    expiresIn: '120d'
+    expiresIn: '10h'
   }
 }
 
-const jwtToken = (data = {}) => {
+const jwtToken = (data) => {
     try {
         return jwt.sign(data, config.SESSION.jwtSecret, {expiresIn:config.SESSION.expiresIn});
     } catch {

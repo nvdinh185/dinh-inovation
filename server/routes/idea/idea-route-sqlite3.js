@@ -8,7 +8,7 @@ const ideaHandler = require('../../handlers/idea/sqlite3/idea-handler-sqlite3')
 const reviewIdeaHandler = require('../../handlers/idea/sqlite3/idea-review-handler')
 
 // thực hiện xác thực token user đã được cấp
-const jwtTokenVerify = require('../../handlers/jwt-token-verify');
+const jwtTokenVerify = require('../../utils/jwt-token-verify');
 
 const adminHandler = require("../../handlers/idea/sqlite3/admin-handler");
 
@@ -62,7 +62,6 @@ router.post('/create-idea'
     , userHandler.getUserId         // trả về req.user.id và req.user.username
     , postHandler.formProcess       // trả về req.form_data {thông tin của user}
     , ideaHandler.createIdea        // tạo idea mới
-    // , ideaHandler.getIdeas          // trả thông tin idea mới
 )
 
 // sửa ý tưởng -- cập nhập trạng thái ...
@@ -70,7 +69,6 @@ router.post('/edit-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , postHandler.formProcess       // trả về req.json_data {thông tin của idea}
     , ideaHandler.editIdea          // sửa idea mới
-    // , ideaHandler.getIdeas       // trả thông tin idea
 )
 
 // lấy chỉ tiết một ý tưởng để tương tác
@@ -105,15 +103,6 @@ router.post('/mark-idea'
     , ideaHandler.markIdea          // comment idea
     , ideaHandler.getIdea           // trả thông tin idea
 )
-
-// xóa bỏ ý tưởng này
-// router.post('/trash-idea'
-//     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
-//     , userHandler.getUserId         // trả về req.user.id và req.user.username
-//     , postHandler.jsonProcess       // trả về req.form_data {thông tin của idea}
-//     , ideaHandler.trashIdea         // comment idea
-//     , ideaHandler.getIdea           // trả thông tin idea
-// )
 
 
 // lấy log sql
