@@ -75,9 +75,7 @@ export class LoginPage implements OnInit {
         { type: 'title', name: 'Nhập user của email @mobifone.vn' }
         ,
         // form login gồm nhập username và password
-        {
-          type: 'text', key: 'username', name: 'Tên đăng nhập:', hint: 'Vui lòng nhập tên đăng nhập!', icon: 'contact', validators: [{ required: true, min: 1, max: 30 }]
-        }
+        { type: 'text', key: 'username', name: 'Tên đăng nhập:', hint: 'Vui lòng nhập tên đăng nhập!', icon: 'contact', validators: [{ required: true, min: 1, max: 30 }] }
         , { type: "password", key: "password", name: "Mật khẩu", hint: "Vui lòng nhập mật khẩu!", input_type: "password", icon: "key", validators: [{ required: true, min: 1, max: 20 }] }
         ,
         {
@@ -87,7 +85,6 @@ export class LoginPage implements OnInit {
               name: 'Đăng nhập'
               , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.AUTH_SERVER + '/login'
-              , token: true
               , command: 'LOGIN'
             }
           ]
@@ -202,8 +199,8 @@ export class LoginPage implements OnInit {
       , items: [
         { name: "Cập nhập các thông tin sau", type: "title" }
         , { key: "nickname", value: this.userInfo.nickname, name: "Biệt danh", hint: "Nickname", type: "text", input_type: "text", icon: "heart", validators: [{ required: true, min: 1 }] }
-        , { key: "fullname", value: this.userInfo.fullname, name: "Họ và tên", hint: "Họ và tên đầy đủ", type: "text", input_type: "text", icon: "person", validators: [{ required: true, min: 5 }] }
-        , { key: "address", value: this.userInfo.address, name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 5 }] }
+        , { key: "fullname", value: this.userInfo.fullname, name: "Họ và tên", hint: "Họ và tên đầy đủ", type: "text", input_type: "text", icon: "person", validators: [{ required: true, min: 1 }] }
+        , { key: "address", value: this.userInfo.address, name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 1 }] }
         , { key: "phone", value: this.userInfo.phone, name: "Điện thoại liên hệ", hint: "Yêu cầu định dạng số điện thoại nhé", type: "text", input_type: "tel", icon: "call", validators: [{ pattern: "^[0-9]*$" }] }
         , { key: "email", value: this.userInfo.email, name: "email", hint: "Yêu cầu định dạng email nhé", type: "text", input_type: "email", icon: "mail", validators: [{ pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" }] }
         , { key: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: this.userInfo.avatar ? this.userInfo.avatar : "assets/imgs/avatar.jpg", options: { ratio: 1 / 1, max_width: 80 } }
@@ -219,12 +216,11 @@ export class LoginPage implements OnInit {
       ]
     }
 
-    // call popup window for form login
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
-        parent: this,                 // for dismiss child component
-        callback: this.callbackLogin, // function for callback process result of form
-        form: form                    // form dynamic 
+        parent: this,
+        callback: this.callbackLogin,
+        form: form
       }
     );
   }
@@ -237,12 +233,11 @@ export class LoginPage implements OnInit {
 
     let form = {
       title: "TẠO THÔNG TIN CÁ NHÂN"
-      //khong cho nut hom
       , items: [
         { name: "Điền đầy đủ thông tin sau", type: "title" }
         , { key: "nickname", name: "Biệt danh", hint: "Nickname", type: "text", input_type: "text", icon: "heart", validators: [{ required: true, min: 1 }] }
-        , { key: "fullname", name: "Họ và tên", hint: "Họ và tên đầy đủ", type: "text", input_type: "text", icon: "person", validators: [{ required: true, min: 5 }] }
-        , { key: "address", name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 5 }] }
+        , { key: "fullname", name: "Họ và tên", hint: "Họ và tên đầy đủ", type: "text", input_type: "text", icon: "person", validators: [{ required: true, min: 1 }] }
+        , { key: "address", name: "Địa chỉ", hint: "Địa chỉ đầy đủ", type: "text", input_type: "text", icon: "pin", validators: [{ required: true, min: 1 }] }
         , { key: "phone", name: "Điện thoại liên hệ", hint: "Yêu cầu định dạng số điện thoại nhé", type: "text", input_type: "tel", icon: "call", validators: [{ pattern: "^[0-9]*$" }] }
         , { key: "email", value: username + "@mobifone.vn", name: "email", hint: "Yêu cầu định dạng email nhé", type: "text", input_type: "email", icon: "mail", validators: [{ pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" }] }
         , { key: "avatar", type: "image", name: "ẢNH ĐẠI DIỆN", value: "assets/imgs/avatar.jpg" }
@@ -256,12 +251,11 @@ export class LoginPage implements OnInit {
       ]
     }
 
-    // call popup window for form login
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
-        parent: this,                 // for dismiss child component
-        callback: this.callbackLogin, // function for callback process result of form
-        form: form                    // form dynamic 
+        parent: this,
+        callback: this.callbackLogin,
+        form: form
       }
     );
   }
@@ -302,7 +296,7 @@ export class LoginPage implements OnInit {
    * @param resData 
    */
   checkRight(resData) {
-    // nếu user chưa có hoặc cần khai báo thông tin cá nhân để đăng nhập
+    // Kiểm tra đã có username trong csdl chưa để xác nhận đăng nhập hoặc đăng ký username mới
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', resData.token)
       .then(result => {
         // console.log('result: ', result);
