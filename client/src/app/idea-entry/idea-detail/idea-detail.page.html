@@ -200,7 +200,7 @@
   <ion-list class="comment-list">
     <div *ngFor="let comment of ideaInfo?.comments" [style.padding-left]="comment.parent_id?'20px':'0px'">
       <ion-item lines="none">
-        <ion-avatar slot="start" (click)="onViewUserPage(comment)">
+        <ion-avatar slot="start" tappable (click)="onViewUserPage(comment)">
           <img src="{{comment.avatar}}">
         </ion-avatar>
         <ion-label class="ion-text-wrap comment-backgound">

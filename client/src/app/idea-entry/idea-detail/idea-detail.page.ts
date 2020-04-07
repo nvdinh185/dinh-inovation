@@ -37,6 +37,8 @@ export class IdeaDetailPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(item => {
       console.log('item', item);
+      let data: any = item
+      // console.log('item', JSON.parse(data));
       this.reviewId = item.review_id;
       // đọc chi tiết để hiển thị nội dung chi tiết ra
       this.refresh(item.id)
@@ -144,10 +146,73 @@ export class IdeaDetailPage implements OnInit {
 
   // thực hiện đánh giá ý tưởng này
   // chỉ giành riêng cho các role của hội đồng thôi
-  reviewIdea(idea) {
-    console.log(this.userInfo, idea);
+  async reviewIdea(idea) {
+    // console.log(this.userInfo, idea);
+    // chỉ những user có vai trò đánh giá của hội đồng mới đánh giá được ý tưởng này
     if (this.userInfo && this.userInfo.role > 1) {
-      // chỉ những user có vai trò đánh giá của hội đồng mới đánh giá được ý tưởng này
+      // console.log(idea);
+      let parameters
+      try {
+        parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
+      } catch{ }
+
+      let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
+
+      let form: any = {
+        title: 'Đánh giá ý tưởng'
+        , buttons: [
+          { color: 'danger', icon: 'close', next: 'CLOSE' }
+        ]
+        ,
+        items: [
+          // Danh sách các trường nhập liệu
+          {
+            type: "details",
+            details: [
+              {
+                name: "Chủ đề #" + idea.id,
+                value: idea.title
+              },
+              {
+                name: "Tác giả:",
+                value: idea.username
+              },
+              {
+                name: "Lĩnh vực:",
+                value: idea.category_name
+              },
+              {
+                name: "Trạng Thái:",
+                value: idea.status_name
+              },
+            ]
+          },
+          { type: "hidden", key: "idea_id", value: idea.id }
+          , { type: "hidden", key: "review_id", value: this.reviewId }
+          , { type: "select", key: "idea_status", value: "" + idea.status, name: "Chuyển trạng thái", icon: "clock", options: statusOptions, color: "secondary" }
+          , { type: "text", key: "value_prize", value: idea.value_prize, name: "Nhập giải thưởng?", hint: "Nhập giá trị của giải thưởng (vd: 200k)", input_type: "text", icon: "md-hideap", validators: [{ required: true }] }
+          , { type: "text_area", key: "description", value: idea.old_review_result, name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
+          , {
+            type: 'button'
+            , options: [
+              {
+                name: 'Tạo đánh giá ý tưởng'    // button name
+                , next: 'CALLBACK'         // callback get resulte or json
+                , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/add-idea-prize', token: true
+                , command: 'ADD-PRIZE'          // extra parameter for callback process
+              }
+            ]
+          }
+        ]
+      }
+      // call popup window for form login
+      this.apiCommons.openModal(DynamicFormMobilePage,
+        {
+          parent: this,  // for dismiss child component
+          callback: this.callbackProcess, //function for callback process result of form
+          form: form    // form dynamic 
+        }
+      );
     }
   }
 
@@ -278,19 +343,19 @@ export class IdeaDetailPage implements OnInit {
         // toàn quyền
         settingsMenu = allMenu
       }
-      if (this.userInfo.role > 1 && this.reviewId) {
-        // cho phép đánh giá
-        settingsMenu.splice(settingsMenu.length, 0
-          , {
-            id: 6
-            , name: "HĐ KHCN đánh giá"
-            , value: "REVIEW"
-            , icon: {
-              name: "eye"
-              , color: "success"
-            }
-          })
-      }
+      // if (this.userInfo.role > 1 && this.reviewId) {
+      // cho phép đánh giá
+      settingsMenu.splice(settingsMenu.length, 0
+        , {
+          id: 6
+          , name: "HĐ KHCN đánh giá"
+          , value: "REVIEW"
+          , icon: {
+            name: "eye"
+            , color: "success"
+          }
+        })
+      // }
     }
 
     this.apiCommons.presentPopover(
@@ -336,6 +401,10 @@ export class IdeaDetailPage implements OnInit {
       if (cmd === 'TRASH') {
         //  loại bỏ ý tưởng này
         this.trashIdea(this.ideaInfo.idea)
+      }
+      if (cmd === 'REVIEW') {
+        //  đánh giá ý tưởng này
+        this.reviewIdea(this.ideaInfo.idea)
       }
     }
   }

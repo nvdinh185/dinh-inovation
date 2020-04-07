@@ -11,6 +11,7 @@ import { SharedModule } from 'src/app/shared.module';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
 import { LinkUrlPipe } from './link.url.pipe';
 import { LinkIdeasPipe } from './link-ideas.pipe';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { LinkIdeasPipe } from './link-ideas.pipe';
     SharedModule,
     IdeaDetailPageRoutingModule
   ],
-  declarations: [IdeaDetailPage, LinkIdeasPipe, LinkUrlPipe]
+  declarations: [IdeaDetailPage, LinkIdeasPipe, LinkUrlPipe],
+  providers: [InAppBrowser]
 })
 export class IdeaDetailPageModule {}

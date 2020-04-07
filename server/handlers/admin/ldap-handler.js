@@ -79,8 +79,8 @@ class LDAPHandler {
         const nameMatch = username.match(/^([^@]*)@/);
         let shortName = nameMatch ? nameMatch[1] : username;
 
-        fakeLoginLdap(username, password)
-            // loginLdapMobifone(username, password)
+        // fakeLoginLdap(username, password)
+            loginLdapMobifone(username, password)
             .then(user => {
                 res.status(200).send({
                     status: 200,

@@ -8,6 +8,7 @@ import { IdeaPageRoutingModule } from './idea-routing.module';
 
 import { IdeaPage } from './idea.page';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
+import { IdeaCardComponent } from 'src/app/components/idea-card/idea-card.component';
 import { SharedModule } from 'src/app/shared.module';
 
 @NgModule({
@@ -15,12 +16,13 @@ import { SharedModule } from 'src/app/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    Ngxi4DynamicServiceModule,
     SharedModule,
+    Ngxi4DynamicServiceModule,
     IdeaPageRoutingModule
   ],
   declarations: [
-    IdeaPage
+    IdeaPage,
+    IdeaCardComponent
   ]
 })
 export class IdeaPageModule { }

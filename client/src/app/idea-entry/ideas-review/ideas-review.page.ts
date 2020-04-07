@@ -51,7 +51,7 @@ export class IdeasReviewPage implements OnInit {
   }
 
   onClickEvaluate(rev) {
-    this.router.navigate(['/ideas-review-detail'], { queryParams: {id:rev.id} });
+    this.router.navigate(['/ideas-review-detail'], { queryParams: { id: rev.id } });
   }
 
   onClickEdit(rev) {
