@@ -4,7 +4,7 @@
  * Bộ tương tác csdl để xử lý tài nguyên ý tưởng
  */
 
-// Kết nối csdl oracle theo pool
+// Kết nối csdl theo pool
 const db = require('../../../db/sqlite3/db-pool');
 const arrObj = require('../../../utils/array-object');
 
@@ -48,7 +48,6 @@ const saveAttachFiles = (files, userId) => {
         } catch{ }
         resolve(fileIds)
     })
-
 }
 
 class IdeaHandler {
@@ -136,7 +135,7 @@ class IdeaHandler {
             created_time: Date.now()
         }
 
-        // xóa cột gia tăng file nếu có
+        // xóa cột đếm file nếu có
         delete ideaInfo["count_file"];
 
         db.insert(arrObj.convertSqlFromJson("ideas", ideaInfo))
@@ -145,9 +144,9 @@ class IdeaHandler {
                 res.end(arrObj.getJsonStringify({ status: "OK", message: "Tạo mới thành công" }));
             })
             .catch(err => {
-                console.log('Lỗi tạo user mới', err);
+                console.log('Lỗi tạo ý tưởng mới', err);
                 res.status(401).json({
-                    message: 'Lỗi tạo user mới, liên hệ quản trị hệ thống',
+                    message: 'Lỗi tạo ý tưởng mới, liên hệ quản trị hệ thống',
                     error: err
                 })
             });
@@ -155,37 +154,27 @@ class IdeaHandler {
     }
 
     /**
-     * 3. sửa thông tin ý tưởng
+     * 3. sửa thông tin ý tưởng, không xử lý sửa file đính kèm
      */
     async editIdea(req, res, next) {
-
-        let fileIds;
-        if (req.form_data.params.count_file > 0) {
-            fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
-        }
-
-        // Phải lấy danh sách attach file cũ sẵn có nữa mới đủ
-        // nếu không sẽ bị mất file cũ liên kết với nó
-
         const ideaInfo = {
             ...req.form_data.params,
             // thêm trường
-            // attach_id_list: fileIds ? JSON.stringify(fileIds) : undefined,
             changed_username: req.user.username,
             changed_time: Date.now()
         }
+        // console.log(arrObj.convertSqlFromJson("ideas", ideaInfo, ['id']));
 
-        // xóa cột gia tăng file nếu có
+        // xóa cột đếm file nếu có
         delete ideaInfo["count_file"];
 
         db.update(arrObj.convertSqlFromJson("ideas", ideaInfo, ['id']))
             .then(data => {
-                req.ideaId = ideaInfo.id;
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(arrObj.getJsonStringify({ status: "OK", message: "Sửa thành công" }));
             })
             .catch(err => {
-                console.log('Lỗi update user', err);
+                console.log('Lỗi update idea', err);
                 res.status(401).json({
                     message: 'Lỗi update idea, liên hệ quản trị hệ thống',
                     error: err
@@ -194,7 +183,7 @@ class IdeaHandler {
 
     }
 
-    // lấy thông tin của 1 ý tưởng trả về khi người dùng like, edit, comment
+    // lấy thông tin của 1 ý tưởng trả về khi người dùng like, comment
     async getIdea(req, res, next) {
 
         // lấy ý tưởng chi tiết ra
@@ -290,7 +279,7 @@ class IdeaHandler {
         db.getRst(`select activities_type from ideas_interactives where idea_id=${req.ideaId} and user_id=${req.user.id}`)
             .then(async result => {
                 if (result) {
-                    // có tồn tại 1 bản ghi rồi của user này chỉ được đếm 1 lần thôi
+                    // có tồn tại 1 bản ghi của user này rồi
                     // nếu đã like thì unlike
                     if (result.activities_type !== 0) jsonLike.activities_type = 0;
                     await db.update(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'idea_id']))
@@ -380,7 +369,7 @@ class IdeaHandler {
                 let count = 0;
                 arrMarks.forEach(async el => {
                     try {
-                        await db.insert(db.convertSqlFromJson('ideas_marks', el, []));
+                        await db.insert(db.convertSqlFromJson('ideas_marks', el));
                     } catch (err) {
                         if (err.code === 'SQLITE_CONSTRAINT') {
                             try {
@@ -429,9 +418,9 @@ class IdeaHandler {
                                             select sum(total_point*weight)/sum(weight) as total_point 
                                             from user_point_weight`);
                 db.update(db.convertSqlFromJson("ideas", { id: req.json_data.id, total_point: row.total_point }, ["id"]))
-                    .then(async result => {
-                        // res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                        next();
+                    .then(result => {
+                        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                        res.end(arrObj.getJsonStringify({ status: "OK", message: "Đánh giá thành công" }));
                     }).catch(err => {
                         res.status(401).json({
                             message: 'Lỗi không cập nhập điểm tổng được!'

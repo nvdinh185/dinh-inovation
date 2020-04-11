@@ -68,7 +68,7 @@ router.post('/create-idea'
 router.post('/edit-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , postHandler.formProcess       // trả về req.json_data {thông tin của idea}
-    , ideaHandler.editIdea          // sửa idea mới
+    , ideaHandler.editIdea          // sửa idea
 )
 
 // lấy chỉ tiết một ý tưởng để tương tác
@@ -100,15 +100,7 @@ router.post('/mark-idea'
     , jwtTokenVerify                // nhúng xác thực token trước khi cho xử lý tiếp
     , userHandler.getUserId         // trả về req.user.id và req.user.username
     , postHandler.jsonProcess       // trả về req.json_data {thông tin của idea}
-    , ideaHandler.markIdea          // comment idea
-    , ideaHandler.getIdea           // trả thông tin idea
-)
-
-
-// lấy log sql
-router.get('/get-sql-logs'
-    , jwtTokenVerify                     // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
-    , listHandler.getSqlLogs
+    , ideaHandler.markIdea          // đánh giá idea
 )
 
 // lấy danh sách câu hỏi để đánh giá
