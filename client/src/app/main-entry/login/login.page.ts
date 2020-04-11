@@ -208,7 +208,7 @@ export class LoginPage implements OnInit {
         , {
           type: "button"
           , options: [
-            { name: "Bỏ qua", next: "CLOSE" }
+            { name: "Reset", next: "RESET" }
             ,
             { name: "Cập nhập", command: "EDIT-USER", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/edit-user", token: true, next: "CALLBACK" }
           ]

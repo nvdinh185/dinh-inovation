@@ -23,8 +23,6 @@ export class IdeaDetailPage implements OnInit {
   isMobile: boolean = false;
   statusConfigs: any = {};
 
-  reviewId: any; // mã review chấm điểm của hội đồng truyền sang thì cho chấm điểm ở đây luôn
-
   constructor(
     private router: Router
     , private route: ActivatedRoute
@@ -36,10 +34,7 @@ export class IdeaDetailPage implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(item => {
-      console.log('item', item);
-      let data: any = item
-      // console.log('item', JSON.parse(data));
-      this.reviewId = item.review_id;
+      // console.log('item', item);
       // đọc chi tiết để hiển thị nội dung chi tiết ra
       this.refresh(item.id)
     });
@@ -54,6 +49,7 @@ export class IdeaDetailPage implements OnInit {
         statusOptions.forEach(el => {
           Object.defineProperty(this.statusConfigs, el.id, { value: el, writable: true, enumerable: true, configurable: true });
         })
+        // console.log(this.statusConfigs);
       })
       .catch(err => {
         console.log(err);
@@ -71,20 +67,14 @@ export class IdeaDetailPage implements OnInit {
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
 
-  // chuyển sang trang ý tưởng cá nhân
-  onViewUserPage(item) {
-    // Xử lý click Avatar user và render page user người khác
-    this.router.navigate(['/my-idea'], { queryParams: { id: item.user_id } });
-  }
-
   //Lấy file cho ý tưởng và comment
   // Kiểm tra userInfo này đã like, comment và chấm điểm chưa?
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
 
-      //Lấy file cho các ý tưởng
+      //Lấy các file cho ý tưởng
       if (this.ideaInfo.idea && this.ideaInfo.idea.attach_id_list) {
-        // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
+        // thực hiện truy vấn lấy danh sách file đính kèm
         this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(this.ideaInfo.idea.attach_id_list), true)
           .then(list => {
 
@@ -109,7 +99,7 @@ export class IdeaDetailPage implements OnInit {
       this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
       //Kiểm tra this.userInfo này đã chấm điểm ý tưởng này chưa?
       this.ideaInfo.isUserMarked = this.ideaInfo.marks.findIndex(x => x.user_id === this.userInfo.id) >= 0
-      //Lấy file cho các bình luận
+      //Lấy các file cho các bình luận
       this.ideaInfo.comments.forEach(el => {
         if (el.attach_id_list) {
           // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
@@ -132,6 +122,11 @@ export class IdeaDetailPage implements OnInit {
         }
       })
     }
+  }
+
+  // chuyển sang trang ý tưởng cá nhân
+  onViewUserPage(item) {
+    this.router.navigate(['/my-idea'], { queryParams: { id: item.user_id } });
   }
 
   // focus đến ô comments
@@ -188,7 +183,7 @@ export class IdeaDetailPage implements OnInit {
             ]
           },
           { type: "hidden", key: "idea_id", value: idea.id }
-          , { type: "hidden", key: "review_id", value: this.reviewId }
+          // , { type: "hidden", key: "review_id", value: this.reviewId }
           , { type: "select", key: "idea_status", value: "" + idea.status, name: "Chuyển trạng thái", icon: "clock", options: statusOptions, color: "secondary" }
           , { type: "text", key: "value_prize", value: idea.value_prize, name: "Nhập giải thưởng?", hint: "Nhập giá trị của giải thưởng (vd: 200k)", input_type: "text", icon: "md-hideap", validators: [{ required: true }] }
           , { type: "text_area", key: "description", value: idea.old_review_result, name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
@@ -220,7 +215,7 @@ export class IdeaDetailPage implements OnInit {
   onClickSend() {
     if (this.message || this.uploadingFiles.length > 0) {
 
-      this.apiCommons.showLoader('Đang xử lý dữ liệu trên máy chủ....')
+      this.apiCommons.showLoader('Đang xử lý dữ liệu trên máy chủ...')
 
       let form_data: FormData = new FormData();
       form_data.append("id", this.ideaInfo.idea.id);
@@ -230,8 +225,7 @@ export class IdeaDetailPage implements OnInit {
         form_data.append('file_' + i++, file, file.filename);
       }
       this.apiAuth.postDynamicFormData(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/comment-idea'
-        , form_data
-        , true)
+        , form_data, true)
         .then(idea => {
           this.apiCommons.hideLoader();
           this.ideaInfo = idea; // lấy lại nội dung này
@@ -258,9 +252,8 @@ export class IdeaDetailPage implements OnInit {
       1	User thường	User  -- hiển thị mỗi một menu chấm điểm (nếu không phải ý tưởng của mình)
                           -- Hoặc menu sửa ý tưởng, chuyển trạng thái (nếu là ý tưởng của mình)
       
-      2	Chủ tịch hội đồng KHCN
-      3	Thành viên Hội đồng KHCN
-      98	Admin	Quản trị hệ thống -- hiển thị hết menu (trừ sửa và chuyển trạng thái)
+      2	Chủ tịch hội đồng KHCN -- hiển thị thêm menu đánh giá
+      98	Admin	Quản trị hệ thống -- hiển thị thêm menu xóa
       99	Developper	Người phát triển -- hiển thị hết menu
      */
 
@@ -304,17 +297,6 @@ export class IdeaDetailPage implements OnInit {
       // chỉ cho admin 98, 99
       {
         id: 4
-        , name: "Ghép với ..."
-        , value: "MERGE"
-        , icon: {
-          name: "git-merge"
-          , color: "primary"
-        }
-      }
-      ,
-      // chỉ cho admin 98, 99
-      {
-        id: 5
         , name: "Xóa ý tưởng này"
         , value: "TRASH"
         , icon: {
@@ -337,30 +319,29 @@ export class IdeaDetailPage implements OnInit {
       }
 
       if (this.userInfo.role === 98) {
-        // cho phép chấm điểm, ghép và xóa
-        settingsMenu = settingsMenu.concat(allMenu.filter(x => x.id !== 1 && x.id !== 2 && x.id !== 3))
+        // thêm menu xóa
+        settingsMenu = settingsMenu.concat(allMenu.filter(x => x.id === 4))
       } else if (this.userInfo.role === 99) {
         // toàn quyền
         settingsMenu = allMenu
       }
-      // if (this.userInfo.role > 1 && this.reviewId) {
-      // cho phép đánh giá
-      settingsMenu.splice(settingsMenu.length, 0
-        , {
-          id: 6
-          , name: "HĐ KHCN đánh giá"
-          , value: "REVIEW"
-          , icon: {
-            name: "eye"
-            , color: "success"
-          }
-        })
-      // }
+      if (this.userInfo.role > 1) {
+        // cho phép đánh giá
+        settingsMenu.splice(settingsMenu.length, 0
+          , {
+            id: 6
+            , name: "HĐ KHCN đánh giá"
+            , value: "REVIEW"
+            , icon: {
+              name: "eye"
+              , color: "success"
+            }
+          })
+      }
     }
 
     this.apiCommons.presentPopover(
-      ev
-      , PopoverCardComponent
+      ev, PopoverCardComponent
       , {
         type: 'single-choice', // multi-choice | single-choice
         title: "Thực thi",
@@ -394,10 +375,6 @@ export class IdeaDetailPage implements OnInit {
         //  thay đổi trạng thái ý tưởng
         this.changeStatusIdea(this.ideaInfo.idea)
       }
-      if (cmd === 'MERGE') {
-        //  ghép ý tưởng
-        this.mergeIdea(this.ideaInfo.idea)
-      }
       if (cmd === 'TRASH') {
         //  loại bỏ ý tưởng này
         this.trashIdea(this.ideaInfo.idea)
@@ -410,9 +387,7 @@ export class IdeaDetailPage implements OnInit {
   }
 
   // Người dùng bấm nút like
-  // Gửi lên máy chủ lệnh like từ token này
   likeIdea(item) {
-    // id và token chứa user like id này
     this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/like-idea', { id: item.id }, true)
       .then(idea => {
         this.ideaInfo = idea; // lấy lại nội dung này
@@ -444,13 +419,8 @@ export class IdeaDetailPage implements OnInit {
     this.uploadingFiles.splice(idx, 1);
   }
 
-  // Đọc hiển thị file ra
-  onClickViewFile(fileId) {
-    this.iab.create(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + fileId, `_system`);
-  }
-
-  // Hiển thị ảnh thật
-  onClickViewImage(fileId) {
+  // hiển thị file hoặc ảnh ra
+  onClickViewItem(fileId) {
     this.iab.create(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + fileId, `_system`);
   }
 
@@ -462,7 +432,6 @@ export class IdeaDetailPage implements OnInit {
       return
     }
 
-    // popup cửa sổ này lên và cho phép chỉnh sửa ý tưởng này
     let questions;
     let userMarkIdea;
     try {
@@ -485,7 +454,6 @@ export class IdeaDetailPage implements OnInit {
       }
       arrayTestDemo.push(obj);
     }
-    // let categoryOptions = parameters && parameters.ideas_categories ? parameters.ideas_categories : [];
 
     // Chấm điểm ý tưởng - popup cửa sổ chấm điểm
     let form: any = {
@@ -501,7 +469,7 @@ export class IdeaDetailPage implements OnInit {
           , options: [
             {
               name: 'Gửi chấm điểm'    // button name
-              , next: 'CALLBACK'      // callback get resulte or json
+              , next: 'CALLBACK'      // callback get result or json
               , id: idea.id
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/mark-idea'
               , token: true           // token login before interceptor or token string
@@ -553,7 +521,8 @@ export class IdeaDetailPage implements OnInit {
         {
           type: 'button'
           , options: [
-            {
+            { name: "Reset", next: "RESET" }
+            , {
               name: 'Gửi sửa ý tưởng'    // button name
               , id: idea.id              // trả lại id của ý tưởng này
               , next: 'CALLBACK'         // callback get resulte or json
@@ -620,11 +589,6 @@ export class IdeaDetailPage implements OnInit {
     );
   }
 
-  // Ghép ý tưởng
-  mergeIdea(idea) {
-
-  }
-
   // loại bỏ ý tưởng này
   trashIdea(idea) {
     let form: any = {
@@ -668,22 +632,17 @@ export class IdeaDetailPage implements OnInit {
     // allway return Promise for callback
     return new Promise<any>((resolve, reject) => {
 
-      // console.log(res);
+      console.log(res);
 
       if (res.error) {
         //If error 
         this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
 
       } else if (res.response_data) {
-        // Data return when server response or sqlite app respone
-        // next="CALLBACK", url="http://..." [,token: true | wzI...]
         if (res.button.command === "MARK") {
-          // Do any for command
           this.refresh(res.button.id);
-
         }
         if (res.button.command === "EDIT") {
-          // Do any for command
           this.refresh(res.button.id)
         }
 
@@ -694,10 +653,5 @@ export class IdeaDetailPage implements OnInit {
 
     });
   }.bind(this);
-
-  // chuyển link đến ý tưởng có liên kết
-  forwardLinkId(id) {
-    this.router.navigate(['/idea-detail'], { queryParams: { id: id } });
-  }
 
 }

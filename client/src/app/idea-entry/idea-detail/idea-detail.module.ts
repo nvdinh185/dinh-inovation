@@ -10,7 +10,6 @@ import { IdeaDetailPage } from './idea-detail.page';
 import { SharedModule } from 'src/app/shared.module';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
 import { LinkUrlPipe } from './link.url.pipe';
-import { LinkIdeasPipe } from './link-ideas.pipe';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @NgModule({
@@ -22,7 +21,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
     SharedModule,
     IdeaDetailPageRoutingModule
   ],
-  declarations: [IdeaDetailPage, LinkIdeasPipe, LinkUrlPipe],
+  declarations: [IdeaDetailPage, LinkUrlPipe],
   providers: [InAppBrowser]
 })
 export class IdeaDetailPageModule {}

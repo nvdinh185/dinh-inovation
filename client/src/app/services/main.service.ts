@@ -61,6 +61,7 @@ export class MainService {
   saveToken(token: string, userInfo: any) {
     this.apiStorage.save("TOKEN", token);
     this.userInfo = userInfo;
+    this.token = token;
     // Lưu token trong interceptor để sử dụng post, request tự động chèn token 
     this.apiAuth.token = token;
     this.apiCommons.publish('event-login-ok', this.userInfo);
