@@ -14,7 +14,7 @@
 
   <!-- Hiển thị avatar -->
   <ion-item lines="none" class="idea-created">
-    <ion-avatar slot="start" tappable (click)="onViewUserPage(ideaInfo?.idea)">
+    <ion-avatar slot="start">
       <img src="{{ideaInfo?.idea?.avatar}}">
     </ion-avatar>
     <ion-label>
@@ -107,37 +107,7 @@
       {{ideaInfo.idea.attach_id_list.length}}<span *ngIf="!isMobile">&nbsp;File(s) đính kèm</span>
     </ion-label>
 
-    <!-- Nút kích vào để xem lịch sử đánh giá (nếu có)  -->
-    <ion-button slot="end" *ngIf="ideaInfo?.idea?.status_chain && !ideaInfo?.idea?.isShowHistory" color="warning"
-      (click)="onClickShowStatusChain(ideaInfo?.idea)" shape="round" size="small">
-      <ion-icon slot="start" name="arrow-dropdown-circle"></ion-icon>
-      {{" "+(ideaInfo?.idea?.status_chain?ideaInfo?.idea?.status_chain.length:0)}}
-      <span *ngIf="!isMobile">&nbsp;đánh giá</span>
-    </ion-button>
-
   </ion-item>
-
-  <!-- Hiển thị chi tiết lịch sử thay đổi đánh giá khi bấm nút xem lịch sử -->
-  <ion-list *ngIf="ideaInfo?.idea?.isShowHistory && ideaInfo?.idea?.status_chain">
-    <ion-item *ngFor="let status of ideaInfo?.idea?.status_chain">
-      <ion-label class="ion-text-wrap" style="font-size:12px;">
-        <ion-note style="font-size:10px;">{{status.changed_time | date : 'dd/MM/yyyy hh:mm:ss'}}
-          {{statusConfigs[status.status]?.name}}</ion-note>
-        <br>
-        <strong>{{status.user_name}}</strong>:
-        <span [innerHTML]="status?.description | linkUrl"></span>. Giải thưởng: {{status.value_prize}}
-      </ion-label>
-    </ion-item>
-    <ion-item lines="none">
-      <div slot="end" class='card-button' tappable (click)="onClickShowStatusChain(ideaInfo?.idea)">
-        <!-- <ion-icon *ngIf="isMobile" slot="ion-only" color="warning" name="ios-arrow-dropup-circle"></ion-icon> -->
-        <ion-button shape="round" fill="outline" color="warning">
-          <ion-icon slot="start" name="arrow-dropup-circle"></ion-icon>
-          Thu Gọn
-        </ion-button>
-      </div>
-    </ion-item>
-  </ion-list>
 
   <!-- Hiển thị nội dung file và image đính kèm của ý tưởng -->
   <div [style.padding-left]="'20px'">

@@ -1,7 +1,7 @@
 "use strict"
 
-const db = require('../../../db/sqlite3/db-pool');
-const arrObj = require('../../../utils/array-object');
+const db = require('../../db/sqlite3/db-pool');
+const arrObj = require('../../utils/array-object');
 
 const defaultOrganizationId = 3; // default tổ chức được tạo
 

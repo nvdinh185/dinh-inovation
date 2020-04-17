@@ -5,8 +5,8 @@
  */
 
 // Kết nối csdl theo pool
-const db = require('../../../db/sqlite3/db-pool');
-const arrObj = require('../../../utils/array-object');
+const db = require('../../db/sqlite3/db-pool');
+const arrObj = require('../../utils/array-object');
 
 const orderList = {
     ORDER_CHANGED: 'ORDER_CHANGED'     // được thay đổi gần đây nhất

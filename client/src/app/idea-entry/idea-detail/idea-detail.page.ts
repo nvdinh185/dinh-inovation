@@ -43,20 +43,9 @@ export class IdeaDetailPage implements OnInit {
   init() {
     this.isMobile = this.apiCommons.isMobile();
     this.userInfo = this.mainService.getUserInfo();
-    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
-      .then(parameters => {
-        let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
-        statusOptions.forEach(el => {
-          Object.defineProperty(this.statusConfigs, el.id, { value: el, writable: true, enumerable: true, configurable: true });
-        })
-        // console.log(this.statusConfigs);
-      })
-      .catch(err => {
-        console.log(err);
-      })
   }
 
-  // làm mới ý tưởng này
+  // lấy ý tưởng theo id
   refresh(id) {
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea?id=' + id, true)
       .then(ideaDetail => {
@@ -124,91 +113,9 @@ export class IdeaDetailPage implements OnInit {
     }
   }
 
-  // chuyển sang trang ý tưởng cá nhân
-  onViewUserPage(item) {
-    this.router.navigate(['/my-idea'], { queryParams: { id: item.user_id } });
-  }
-
   // focus đến ô comments
   focusCommentIdea() {
     this.textAreaElement.setFocus();
-  }
-
-  // hiển thị lịch sử đánh giá ý tưởng này
-  onClickShowStatusChain(idea) {
-    idea.isShowHistory = !idea.isShowHistory;
-  }
-
-  // thực hiện đánh giá ý tưởng này
-  // chỉ giành riêng cho các role của hội đồng thôi
-  async reviewIdea(idea) {
-    // console.log(this.userInfo, idea);
-    // chỉ những user có vai trò đánh giá của hội đồng mới đánh giá được ý tưởng này
-    if (this.userInfo && this.userInfo.role > 1) {
-      // console.log(idea);
-      let parameters
-      try {
-        parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
-      } catch{ }
-
-      let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
-
-      let form: any = {
-        title: 'Đánh giá ý tưởng'
-        , buttons: [
-          { color: 'danger', icon: 'close', next: 'CLOSE' }
-        ]
-        ,
-        items: [
-          // Danh sách các trường nhập liệu
-          {
-            type: "details",
-            details: [
-              {
-                name: "Chủ đề #" + idea.id,
-                value: idea.title
-              },
-              {
-                name: "Tác giả:",
-                value: idea.username
-              },
-              {
-                name: "Lĩnh vực:",
-                value: idea.category_name
-              },
-              {
-                name: "Trạng Thái:",
-                value: idea.status_name
-              },
-            ]
-          },
-          { type: "hidden", key: "idea_id", value: idea.id }
-          // , { type: "hidden", key: "review_id", value: this.reviewId }
-          , { type: "select", key: "idea_status", value: "" + idea.status, name: "Chuyển trạng thái", icon: "clock", options: statusOptions, color: "secondary" }
-          , { type: "text", key: "value_prize", value: idea.value_prize, name: "Nhập giải thưởng?", hint: "Nhập giá trị của giải thưởng (vd: 200k)", input_type: "text", icon: "md-hideap", validators: [{ required: true }] }
-          , { type: "text_area", key: "description", value: idea.old_review_result, name: "Nhập nhận xét của hội đồng cho ý tưởng này", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 5 }] }
-          , {
-            type: 'button'
-            , options: [
-              {
-                name: 'Tạo đánh giá ý tưởng'    // button name
-                , next: 'CALLBACK'         // callback get resulte or json
-                , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/add-idea-prize', token: true
-                , command: 'ADD-PRIZE'          // extra parameter for callback process
-              }
-            ]
-          }
-        ]
-      }
-      // call popup window for form login
-      this.apiCommons.openModal(DynamicFormMobilePage,
-        {
-          parent: this,  // for dismiss child component
-          callback: this.callbackProcess, //function for callback process result of form
-          form: form    // form dynamic 
-        }
-      );
-    }
   }
 
   // Gửi nội dung comment đi
@@ -252,8 +159,6 @@ export class IdeaDetailPage implements OnInit {
       1	User thường	User  -- hiển thị mỗi một menu chấm điểm (nếu không phải ý tưởng của mình)
                           -- Hoặc menu sửa ý tưởng, chuyển trạng thái (nếu là ý tưởng của mình)
       
-      2	Chủ tịch hội đồng KHCN -- hiển thị thêm menu đánh giá
-      98	Admin	Quản trị hệ thống -- hiển thị thêm menu xóa
       99	Developper	Người phát triển -- hiển thị hết menu
      */
 
@@ -306,8 +211,6 @@ export class IdeaDetailPage implements OnInit {
       }
     ]
 
-    // console.log(this.ideaInfo.idea, this.userInfo);
-
     if (this.userInfo && this.ideaInfo && this.ideaInfo.idea) {
       //user_id của ý tưởng trùng với id của userInfo
       if (this.ideaInfo.idea.user_id === this.userInfo.id) {
@@ -318,32 +221,16 @@ export class IdeaDetailPage implements OnInit {
         settingsMenu = allMenu.filter(x => x.id === 1)
       }
 
-      if (this.userInfo.role === 98) {
-        // thêm menu xóa
-        settingsMenu = settingsMenu.concat(allMenu.filter(x => x.id === 4))
-      } else if (this.userInfo.role === 99) {
+      if (this.userInfo.role === 99) {
         // toàn quyền
         settingsMenu = allMenu
-      }
-      if (this.userInfo.role > 1) {
-        // cho phép đánh giá
-        settingsMenu.splice(settingsMenu.length, 0
-          , {
-            id: 6
-            , name: "HĐ KHCN đánh giá"
-            , value: "REVIEW"
-            , icon: {
-              name: "eye"
-              , color: "success"
-            }
-          })
       }
     }
 
     this.apiCommons.presentPopover(
       ev, PopoverCardComponent
       , {
-        type: 'single-choice', // multi-choice | single-choice
+        type: 'single-choice',
         title: "Thực thi",
         color: "primary",
         menu: settingsMenu
@@ -362,8 +249,6 @@ export class IdeaDetailPage implements OnInit {
     // console.log('lenh', cmd);
     if (this.ideaInfo && this.ideaInfo.idea) {
       if (cmd === 'MARK') {
-        // kiểm tra user đã chấm điểm hay chưa
-
         // gọi form chấm điểm
         this.markIdea(this.ideaInfo.idea)
       }
@@ -378,10 +263,6 @@ export class IdeaDetailPage implements OnInit {
       if (cmd === 'TRASH') {
         //  loại bỏ ý tưởng này
         this.trashIdea(this.ideaInfo.idea)
-      }
-      if (cmd === 'REVIEW') {
-        //  đánh giá ý tưởng này
-        this.reviewIdea(this.ideaInfo.idea)
       }
     }
   }
