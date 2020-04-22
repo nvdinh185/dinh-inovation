@@ -329,7 +329,7 @@ class IdeaHandler {
                                                         distinct user_id as user_id 
                                                         from ideas_comments
                                                         where idea_id = ${req.ideaId}
-                                                        and parent_id is null`);
+                                                        `);
                 commentedUsers = commentedUsers.map(o => o["user_id"]);
                 await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, commented_count: commentedUsers.length, commented_users: JSON.stringify(commentedUsers) }, ["id"]))
                 next()
