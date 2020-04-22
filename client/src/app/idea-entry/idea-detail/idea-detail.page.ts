@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService, CommonsService, PopoverCardComponent, DynamicFormMobilePage } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
 
@@ -21,11 +21,9 @@ export class IdeaDetailPage implements OnInit {
 
   uploadingFiles: any = [];
   isMobile: boolean = false;
-  statusConfigs: any = {};
 
   constructor(
-    private router: Router
-    , private route: ActivatedRoute
+    private route: ActivatedRoute
     , private apiCommons: CommonsService
     , private apiAuth: AuthService
     , private mainService: MainService
@@ -56,7 +54,7 @@ export class IdeaDetailPage implements OnInit {
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
 
-  //Lấy file cho ý tưởng và comment
+  // Lấy file cho ý tưởng và comment
   // Kiểm tra userInfo này đã like, comment và chấm điểm chưa?
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
@@ -116,36 +114,6 @@ export class IdeaDetailPage implements OnInit {
   // focus đến ô comments
   focusCommentIdea() {
     this.textAreaElement.setFocus();
-  }
-
-  // Gửi nội dung comment đi
-  onClickSend() {
-    if (this.message || this.uploadingFiles.length > 0) {
-
-      this.apiCommons.showLoader('Đang xử lý dữ liệu trên máy chủ...')
-
-      let form_data: FormData = new FormData();
-      form_data.append("id", this.ideaInfo.idea.id);
-      form_data.append("content", this.message ? this.message : this.uploadingFiles.length + ' files');
-      let i = 0;
-      for (let file of this.uploadingFiles) {
-        form_data.append('file_' + i++, file, file.filename);
-      }
-      this.apiAuth.postDynamicFormData(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/comment-idea'
-        , form_data, true)
-        .then(idea => {
-          this.apiCommons.hideLoader();
-          this.ideaInfo = idea; // lấy lại nội dung này
-          this.refreshUserAction()
-        })
-        .catch(err => {
-          this.apiCommons.hideLoader();
-          // console.log('Lỗi: ', err);
-        });
-
-      this.message = '';
-      this.uploadingFiles = [];
-    }
   }
 
   // Bấm vào nút more 
@@ -221,9 +189,15 @@ export class IdeaDetailPage implements OnInit {
         settingsMenu = allMenu.filter(x => x.id === 1)
       }
 
+      // Nếu là admin thì phân quyền như sau:
       if (this.userInfo.role === 99) {
-        // toàn quyền
-        settingsMenu = allMenu
+        // Nếu là ý tưởng của admin thì không có quyền chấm điểm
+        if (this.ideaInfo.idea.user_id === this.userInfo.id) {
+          settingsMenu = allMenu.filter(x => x.id !== 1)
+        } else {
+          // toàn quyền
+          settingsMenu = allMenu
+        }
       }
     }
 
@@ -231,7 +205,7 @@ export class IdeaDetailPage implements OnInit {
       ev, PopoverCardComponent
       , {
         type: 'single-choice',
-        title: "Thực thi",
+        title: "Chọn chức năng",
         color: "primary",
         menu: settingsMenu
       })
@@ -303,6 +277,36 @@ export class IdeaDetailPage implements OnInit {
   // hiển thị file hoặc ảnh ra
   onClickViewItem(fileId) {
     this.iab.create(this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + fileId, `_system`);
+  }
+
+  // Gửi nội dung comment đi
+  onClickSend() {
+    if (this.message || this.uploadingFiles.length > 0) {
+
+      this.apiCommons.showLoader('Đang xử lý dữ liệu trên máy chủ...')
+
+      let form_data: FormData = new FormData();
+      form_data.append("id", this.ideaInfo.idea.id);
+      form_data.append("content", this.message ? this.message : this.uploadingFiles.length + ' files');
+      let i = 0;
+      for (let file of this.uploadingFiles) {
+        form_data.append('file_' + i++, file, file.filename);
+      }
+      this.apiAuth.postDynamicFormData(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/comment-idea'
+        , form_data, true)
+        .then(idea => {
+          this.apiCommons.hideLoader();
+          this.ideaInfo = idea; // lấy lại nội dung này
+          this.refreshUserAction()
+        })
+        .catch(err => {
+          this.apiCommons.hideLoader();
+          // console.log('Lỗi: ', err);
+        });
+
+      this.message = '';
+      this.uploadingFiles = [];
+    }
   }
 
   // chấm điểm ý tưởng này theo các tiêu chí định nghĩa
