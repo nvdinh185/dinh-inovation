@@ -5,12 +5,10 @@
  * Các danh mục trả về dưới dạng đối tượng
  */
 
-// Kết nối csdl oracle theo pool
+// Kết nối csdl theo pool
 const db = require('../../db/sqlite3/db-pool');
 const arrObj = require('../../utils/array-object');
 const fs = require('fs');
-// const mime = require('mime-types');
-// const systempath = require('path');
 
 class ListHandler {
 
@@ -19,9 +17,8 @@ class ListHandler {
         const getListPromise = new Promise(async (resolve, reject) => {
             let Parameters = {}
             try {
-                Parameters.ideas_categories = await db.getRsts(`select a.id as value, a.* from ideas_categories a where status is null order by order_1, id`)
-                Parameters.ideas_status_type = await db.getRsts(`select a.id as value, a.* from ideas_status_type a where status is null order by order_1, id`)
-                Parameters.ideas_statuses = await db.getRsts(`select a.id as value, a.* from ideas_statuses a where status is null order by order_1, id`)
+                Parameters.ideas_categories = await db.getRsts(`select a.id as value, a.* from ideas_categories a order by order_1, id`)
+                Parameters.ideas_statuses = await db.getRsts(`select a.id as value, a.* from ideas_statuses a order by order_1, id`)
             } catch (e) {
                 console.log(arrObj.getTimestamp(), 'Lỗi lấy danh mục', e);
                 reject(e)
@@ -46,13 +43,13 @@ class ListHandler {
     // lấy danh sách câu hỏi
     getQuestions(req, res, next) {
         db.getRsts(`SELECT * FROM ideas_questions
-                    where status > 0
                     order by order_1`)
             .then(result => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(arrObj.getJsonStringify(result));
             })
             .catch(err => {
+                // console.log(err);
                 res.status(401).json({
                     message: 'Lỗi truy vấn csdl getQuestions'
                 })

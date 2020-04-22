@@ -120,20 +120,6 @@ export class AppComponent {
           url: '/idea',      // chuyển trang theo routing
           icon: 'md-alarm'
         })
-
-      if (this.userInfo.role === 99) {
-        // Thêm menu họp xét duyệt
-        this.treeMenu.push(
-          {
-            id: 4,
-            name: 'Họp xét duyệt',
-            size: '1.1em',
-            type: 'route',             // chuyển trang theo routing
-            url: '/ideas-review',      // chuyển trang theo routing
-            icon: 'people'
-          }
-        )
-      }
     }
 
   }
