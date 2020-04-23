@@ -34,7 +34,7 @@ router.post('/edit-user'
 
 // -- các chức năng truy vấn danh mục -----
 router.get('/get-idea-parameters'
-    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
+    , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , listHandler.getListParameters       // trả về danh mục tham số của user đang thuộc tổ chức đó
 )
 

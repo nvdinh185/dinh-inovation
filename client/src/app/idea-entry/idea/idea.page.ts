@@ -49,7 +49,7 @@ export class IdeaPage implements OnInit {
   categoryOptions: any = [];
   statusOptions: any = [];
 
-  pageSize: number = 20;
+  pageSize: number = 3;
   currentPage: number = 0;
 
   isMobile: boolean = false;
@@ -71,7 +71,7 @@ export class IdeaPage implements OnInit {
   ) { this.init() }
 
   ngOnInit() {
-    this.refresh();
+    this.refresh()
   }
 
   async init() {
@@ -113,14 +113,12 @@ export class IdeaPage implements OnInit {
     })
 
     // giá trị mặc định
-    this.dynamicFormValue = JSON.stringify(
-      {
-        title: '',
-        description: '',
-        category_id: '' + (this.categoryOptions.find(x => x.is_default === 1) ? this.categoryOptions.find(x => x.is_default === 1).id : 2),
-        status: '' + (this.statusOptions.find(x => x.is_default === 1) ? this.statusOptions.find(x => x.is_default === 1).id : 2)
-      }
-    )
+    this.dynamicFormValue = JSON.stringify({
+      title: '',
+      description: '',
+      category_id: '' + (this.categoryOptions.find(x => x.is_default === 1) ? this.categoryOptions.find(x => x.is_default === 1).id : 2),
+      status: '' + (this.statusOptions.find(x => x.is_default === 1) ? this.statusOptions.find(x => x.is_default === 1).id : 2)
+    })
 
     this.dynamicCallback = this.dynamicCallbackCard;
 
@@ -142,14 +140,14 @@ export class IdeaPage implements OnInit {
         + '&page_size=' + this.pageSize
         + '&page=' + (nextPage ? nextPage : 0)
         , true)
-      // console.log(ideas);
+      console.log(ideas);
       // reset trang và mảng khi lấy xong dữ liệu
       if (isReset) this.formIdea.ideas = []
 
       if (Array.isArray(ideas)) {
         countIdeaReturn = ideas.length
         if (direction === 'UP') {
-          for (let idx = countIdeaReturn - 1; idx < 0; idx--) {
+          for (let idx = countIdeaReturn - 1; idx >= 0; idx--) {
             let el = ideas[idx]
             if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
             if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
@@ -179,8 +177,9 @@ export class IdeaPage implements OnInit {
       if (countIdeaReturn === 0 && this.currentPage === 0) {
         this.apiCommons.showToast('Không tìm thấy ý tưởng nào', 3000, 'danger')
       }
-    } catch{ }
-    finally {
+    } catch (err) {
+      console.log(err);
+    } finally {
       if (isReset)
         setTimeout(() => {
           this.apiCommons.hideLoader()
@@ -336,12 +335,6 @@ export class IdeaPage implements OnInit {
     this.refresh(true)
   }
 
-  // Hiển thị trang cá nhân
-  onViewUserPage(userInfo) {
-    // Xử lý click Avatar user và render page user người khác
-    this.router.navigate(['/my-idea'], { queryParams: { id: userInfo.id } });
-  }
-
   // hàm gọi lại xử lý ajax khi người dùng thay chọn lựa ở card nhập nội dung
   dynamicCallbackCard(ajaxItem) {
     return new Promise(resolve => {
@@ -456,14 +449,14 @@ export class IdeaPage implements OnInit {
   }
 
   // mở cửa sổ popup ở window rộng hơn mặt định của ionic
-  async openModal(componentPage, navParams) {
+  /* async openModal(componentPage, navParams) {
     const myModal = await this.modalController.create({
       component: componentPage,
       componentProps: navParams,
       cssClass: 'cng-custom-modal-css'  // thiết lập css này để mở rộng màn hình tùy thích
     });
     return myModal.present();
-  }
+  } */
 
   // tùy chọn để tìm kiếm
   // Lọc chủ đề hiện có

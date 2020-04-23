@@ -11,7 +11,7 @@
     <ion-title *ngIf="!isSearch">{{(formIdea?.title?formIdea.title:'')}}</ion-title>
 
     <ion-buttons *ngIf="!isSearch && userInfo" slot="end">
-      <ion-button shape="round" (click)="onViewUserPage(userInfo)">
+      <ion-button shape="round">
         <ion-icon slot="start" name="{{userInfo?'contact':'log-in'}}"></ion-icon>
         {{userInfo?.username}}
       </ion-button>
@@ -57,7 +57,7 @@
       [dynamicCallback]="dynamicCallback" (onSelectedFinish)="onSelectedFinish($event)"></card-dynamic-form>
   </ion-card>
 
-  <!-- Phần bộ công cụ kéo xuống đọc dữ liệu -->
+  <!-- Phần bộ công cụ kéo refresh để đọc dữ liệu mới -->
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event, 'UP')" pullFactor="0.8" pullMin="60" pullMax="120">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Kéo xuống để làm mới" refreshingSpinner="bubbles"
       refreshingText="Đang tải...">
@@ -74,7 +74,7 @@
     </ion-row>
   </ion-grid>
 
-  <!-- Phần công cụ kéo lên hết để đọc tiếp dữ liệu trang sau bổ sung  -->
+  <!-- Phần công cụ kéo xuống để đọc tiếp dữ liệu trang sau bổ sung  -->
   <ion-infinite-scroll (ionInfinite)="doRefresh($event, 'DOWN')">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Load dữ liệu cũ hơn...">
     </ion-infinite-scroll-content>
