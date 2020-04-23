@@ -287,7 +287,7 @@ export class IdeaDetailPage implements OnInit {
 
       let form_data: FormData = new FormData();
       form_data.append("id", this.ideaInfo.idea.id);
-      form_data.append("content", this.message ? this.message : this.uploadingFiles.length + ' files');
+      form_data.append("content", this.message ? this.message : this.uploadingFiles.length + ' file(s)');
       let i = 0;
       for (let file of this.uploadingFiles) {
         form_data.append('file_' + i++, file, file.filename);
@@ -328,7 +328,7 @@ export class IdeaDetailPage implements OnInit {
     let arrayTestDemo = [];
     for (let ques of questions) {
       let oldMarkQues = userMarkIdea.find(x => x.question_id === ques.id);
-      let oldMark = oldMarkQues ? oldMarkQues.point : 0;
+      let oldMark = oldMarkQues ? oldMarkQues.point : 0; // lấy lại điểm đã chấm trước đó
       let obj = {
         type: "range-text",
         key: "question_" + ques.id,

@@ -348,25 +348,25 @@ class IdeaHandler {
         if (req.json_data && req.json_data.id && req.user.id) {
             let arrMarks = [];
 
+            // Đưa các dữ liệu chấm điểm vào mảng arrMarks
             for (const key in req.json_data) {
                 if (key && key.indexOf("question") === 0) {
                     try {
-
-                        let question_id = parseInt(key.split("_").pop());
+                        let question_id = parseInt(key.split("_").pop());// lấy id của câu hỏi
                         arrMarks.push({
                             idea_id: req.json_data.id,
                             question_id: question_id,
                             user_id: req.user.id,
                             point: req.json_data[key],
                             created_time: Date.now()
-                        }
-                        )
+                        })
                     } catch { }
                 }
             }
 
             let insertMarkPromise = new Promise(resolve => {
                 let count = 0;
+                // Duyệt từng phần tử và lưu đánh giá từng câu hỏi
                 arrMarks.forEach(async el => {
                     try {
                         await db.insert(db.convertSqlFromJson('ideas_marks', el));
@@ -426,10 +426,6 @@ class IdeaHandler {
                             message: 'Lỗi không cập nhập điểm tổng được!'
                         })
                     })
-            }).catch(err => {
-                res.status(401).json({
-                    message: 'Lỗi chưa thể chấm điểm được!'
-                })
             })
         } else {
             res.status(401).json({
