@@ -11,13 +11,12 @@ const orderList = {
   , ORDER_LIKES: 'ORDER_LIKES'       // được yêu thích nhất
   , ORDER_COMMENTS: 'ORDER_COMMENTS' // được nhiều người bình luận nhất
   , ORDER_MARKS: 'ORDER_MARKS'       // được chấm điểm cao nhất của mọi người
-  , ORDER_PRIZES: 'ORDER_PRIZES'     // được giải của hội đồng chọn cao nhất
 }
 
 const searchOptions = {
   SEARCH_ON_PAGE: 'SEARCH_ON_PAGE'     // được thay đổi gần đây nhất
-  , SEARCH_BY_ID: 'SEARCH_BY_ID'   // được tạo ra gần đây nhất
-  , SEARCH_BY_AI: 'SEARCH_BY_AI'       // được yêu thích nhất
+  , SEARCH_BY_ID: 'SEARCH_BY_ID'      // được tạo ra gần đây nhất
+  , SEARCH_BY_AI: 'SEARCH_BY_AI'     // được yêu thích nhất
 }
 
 @Component({
@@ -283,13 +282,6 @@ export class IdeaPage implements OnInit {
         , name: "Được chấm điểm cao nhất"
         , isChecked: orderList[this.orderBy] === orderList.ORDER_MARKS
         , value: orderList.ORDER_MARKS
-      }
-      ,
-      {
-        id: 6
-        , name: "Được giải cao nhất"
-        , isChecked: orderList[this.orderBy] === orderList.ORDER_PRIZES
-        , value: orderList.ORDER_PRIZES
       }
     ]
 

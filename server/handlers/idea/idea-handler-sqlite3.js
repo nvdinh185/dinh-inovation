@@ -14,7 +14,6 @@ const orderList = {
     , ORDER_LIKES: 'ORDER_LIKES'       // được yêu thích nhất
     , ORDER_COMMENTS: 'ORDER_COMMENTS' // được nhiều người bình luận nhất
     , ORDER_MARKS: 'ORDER_MARKS'       // được chấm điểm cao nhất của mọi người
-    , ORDER_PRIZES: 'ORDER_PRIZES'     // được giải của hội đồng chọn cao nhất
 }
 
 /**
@@ -73,9 +72,6 @@ class IdeaHandler {
         if (orderList[order_by] === orderList.ORDER_MARKS)
             orderBy = `order by a.total_point desc`
 
-        if (orderList[order_by] === orderList.ORDER_PRIZES)
-            orderBy = `order by a.last_value_prize desc`
-
         let filterCategory = filter_category ? filter_category.split(",") : [];
         let filterStatus = filter_status ? filter_status.split(",") : [];
 
@@ -100,8 +96,8 @@ class IdeaHandler {
                     ${sqlCategory}
                     ${sqlStatus}
                     ${orderBy}
-                    LIMIT ${(page_size ? page_size : 30)}
-                    OFFSET ${(page ? page * (page_size ? page_size : 30) : 0)}
+                    LIMIT ${(page_size ? page_size : 3)}
+                    OFFSET ${(page ? page * (page_size ? page_size : 3) : 0)}
                     `)
             .then(result => {
                 // console.log('result: ', result);
@@ -419,6 +415,7 @@ class IdeaHandler {
                                             from user_point_weight`);
                 db.update(db.convertSqlFromJson("ideas", { id: req.json_data.id, total_point: row.total_point }, ["id"]))
                     .then(result => {
+                        // console.log(123);
                         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                         res.end(arrObj.getJsonStringify({ status: "OK", message: "Đánh giá thành công" }));
                     }).catch(err => {
