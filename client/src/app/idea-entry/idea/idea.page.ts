@@ -376,19 +376,21 @@ export class IdeaPage implements OnInit {
     }
 
     if (direction === 'DOWN') {
-      // làm mới trang tiếp theo
-      this.refresh(false, ++this.currentPage, direction)
-        .then(count => {
-          evt.target.complete();
-          if (count < this.pageSize) {
-            this.apiCommons.showToast('Hết ý tưởng rồi', 1000, 'success', 'bottom')
-            // evt.target.disabled = true; // cần thiết vô hiệu thanh kéo này
-          }
-        })
-        .catch(err => {
-          console.log('Lỗi: ', err);
-          evt.target.complete();
-        })
+      if (!this.isCardNewShow) {
+        // làm mới trang tiếp theo
+        this.refresh(false, ++this.currentPage, direction)
+          .then(count => {
+            evt.target.complete();
+            if (count < this.pageSize) {
+              this.apiCommons.showToast('Hết ý tưởng rồi', 1000, 'success', 'bottom')
+              // evt.target.disabled = true; // cần thiết vô hiệu thanh kéo này
+            }
+          })
+          .catch(err => {
+            console.log('Lỗi: ', err);
+            evt.target.complete();
+          })
+      } else evt.target.complete();
     }
 
   }

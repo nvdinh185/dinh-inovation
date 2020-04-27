@@ -111,15 +111,14 @@ export class AppComponent {
 
     if (this.userInfo) {
       // thêm menu phòng ý tưởng
-      this.treeMenu.push(
-        {
-          id: 3,
-          name: 'Phòng ý tưởng',
-          size: '1.1em',
-          type: 'route',     // chuyển trang theo routing
-          url: '/idea',      // chuyển trang theo routing
-          icon: 'md-alarm'
-        })
+      this.treeMenu.push({
+        id: 3,
+        name: 'Phòng ý tưởng',
+        size: '1.1em',
+        type: 'route',     // chuyển trang theo routing
+        url: '/idea',      // chuyển trang theo routing
+        icon: 'md-alarm'
+      })
     }
 
   }
