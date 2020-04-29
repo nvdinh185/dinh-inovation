@@ -3,8 +3,6 @@
 const db = require('../../db/sqlite3/db-pool');
 const arrObj = require('../../utils/array-object');
 
-const defaultOrganizationId = 3; // default tổ chức được tạo
-
 class UserHandler {
 
     // lấy thông tin user
@@ -69,7 +67,6 @@ class UserHandler {
         const userInfo = {
             ...req.json_data,
             // các trường thông tin thêm vào
-            organization_id: defaultOrganizationId,
             username: req.user.username,
             status: 1,
             created_time: Date.now()

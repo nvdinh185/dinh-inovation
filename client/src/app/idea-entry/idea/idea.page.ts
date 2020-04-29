@@ -365,14 +365,16 @@ export class IdeaPage implements OnInit {
       return
     }
     if (direction === 'UP') {
-      // làm mới đọc dữ liệu mới nhất 
-      this.refresh(false, 0, direction)
-        .then(data => {
-          evt.target.complete();
-        })
-        .catch(err => {
-          evt.target.complete();
-        });;        // làm mới ý tưởng mới
+      if (!this.isCardNewShow) {
+        // làm mới đọc dữ liệu mới nhất 
+        this.refresh(false, 0, direction)
+          .then(data => {
+            evt.target.complete();
+          })
+          .catch(err => {
+            evt.target.complete();
+          });;        // làm mới ý tưởng mới
+      } else evt.target.complete();
     }
 
     if (direction === 'DOWN') {
