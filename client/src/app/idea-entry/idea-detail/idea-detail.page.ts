@@ -49,7 +49,7 @@ export class IdeaDetailPage implements OnInit {
       .then(ideaDetail => {
         this.ideaInfo = ideaDetail
         this.refreshUserAction()
-        console.log(this.ideaInfo);
+        // console.log(this.ideaInfo);
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
@@ -119,11 +119,12 @@ export class IdeaDetailPage implements OnInit {
   // Bấm vào nút more 
   onClickMore(ev) {
 
-    // kiểm tra quyền của userInfo mà hiển thị menu khác nhau
-    // nếu user không thuộc ý tưởng, thì có quyền chấm điểm cho ý tưởng này
-    // nếu là ý tưởng thuộc user thì cho phép sửa nội dung, chuyển trạng thái
+    /* kiểm tra quyền của userInfo mà hiển thị menu khác nhau
+    + nếu user không thuộc ý tưởng, thì có quyền chấm điểm cho ý tưởng này
+    + nếu là ý tưởng thuộc user thì cho phép sửa nội dung, chuyển trạng thái */
+
     // cụ thể như sau: Nếu role là
-    /**
+    /*
       1	User thường	User  -- hiển thị mỗi một menu chấm điểm (nếu không phải ý tưởng của mình)
                           -- Hoặc menu sửa ý tưởng, chuyển trạng thái (nếu là ý tưởng của mình)
       
@@ -517,7 +518,7 @@ export class IdeaDetailPage implements OnInit {
     // allway return Promise for callback
     return new Promise<any>((resolve, reject) => {
 
-      console.log(res);
+      // console.log(res);
 
       if (res.error) {
         //If error 

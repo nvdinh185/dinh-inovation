@@ -70,7 +70,6 @@ export class LoginPage implements OnInit {
       , buttons: [
         { color: 'danger', icon: 'close', next: 'CLOSE' }
       ]
-
       , items: [
         { type: 'title', name: 'Nhập user của email @mobifone.vn' }
         ,
@@ -233,6 +232,9 @@ export class LoginPage implements OnInit {
 
     let form = {
       title: "TẠO THÔNG TIN CÁ NHÂN"
+      , buttons: [
+        { color: 'danger', icon: 'close', next: 'CLOSE' }
+      ]
       , items: [
         { name: "Điền đầy đủ thông tin sau", type: "title" }
         , { key: "nickname", name: "Biệt danh", hint: "Nickname", type: "text", input_type: "text", icon: "heart", validators: [{ required: true, min: 1 }] }
@@ -265,7 +267,7 @@ export class LoginPage implements OnInit {
    */
   callbackLogin = function (res) {
     return new Promise(resolve => {
-      console.log(res);
+      // console.log(res);
       if (res.error) {
         // console.log('res', res.error.message , res.message,'Error:<br>' + (res.error.message!=undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))))
         this.apiCommons.presentAlert('Error:<br>' + (res.error.message != undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))));

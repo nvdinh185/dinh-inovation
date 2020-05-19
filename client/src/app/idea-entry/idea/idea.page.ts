@@ -139,7 +139,7 @@ export class IdeaPage implements OnInit {
         + '&page_size=' + this.pageSize
         + '&page=' + (nextPage ? nextPage : 0)
         , true)
-      console.log(ideas);
+      // console.log(ideas);
       // reset trang và mảng khi lấy xong dữ liệu
       if (isReset) this.formIdea.ideas = []
 

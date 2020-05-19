@@ -54,9 +54,7 @@ const loginLdapMobifone = (usernameOremail, password) => new Promise((rs, rj) =>
 const fakeLoginLdap = (email, password) => new Promise((rs, rj) => {
     setTimeout(() => {
         if (email === 'dinh1' && password == '123') {
-            rs({
-                email
-            })
+            rs({ email })
         } else {
             rj(new Error('Email or password invalid!'))
         }
@@ -72,7 +70,7 @@ class LDAPHandler {
      * @param {*} res 
      * @param {*} next 
      */
-    async login(req, res, next) {
+    login(req, res, next) {
         const { username, password } = req.json_data
 
         // cắt lấy username không thôi, không cho nhập @ vào username
