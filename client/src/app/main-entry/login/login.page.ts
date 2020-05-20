@@ -209,7 +209,7 @@ export class LoginPage implements OnInit {
           , options: [
             { name: "Reset", next: "RESET" }
             ,
-            { name: "Cập nhập", command: "EDIT-USER", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/edit-user", token: true, next: "CALLBACK" }
+            { name: "Cập nhật", command: "EDIT-USER", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/edit-user", token: true, next: "CALLBACK" }
           ]
         }
       ]
