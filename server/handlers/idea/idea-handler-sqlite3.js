@@ -364,9 +364,12 @@ class IdeaHandler {
                 let count = 0;
                 // Duyệt từng phần tử và lưu đánh giá từng câu hỏi
                 arrMarks.forEach(async el => {
+                    // console.log(db.convertSqlFromJson('ideas_marks', el));
                     try {
                         await db.insert(db.convertSqlFromJson('ideas_marks', el));
+                        // console.log(123);
                     } catch (err) {
+                        // console.log(err);
                         if (err.code === 'SQLITE_CONSTRAINT') {
                             try {
                                 delete el['created_time'];

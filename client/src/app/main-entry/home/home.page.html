@@ -23,7 +23,7 @@
   <ion-grid>
     <ion-row>
 
-      <ion-col *ngIf="homeForm?.card" size="12" size-sm="6" size-md="6" size-lg="12" size-xl="12">
+      <ion-col *ngIf="homeForm?.card" size="12" size-sm="12" size-md="12" size-lg="6" size-xl="6">
         <ion-card class="welcome-card">
 
           <div *ngIf="homeForm?.card?.image" class="welcome-card-image-height"
@@ -37,7 +37,7 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col *ngIf="homeForm?.list" size="12" size-sm="6" size-md="6" size-lg="6" size-xl="6">
+      <ion-col *ngIf="homeForm?.list" size="12" size-sm="12" size-md="12" size-lg="6" size-xl="6">
         <ion-list lines="none">
           <ion-list-header>
             <ion-label>{{homeForm?.list?.title}}</ion-label>
