@@ -22,18 +22,10 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.mainService.getTokenInfo()
-      .then(userInfo => {
-        if (userInfo) {
-          this.userInfo = userInfo;
-          this.showUserInfo();
-        }
-      })
-      .catch(err => {
-        this.showUserInfo();
-        // chưa login thì yêu cầu login thôi
-        this.login()
-      })
+    setTimeout(() => {
+      this.userInfo = this.mainService.getUserInfo();
+      this.showUserInfo();
+    }, 1000)
   }
 
   /**
@@ -51,7 +43,18 @@ export class LoginPage implements OnInit {
     if (btn.command === 'LOGOUT') {
       this.mainService.logout()
       this.userInfo = null
-      this.showUserInfo();
+      this.formLogin = {
+        title: "LOGIN"
+        , color: 'primary'
+        , items: [
+          {
+            type: "button"
+            , options: [
+              { name: "Đăng nhập", command: "LOGIN" }
+            ]
+          }
+        ]
+      }
     }
 
     // sửa thông tin user
@@ -160,18 +163,7 @@ export class LoginPage implements OnInit {
         ]
       }
     else
-      this.formLogin = {
-        title: "LOGIN"
-        , color: 'primary'
-        , items: [
-          {
-            type: "button"
-            , options: [
-              { name: "Đăng nhập", command: "LOGIN" }
-            ]
-          }
-        ]
-      }
+      this.login()
   }
 
   /**

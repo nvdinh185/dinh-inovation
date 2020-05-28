@@ -67,7 +67,7 @@
   <!-- Hiển thị danh sách các ý tưởng ra trên trang này sắp xếp thành các card theo các màu sắc ý tưởng khác nhau -->
   <ion-grid *ngIf="!isCardNewShow">
     <ion-row>
-      <ion-col *ngFor="let it of myIdeaFilterList; let idx=index;" size="12" size-sm="6" size-md="4" size-lg="4"
+      <ion-col *ngFor="let it of myIdeaFilterList" size="12" size-sm="6" size-md="4" size-lg="4"
         size-xl="3">
         <app-idea-card [cardData]="it" (onClickSub)="onClickIdeaCard($event)"></app-idea-card>
       </ion-col>

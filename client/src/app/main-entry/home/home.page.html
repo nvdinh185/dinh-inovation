@@ -42,7 +42,7 @@
           <ion-list-header>
             <ion-label>{{homeForm?.list?.title}}</ion-label>
           </ion-list-header>
-          <ion-item *ngFor="let item of homeForm.list.items; let idx = index" href="{{item.url}}">
+          <ion-item *ngFor="let item of homeForm.list.items" href="{{item.url}}">
             <ion-icon slot="{{(item?.icon?.slot?item.icon.slot:'start')}}"
               color="{{(item?.icon?.color?item.icon.color:'medium')}}"
               name="{{(item?.icon?.name?item.icon.name:item?.icon?item?.icon:'book')}}"></ion-icon>

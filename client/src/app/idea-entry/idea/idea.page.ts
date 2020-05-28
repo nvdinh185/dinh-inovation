@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService, CommonsService, PopoverCardComponent } from 'ngxi4-dynamic-service';
 import { MainService } from 'src/app/services/main.service';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
 
 // các sắp xếp ý tưởng theo
 const orderList = {
@@ -65,7 +64,6 @@ export class IdeaPage implements OnInit {
     private router: Router
     , private apiAuth: AuthService
     , private apiCommons: CommonsService
-    , private modalController: ModalController
     , private mainService: MainService
   ) { this.init() }
 
@@ -172,6 +170,7 @@ export class IdeaPage implements OnInit {
       }
 
       this.myIdeaFilterList = this.formIdea.ideas; // lấy nguyên gốc bảng dữ liệu lấy về
+      // console.log(this.myIdeaFilterList);
 
       if (countIdeaReturn === 0 && this.currentPage === 0) {
         this.apiCommons.showToast('Không tìm thấy ý tưởng nào', 3000, 'danger')
@@ -179,10 +178,7 @@ export class IdeaPage implements OnInit {
     } catch (err) {
       console.log(err);
     } finally {
-      if (isReset)
-        setTimeout(() => {
-          this.apiCommons.hideLoader()
-        }, 1000)
+      if (isReset) this.apiCommons.hideLoader()
       return countIdeaReturn;
     }
     // Đã có danh sách ý tưởng mới lấy được từ csdl rồi
@@ -373,7 +369,7 @@ export class IdeaPage implements OnInit {
           })
           .catch(err => {
             evt.target.complete();
-          });;        // làm mới ý tưởng mới
+          });
       } else evt.target.complete();
     }
 
@@ -385,7 +381,6 @@ export class IdeaPage implements OnInit {
             evt.target.complete();
             if (count < this.pageSize) {
               this.apiCommons.showToast('Hết ý tưởng rồi', 1000, 'success', 'bottom')
-              // evt.target.disabled = true; // cần thiết vô hiệu thanh kéo này
             }
           })
           .catch(err => {
@@ -424,7 +419,6 @@ export class IdeaPage implements OnInit {
   }
 
   // Người dùng bấm nút like
-  // Gửi lên máy chủ lệnh like từ token này
   likeIdea(item) {
     // id và token chứa user like id này
     this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/like-idea', { id: item.id }, true)
@@ -443,16 +437,6 @@ export class IdeaPage implements OnInit {
   commentIdea(item) {
     this.router.navigate(['/idea-detail'], { queryParams: { id: item.id } });
   }
-
-  // mở cửa sổ popup ở window rộng hơn mặt định của ionic
-  /* async openModal(componentPage, navParams) {
-    const myModal = await this.modalController.create({
-      component: componentPage,
-      componentProps: navParams,
-      cssClass: 'cng-custom-modal-css'  // thiết lập css này để mở rộng màn hình tùy thích
-    });
-    return myModal.present();
-  } */
 
   // tùy chọn để tìm kiếm
   // Lọc chủ đề hiện có
@@ -510,7 +494,7 @@ export class IdeaPage implements OnInit {
       this.searchHint = 'Gõ các từ có trong chủ đề cần tìm';
   }
 
-  // hiển thị ô tìm kiếm để 
+  // hiển thị ô tìm kiếm 
   goSearch() {
     this.isSearch = true;
   }
