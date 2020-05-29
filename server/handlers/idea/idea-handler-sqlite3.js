@@ -9,8 +9,7 @@ const db = require('../../db/sqlite3/db-pool');
 const arrObj = require('../../utils/array-object');
 
 const orderList = {
-    ORDER_CHANGED: 'ORDER_CHANGED'     // được thay đổi gần đây nhất
-    , ORDER_CREATED: 'ORDER_CREATED'   // được tạo ra gần đây nhất
+    ORDER_CREATED: 'ORDER_CREATED'   // được tạo ra gần đây nhất
     , ORDER_LIKES: 'ORDER_LIKES'       // được yêu thích nhất
     , ORDER_COMMENTS: 'ORDER_COMMENTS' // được nhiều người bình luận nhất
     , ORDER_MARKS: 'ORDER_MARKS'       // được chấm điểm cao nhất của mọi người

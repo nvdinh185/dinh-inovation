@@ -5,8 +5,7 @@ import { Router } from '@angular/router';
 
 // các sắp xếp ý tưởng theo
 const orderList = {
-  ORDER_CHANGED: 'ORDER_CHANGED'     // được thay đổi gần đây nhất
-  , ORDER_CREATED: 'ORDER_CREATED'   // được tạo ra gần đây nhất
+  ORDER_CREATED: 'ORDER_CREATED'   // được tạo ra gần đây nhất
   , ORDER_LIKES: 'ORDER_LIKES'       // được yêu thích nhất
   , ORDER_COMMENTS: 'ORDER_COMMENTS' // được nhiều người bình luận nhất
   , ORDER_MARKS: 'ORDER_MARKS'       // được chấm điểm cao nhất của mọi người
@@ -50,8 +49,6 @@ export class IdeaPage implements OnInit {
   pageSize: number = 3;
   currentPage: number = 0;
 
-  isMobile: boolean = false;
-
   isSearch: boolean = false;
   searchString: string;
   searchHint: string = 'Gõ từ có trong các chủ đề bên dưới'
@@ -74,7 +71,6 @@ export class IdeaPage implements OnInit {
   async init() {
     // lấy thông tin user đang login có chưa?
     this.userInfo = this.mainService.getUserInfo();
-    this.isMobile = this.apiCommons.isMobile()
 
     try {
       this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
@@ -156,7 +152,7 @@ export class IdeaPage implements OnInit {
           }
         } else {
           for (let idx = 0; idx < countIdeaReturn; idx++) {
-            let el = ideas[idx]
+            let el = ideas[idx];
             if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
             if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
             let findIndex = this.formIdea.ideas.findIndex(x => x.id === el.id)
@@ -169,7 +165,7 @@ export class IdeaPage implements OnInit {
 
       }
 
-      this.myIdeaFilterList = this.formIdea.ideas; // lấy nguyên gốc bảng dữ liệu lấy về
+      this.myIdeaFilterList = this.formIdea.ideas; // gán dữ liệu lấy về để hiển thị ra
       // console.log(this.myIdeaFilterList);
 
       if (countIdeaReturn === 0 && this.currentPage === 0) {
@@ -181,7 +177,6 @@ export class IdeaPage implements OnInit {
       if (isReset) this.apiCommons.hideLoader()
       return countIdeaReturn;
     }
-    // Đã có danh sách ý tưởng mới lấy được từ csdl rồi
   }
 
   // lọc theo lĩnh vực
@@ -247,13 +242,6 @@ export class IdeaPage implements OnInit {
     let settingsMenu = [
       {
         id: 1
-        , name: "Thay đổi gần nhất"
-        , isChecked: orderList[this.orderBy] === orderList.ORDER_CHANGED
-        , value: orderList.ORDER_CHANGED
-      }
-      ,
-      {
-        id: 2
         , name: "Tạo gần đây nhất"
         , isChecked: orderList[this.orderBy] === orderList.ORDER_CREATED
         , value: orderList.ORDER_CREATED
@@ -345,7 +333,7 @@ export class IdeaPage implements OnInit {
   onSelectedFinish(evt) {
     // cảm ơn bạn đã gửi ý tưởng của bạn
     // console.log('ghi xong du lieu', evt);
-    if (evt) this.refresh(true);        // làm mới ý tưởng mới
+    if (evt) this.refresh(true); // làm mới ý tưởng mới
     this.isCardNewShow = false;
   }
 
@@ -362,30 +350,23 @@ export class IdeaPage implements OnInit {
     }
     if (direction === 'UP') {
       if (!this.isCardNewShow) {
-        // làm mới đọc dữ liệu mới nhất 
+        // đọc dữ liệu mới nhất 
         this.refresh(false, 0, direction)
           .then(data => {
             evt.target.complete();
           })
-          .catch(err => {
-            evt.target.complete();
-          });
       } else evt.target.complete();
     }
 
     if (direction === 'DOWN') {
       if (!this.isCardNewShow) {
-        // làm mới trang tiếp theo
+        // lấy trang tiếp theo
         this.refresh(false, ++this.currentPage, direction)
           .then(count => {
             evt.target.complete();
             if (count < this.pageSize) {
               this.apiCommons.showToast('Hết ý tưởng rồi', 1000, 'success', 'bottom')
             }
-          })
-          .catch(err => {
-            console.log('Lỗi: ', err);
-            evt.target.complete();
           })
       } else evt.target.complete();
     }
