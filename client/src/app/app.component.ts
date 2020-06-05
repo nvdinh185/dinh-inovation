@@ -59,7 +59,7 @@ export class AppComponent {
     this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER || 'http://localhost:9223/m-inovation/api/auth';
     this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER || 'http://localhost:9223/m-inovation/api';
 
-    this.apiCommons.subscribe('event-login-ok', (userInfo) => {
+    this.apiCommons.subscribe('event-login-ok', userInfo => {
       this.userInfo = userInfo
       // gọi tổ chức menu khi login thành công
       this.refresh();
@@ -93,16 +93,16 @@ export class AppComponent {
         id: 1,
         name: 'Văn phòng sáng tạo',
         size: '1.1em',
-        type: 'route',     // chuyển trang theo routing
-        url: '/home',      // chuyển trang theo routing
+        type: 'route',
+        url: '/home',
         icon: 'home'
       }
       ,
       {
         id: 2,
         name: 'Login/Logout',
-        type: 'route',     // bấm chuyển trang theo routing
-        url: '/login',     // bấm chuyển trang khai phần tử quản lý
+        type: 'route',
+        url: '/login',
         icon: 'log-in'
       }
     ];
@@ -113,8 +113,8 @@ export class AppComponent {
         id: 3,
         name: 'Phòng ý tưởng',
         size: '1.1em',
-        type: 'route',     // chuyển trang theo routing
-        url: '/idea',      // chuyển trang theo routing
+        type: 'route',
+        url: '/idea',
         icon: 'md-alarm'
       })
     }

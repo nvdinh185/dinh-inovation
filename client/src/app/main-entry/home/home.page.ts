@@ -19,8 +19,7 @@ export class HomePage implements OnInit {
     }
     ,
     list: {
-      title: 'Tài liệu:'
-      ,
+      title: 'Tài liệu:',
       items: [
         {
           url: 'assets/docs/ManualGuide_v1.1.pdf',
@@ -36,7 +35,8 @@ export class HomePage implements OnInit {
     , private mainService: MainService
   ) { }
 
-  // khi trang bắt đầu load
+  // Đợi 1s để xác nhận đăng nhập (nếu có)
+  // để lấy userInfo
   ngOnInit() {
     setTimeout(() => {
       this.userInfo = this.mainService.getUserInfo();

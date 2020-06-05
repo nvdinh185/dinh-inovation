@@ -106,7 +106,7 @@ export class LoginPage implements OnInit {
 
   /**
    * Nếu đã đăng nhập thì hiển thị thông tin user đăng nhập
-   * Nếu không thì hiện nút để kích vào gọi form đăng nhập
+   * Nếu không thì gọi phương thức login() để popup form đăng nhập
    */
   showUserInfo() {
 
@@ -259,7 +259,7 @@ export class LoginPage implements OnInit {
    */
   callbackLogin = function (res) {
     return new Promise(resolve => {
-      // console.log(res);
+      console.log(res);
       if (res.error) {
         // console.log('res', res.error.message , res.message,'Error:<br>' + (res.error.message!=undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))))
         this.apiCommons.presentAlert('Error:<br>' + (res.error.message != undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))));
