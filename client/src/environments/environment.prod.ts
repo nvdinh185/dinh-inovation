@@ -1,7 +1,5 @@
-export const environment = {
+export const environment_web = {
   production: true
-  , AUTH_SERVER: 'https://c3.mobifone.vn/m-inovation/api/auth'
-  , RESOURCE_SERVER: 'https://c3.mobifone.vn/m-inovation/api'
-  , SOCKET_SERVER: 'https://c3.mobifone.vn/m-inovation/chatbot'
-  , MEDIA_SERVER: 'https://c3.mobifone.vn/m-inovation/nlp'
+  , AUTH_SERVER: 'https://dinh-inovation.herokuapp.com/m-inovation/api/auth'
+  , RESOURCE_SERVER: 'https://dinh-inovation.herokuapp.com/m-inovation/api'
 };

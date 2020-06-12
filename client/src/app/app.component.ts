@@ -56,8 +56,8 @@ export class AppComponent {
    * Khởi tạo các biến đầu tiên
    */
   init() {
-    this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER || 'http://localhost:9223/m-inovation/api/auth';
-    this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER || 'http://localhost:9223/m-inovation/api';
+    this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER;
+    this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER;
 
     this.apiCommons.subscribe('event-login-ok', userInfo => {
       this.userInfo = userInfo

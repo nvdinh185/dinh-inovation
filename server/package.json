@@ -23,7 +23,7 @@
     "path": "^0.12.7",
     "ramda": "^0.27.0",
     "simple-crypto-js": "^2.2.0",
-    "sqlite3": "^4.1.1",
+    "sqlite3": "^4.2.0",
     "xlsx-to-json-lc": "^0.5.0"
   }
 }
