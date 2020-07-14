@@ -9,20 +9,13 @@
   "author": "NVDinh",
   "license": "ISC",
   "dependencies": {
-    "crypto-js": "^3.2.0",
-    "dddos": "^0.1.2",
     "express": "^4.17.1",
     "formidable": "^1.2.1",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "ldapjs": "^1.0.2",
-    "node-cron": "^2.0.3",
-    "node-fasttext": "^1.0.0-alpha.1",
-    "node-rsa": "^1.0.7",
-    "oracledb": "^4.2.0",
     "path": "^0.12.7",
     "ramda": "^0.27.0",
-    "simple-crypto-js": "^2.2.0",
     "sqlite3": "^4.2.0",
     "xlsx-to-json-lc": "^0.5.0"
   }

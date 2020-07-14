@@ -78,7 +78,7 @@ export class LoginPage implements OnInit {
         ,
         // form login gồm nhập username và password
         { type: 'text', key: 'username', name: 'Tên đăng nhập:', hint: 'Vui lòng nhập tên đăng nhập!', icon: 'contact', validators: [{ required: true, min: 1, max: 30 }] }
-        , { type: "password", key: "password", name: "Mật khẩu", hint: "Vui lòng nhập mật khẩu!", input_type: "password", icon: "key", validators: [{ required: true, min: 1, max: 20 }] }
+        , { type: "password", key: "password", name: "Mật khẩu", hint: "Vui lòng nhập mật khẩu!", icon: "key", validators: [{ required: true, min: 1, max: 20 }] }
         ,
         {
           type: 'button'
@@ -261,7 +261,8 @@ export class LoginPage implements OnInit {
     return new Promise(resolve => {
       console.log(res);
       if (res.error) {
-        // console.log('res', res.error.message , res.message,'Error:<br>' + (res.error.message!=undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))))
+        console.log('res.message', res.message)
+        console.log('res.error', res.error)
         this.apiCommons.presentAlert('Error:<br>' + (res.error.message != undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))));
       } else if (res.response_data) {
         if (res.button.command === "LOGIN") {
