@@ -49,13 +49,13 @@ export class IdeaDetailPage implements OnInit {
       .then(ideaDetail => {
         this.ideaInfo = ideaDetail
         this.refreshUserAction()
-        // console.log(this.ideaInfo);
+        console.log(this.ideaInfo);
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
 
   // Lấy file cho ý tưởng và comment
-  // Kiểm tra userInfo này đã like, comment và chấm điểm chưa?
+  // Kiểm tra userInfo này đã like, comment hoặc chấm điểm chưa?
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
 
@@ -168,7 +168,7 @@ export class IdeaDetailPage implements OnInit {
         }
       }
       ,
-      // chỉ cho admin 98, 99
+      // chỉ cho admin 99
       {
         id: 4
         , name: "Xóa ý tưởng này"
@@ -219,23 +219,20 @@ export class IdeaDetailPage implements OnInit {
   }
 
   // Thực thi lệnh khi chọn nút more
-  processDetails(itemOrItems: any) {
-    let cmd = itemOrItems.value;
+  processDetails(data: any) {
+    let cmd = data.value;
     // console.log('lenh', cmd);
     if (this.ideaInfo && this.ideaInfo.idea) {
       if (cmd === 'MARK') {
         // gọi form chấm điểm
         this.markIdea(this.ideaInfo.idea)
-      }
-      if (cmd === 'EDIT') {
+      } else if (cmd === 'EDIT') {
         //  sửa ý tưởng này
         this.editIdea(this.ideaInfo.idea)
-      }
-      if (cmd === 'CHANGE') {
+      } else if (cmd === 'CHANGE') {
         //  thay đổi trạng thái ý tưởng
         this.changeStatusIdea(this.ideaInfo.idea)
-      }
-      if (cmd === 'TRASH') {
+      } else if (cmd === 'TRASH') {
         //  loại bỏ ý tưởng này
         this.trashIdea(this.ideaInfo.idea)
       }
@@ -399,8 +396,8 @@ export class IdeaDetailPage implements OnInit {
       items: [
         // Danh sách các trường nhập liệu
         { type: "hidden", key: "id", value: idea.id }
-        , { type: "text", key: "title", value: idea.title, name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự", input_type: "text", icon: "md-help", validators: [{ required: true, min: 5, max: 200 }] }
-        , { type: "text_area", key: "description", value: idea.description, name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 10 }] }
+        , { type: "text", key: "title", value: idea.title, name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự", input_type: "text", icon: "md-help", validators: [{ required: true, min: 1, max: 200 }] }
+        , { type: "text_area", key: "description", value: idea.description, name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 1 }] }
         , { type: "select", key: "category_id", value: "" + idea.category_id, name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", value: "" + idea.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
         ,
@@ -411,21 +408,20 @@ export class IdeaDetailPage implements OnInit {
             , {
               name: 'Gửi sửa ý tưởng'    // button name
               , id: idea.id              // trả lại id của ý tưởng này
-              , next: 'CALLBACK'         // callback get resulte or json
+              , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
-              , command: 'EDIT'          // extra parameter for callback process
+              , command: 'EDIT'
             }
           ]
         }
       ]
     }
 
-    // call popup window for form login
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
-        parent: this,  // for dismiss child component
-        callback: this.callbackProcess, //function for callback process result of form
-        form: form    // form dynamic 
+        parent: this,
+        callback: this.callbackProcess,
+        form: form
       }
     );
   }
@@ -515,15 +511,12 @@ export class IdeaDetailPage implements OnInit {
 
   // hàm gọi lại xử lý form popup
   callbackProcess = function (res) {
-    // allway return Promise for callback
     return new Promise<any>((resolve, reject) => {
 
       // console.log(res);
 
       if (res.error) {
-        //If error 
         this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
-
       } else if (res.response_data) {
         if (res.button.command === "MARK") {
           this.refresh(res.button.id);
@@ -534,7 +527,6 @@ export class IdeaDetailPage implements OnInit {
 
       }
 
-      // close form
       resolve({ next: "CLOSE" });
 
     });

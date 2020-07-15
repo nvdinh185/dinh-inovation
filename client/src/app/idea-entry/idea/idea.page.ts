@@ -3,7 +3,7 @@ import { AuthService, CommonsService, PopoverCardComponent } from 'ngxi4-dynamic
 import { MainService } from 'src/app/services/main.service';
 import { Router } from '@angular/router';
 
-// các sắp xếp ý tưởng theo
+// các tùy chọn sắp xếp ý tưởng
 const orderList = {
   ORDER_CREATED: 'ORDER_CREATED'   // được tạo ra gần đây nhất
   , ORDER_LIKES: 'ORDER_LIKES'       // được yêu thích nhất
@@ -11,10 +11,10 @@ const orderList = {
   , ORDER_MARKS: 'ORDER_MARKS'       // được chấm điểm cao nhất của mọi người
 }
 
+// các tùy chọn tìm kiếm ý tưởng
 const searchOptions = {
-  SEARCH_ON_PAGE: 'SEARCH_ON_PAGE'     // được thay đổi gần đây nhất
-  , SEARCH_BY_ID: 'SEARCH_BY_ID'      // được tạo ra gần đây nhất
-  , SEARCH_BY_AI: 'SEARCH_BY_AI'     // được yêu thích nhất
+  SEARCH_BY_TITLE: 'SEARCH_BY_TITLE'
+  , SEARCH_BY_ID: 'SEARCH_BY_ID'
 }
 
 @Component({
@@ -34,7 +34,6 @@ export class IdeaPage implements OnInit {
 
   dynamicFormInput: string;
   dynamicFormValue: string;
-  dynamicCallback: any;
 
   isCardNewShow: boolean = false;
 
@@ -51,9 +50,9 @@ export class IdeaPage implements OnInit {
 
   isSearch: boolean = false;
   searchString: string;
-  searchHint: string = 'Gõ từ có trong các chủ đề bên dưới'
+  searchHint: string = 'Tìm theo chủ đề...'
 
-  searchOption: string = searchOptions.SEARCH_ON_PAGE;
+  searchOption: string = searchOptions.SEARCH_BY_TITLE;
 
   myIdeaFilterList: any = [];
 
@@ -82,16 +81,16 @@ export class IdeaPage implements OnInit {
 
     this.statusOptions = this.parameters && this.parameters.ideas_statuses ? this.parameters.ideas_statuses : [];
 
-    // form nhập liệu này
-    this.dynamicFormInput = JSON.stringify({ // Form mẫu hiển thị nhập liệu tạo đối tượng jon_data
+    //form nhập thông tin ý tưởng mới
+    this.dynamicFormInput = JSON.stringify({
       okButton: { icon: "save", name: "Ý tưởng mới của bạn là gì?", color: "secondary", next: "CALLBACK", command: "ADD", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/create-idea', type: "FORM-DATA", token: true }
       ,
       cancelButton: { icon: "close", next: "CLOSE" }
       ,
       items: [
         // Danh sách các trường nhập liệu
-        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 5, max: 200 }] }
-        , { type: "text_area", key: "description", hint: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", name: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 10 }] }
+        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 1, max: 200 }] }
+        , { type: "text_area", key: "description", hint: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", name: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 1 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: this.categoryOptions }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: this.statusOptions }
         , {
@@ -113,11 +112,9 @@ export class IdeaPage implements OnInit {
       status: '' + (this.statusOptions.find(x => x.is_default === 1) ? this.statusOptions.find(x => x.is_default === 1).id : 2)
     })
 
-    this.dynamicCallback = this.dynamicCallbackCard;
-
   }
 
-  // hàm gọi lại khi thay đổi bộ lọc, sắp xếp, hoặc làm mới trang
+  // hàm gọi lại khi bắt đầu tải, thay đổi bộ lọc, sắp xếp, hoặc làm mới trang
   async refresh(isReset?: boolean, nextPage?: number, direction?: string) {
     if (isReset) this.currentPage = 0;
 
@@ -128,13 +125,13 @@ export class IdeaPage implements OnInit {
       let ideas = await this.apiAuth.getDynamicUrl(
         this.apiAuth.serviceUrls.RESOURCE_SERVER
         + '/get-ideas?order_by=' + this.orderBy
-        + '&filter_category=' + this.filterCategorySelected.toString(",")
-        + '&filter_status=' + this.filterStatusSelected.toString(",")
+        + '&filter_category=' + this.filterCategorySelected.toString()
+        + '&filter_status=' + this.filterStatusSelected.toString()
         + '&page_size=' + this.pageSize
         + '&page=' + (nextPage ? nextPage : 0)
         , true)
       // console.log(ideas);
-      // reset trang và mảng khi lấy xong dữ liệu
+      // reset mảng khi thêm mới dữ liệu
       if (isReset) this.formIdea.ideas = []
 
       if (Array.isArray(ideas)) {
@@ -180,19 +177,18 @@ export class IdeaPage implements OnInit {
   }
 
   // lọc theo lĩnh vực
-  onClickFilterCategory(ev?) {
+  onClickFilterCategory() {
     let settingsMenu = [];
     this.categoryOptions.forEach(el => {
       settingsMenu.push({
         id: el.id
         , name: el.name
-        , isChecked: this.filterCategorySelected.includes(el.id)
+        , isChecked: this.filterCategorySelected.includes(el.id)//Nếu có id trong mảng thì true
         , value: el.id
       })
     })
     this.apiCommons.presentPopover(
-      ev
-      , PopoverCardComponent
+      undefined, PopoverCardComponent
       , {
         type: 'multi-choice',
         title: "LỌC THEO LĨNH VỰC",
@@ -208,19 +204,18 @@ export class IdeaPage implements OnInit {
   }
 
   // lọc theo trạng thái
-  onClickFilterStatus(ev?) {
+  onClickFilterStatus() {
     let settingsMenu = [];
     this.statusOptions.forEach(el => {
       settingsMenu.push({
         id: el.id
         , name: el.name
-        , isChecked: this.filterStatusSelected.includes(el.id)
+        , isChecked: this.filterStatusSelected.includes(el.id)//Nếu có id trong mảng thì true
         , value: el.id
       })
     })
     this.apiCommons.presentPopover(
-      ev
-      , PopoverCardComponent
+      undefined, PopoverCardComponent
       , {
         type: 'multi-choice',
         title: "LỌC THEO TRẠNG THÁI",
@@ -235,8 +230,8 @@ export class IdeaPage implements OnInit {
       });
   }
 
-  // sắp xếp theo
-  onClickOrder(ev?) {
+  // hiện thì các tùy chọn sắp xếp
+  onClickOrder() {
     // console.log(this.orderBy, orderList[this.orderBy]);
 
     let settingsMenu = [
@@ -248,21 +243,21 @@ export class IdeaPage implements OnInit {
       }
       ,
       {
-        id: 3
+        id: 2
         , name: "Nhiều người thích nhất"
         , isChecked: orderList[this.orderBy] === orderList.ORDER_LIKES
         , value: orderList.ORDER_LIKES
       }
       ,
       {
-        id: 4
+        id: 3
         , name: "Nhiều người bình luận nhất"
         , isChecked: orderList[this.orderBy] === orderList.ORDER_COMMENTS
         , value: orderList.ORDER_COMMENTS
       }
       ,
       {
-        id: 5
+        id: 4
         , name: "Được chấm điểm cao nhất"
         , isChecked: orderList[this.orderBy] === orderList.ORDER_MARKS
         , value: orderList.ORDER_MARKS
@@ -270,8 +265,7 @@ export class IdeaPage implements OnInit {
     ]
 
     this.apiCommons.presentPopover(
-      ev
-      , PopoverCardComponent
+      undefined, PopoverCardComponent
       , {
         type: 'single-choice',
         title: "SẮP XẾP",
@@ -311,27 +305,8 @@ export class IdeaPage implements OnInit {
     this.refresh(true)
   }
 
-  // hàm gọi lại xử lý ajax khi người dùng thay chọn lựa ở card nhập nội dung
-  dynamicCallbackCard(ajaxItem) {
-    return new Promise(resolve => {
-      // console.log(ajaxItem);
-      /* let ajaxReturn = {
-        key: 'name',
-        property_name: 'value',
-        new_data: 'Tên mới thay đổi từ ajax'
-      }
-      // or 
-      // ajaxReturns = [{...ajaxReturn}]
-      resolve(ajaxReturn); */
-
-      resolve({});
-
-    })
-  }
-
   // hàm trả kết quả của form nhập mới ý tưởng
   onSelectedFinish(evt) {
-    // cảm ơn bạn đã gửi ý tưởng của bạn
     // console.log('ghi xong du lieu', evt);
     if (evt) this.refresh(true); // làm mới ý tưởng mới
     this.isCardNewShow = false;
@@ -342,7 +317,7 @@ export class IdeaPage implements OnInit {
     this.isCardNewShow = true;
   }
 
-  // Đọc lại các ý tưởng mới
+  // Hàm thực hiện khi kéo xuống hoặc refresh trang
   doRefresh(evt, direction) {
     if (this.isSearch) {
       evt.target.complete();
@@ -361,7 +336,7 @@ export class IdeaPage implements OnInit {
     if (direction === 'DOWN') {
       if (!this.isCardNewShow) {
         // lấy trang tiếp theo
-        this.refresh(false, ++this.currentPage, direction)
+        this.refresh(false, ++this.currentPage)
           .then(count => {
             evt.target.complete();
             if (count < this.pageSize) {
@@ -373,8 +348,7 @@ export class IdeaPage implements OnInit {
 
   }
 
-  // sự kiện bấm ở card ý tưởng
-  // có mấy tình huống sinh ra bằng command
+  // khi bấm ở card ý tưởng thì có mấy tình huống sinh ra bằng command
   onClickIdeaCard(evt) {
     // console.log(evt);
     if (evt) {
@@ -391,25 +365,22 @@ export class IdeaPage implements OnInit {
     }
   }
 
-  // Hiển thị item ý tưởng đó cho mọi người thông tin để biết
+  // chuyển sang trang chi tiết để hiển thị chi tiết ý tưởng đó
   viewIdea(item) {
-    // mở ra một component để hiển thị thông tin ý tưởng, các chức năng như comment, like, share, edit, ... nằm ở component này
-    // Chuyển tham số kiểu queryParams --> { queryParams: { page: pageNum } }
     this.router.navigate(['/idea-detail'], { queryParams: { id: item.id } });
-
   }
 
   // Người dùng bấm nút like
   likeIdea(item) {
-    // id và token chứa user like id này
     this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/like-idea', { id: item.id }, true)
       .then(data => {
         // console.log(data);
         let el = data.idea;
         if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
         if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
-        let findIndex = this.formIdea.ideas.findIndex(x => x.id === el.id)
-        if (findIndex >= 0) this.formIdea.ideas.splice(findIndex, 1, el)
+        let index = this.formIdea.ideas.findIndex(x => x.id === el.id)
+        this.formIdea.ideas.splice(index, 1, el)
+        //tự động thay đổi trong this.myIdeaFilterList để hiển thị
       })
       .catch(err => console.log(err))
   }
@@ -420,36 +391,25 @@ export class IdeaPage implements OnInit {
   }
 
   // tùy chọn để tìm kiếm
-  // Lọc chủ đề hiện có
-  // Theo mã chủ đề
-  // Tìm trên máy chủ
-  onClickSearchOption(ev?) {
+  onClickSearchOption() {
     let settingsMenu = [
       {
         id: 1
-        , name: "Lọc chủ đề hiện có"
-        , isChecked: searchOptions[this.searchOption] === searchOptions.SEARCH_ON_PAGE
-        , value: searchOptions.SEARCH_ON_PAGE
+        , name: "Tìm theo chủ đề"
+        , isChecked: searchOptions[this.searchOption] === searchOptions.SEARCH_BY_TITLE
+        , value: searchOptions.SEARCH_BY_TITLE
       }
       ,
       {
         id: 2
-        , name: "Theo mã ý tưởng"
+        , name: "Tìm theo mã ý tưởng"
         , isChecked: searchOptions[this.searchOption] === searchOptions.SEARCH_BY_ID
         , value: searchOptions.SEARCH_BY_ID
-      }
-      ,
-      {
-        id: 3
-        , name: "Tìm trên máy chủ"
-        , isChecked: searchOptions[this.searchOption] === searchOptions.SEARCH_BY_AI
-        , value: searchOptions.SEARCH_BY_AI
       }
     ]
 
     this.apiCommons.presentPopover(
-      ev
-      , PopoverCardComponent
+      undefined, PopoverCardComponent
       , {
         type: 'single-choice',
         title: "TÙY CHỌN TÌM KIẾM",
@@ -467,12 +427,10 @@ export class IdeaPage implements OnInit {
   // bộ lọc tìm kiếm
   processSearchOptions(data: any) {
     this.searchOption = data.value;
-    if (this.searchOption === searchOptions.SEARCH_ON_PAGE)
-      this.searchHint = 'Gõ từ có các trong chủ đề bên dưới';
+    if (this.searchOption === searchOptions.SEARCH_BY_TITLE)
+      this.searchHint = 'Gõ từ có trong các chủ đề bên dưới';
     if (this.searchOption === searchOptions.SEARCH_BY_ID)
       this.searchHint = 'Gõ mã ý tưởng để tìm';
-    if (this.searchOption === searchOptions.SEARCH_BY_AI)
-      this.searchHint = 'Gõ các từ có trong chủ đề cần tìm';
   }
 
   // hiển thị ô tìm kiếm 
@@ -482,30 +440,21 @@ export class IdeaPage implements OnInit {
 
   searchEnter() {
     this.isSearch = false;
-    if (this.searchOption === searchOptions.SEARCH_BY_AI) {
-      // gọi hàm lấy thông tin từ máy chủ theo thuật toán xử lý ngôn ngữ tự nhiên của title
-      // tìm 10 bảng ghi có từ tìm kiếm có nội dung gần nhất
-
-    }
     this.searchString = "";
   }
 
-  // chức năng tìm kiếm của ô tìm kiếm, lọc ra hoặc tìm trong csdl???
+  // tìm kiếm theo title hoặc theo id
   onUserEnterSearch(evt) {
     const searchTxt = evt.detail.value;
     if (searchTxt.length > 0) {
-      if (this.searchOption === searchOptions.SEARCH_ON_PAGE) {
+      if (this.searchOption === searchOptions.SEARCH_BY_TITLE) {
         this.myIdeaFilterList = this.formIdea.ideas.filter(
           x => x.title.toLowerCase().indexOf(searchTxt.toLowerCase()) >= 0
             || ("" + x.id).indexOf(searchTxt) >= 0
             || (x.full_name && x.full_name.toLowerCase().indexOf(searchTxt.toLowerCase()) >= 0)
         );
-      }
-      if (this.searchOption === searchOptions.SEARCH_BY_ID) {
+      } else if (this.searchOption === searchOptions.SEARCH_BY_ID) {
         this.myIdeaFilterList = this.formIdea.ideas.filter(x => ("" + x.id).indexOf(searchTxt) >= 0);
-      }
-      if (this.searchOption === searchOptions.SEARCH_BY_AI) {
-        // gọi hàm khi gõ phím enter
       }
     } else {
       this.myIdeaFilterList = this.formIdea.ideas

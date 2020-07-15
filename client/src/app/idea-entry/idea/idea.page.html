@@ -54,7 +54,7 @@
 
   <ion-card class="card-add-new" *ngIf="isCardNewShow">
     <card-dynamic-form [dynamicFormInput]="dynamicFormInput" [dynamicFormValue]="dynamicFormValue"
-      [dynamicCallback]="dynamicCallback" (onSelectedFinish)="onSelectedFinish($event)"></card-dynamic-form>
+      (onSelectedFinish)="onSelectedFinish($event)"></card-dynamic-form>
   </ion-card>
 
   <!-- Phần bộ công cụ kéo refresh để đọc dữ liệu mới -->
@@ -67,8 +67,7 @@
   <!-- Hiển thị danh sách các ý tưởng ra trên trang này sắp xếp thành các card theo các màu sắc ý tưởng khác nhau -->
   <ion-grid *ngIf="!isCardNewShow">
     <ion-row>
-      <ion-col *ngFor="let it of myIdeaFilterList" size="12" size-sm="6" size-md="4" size-lg="4"
-        size-xl="3">
+      <ion-col *ngFor="let it of myIdeaFilterList" size="12" size-sm="6" size-md="4" size-lg="4" size-xl="3">
         <app-idea-card [cardData]="it" (onClickSub)="onClickIdeaCard($event)"></app-idea-card>
       </ion-col>
     </ion-row>
