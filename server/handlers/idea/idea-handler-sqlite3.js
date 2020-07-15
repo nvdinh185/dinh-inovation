@@ -229,6 +229,7 @@ class IdeaHandler {
                                 from comments_ideas a
                                 left join users b
                                 on a.user_id = b.id`);
+
             let marks = await db.getRsts(`with 
                                 marks_ideas as
                                 (select * from ideas_marks
@@ -286,8 +287,8 @@ class IdeaHandler {
                 let votedUsers = await db.getRsts(`select distinct user_id as user_id
                                                     from ideas_interactives
                                                     where idea_id = ${req.ideaId}
-                                                    and activities_type>0`);//[ { user_id: 779 }, { user_id: 2 } ]
-                votedUsers = votedUsers.map(o => o["user_id"]);//[ 779, 2 ]
+                                                    and activities_type>0`);//[ { user_id: 1 }, { user_id: 2 } ]
+                votedUsers = votedUsers.map(o => o["user_id"]);//[ 1, 2 ]
                 await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, voted_count: votedUsers.length, voted_users: JSON.stringify(votedUsers) }, ["id"]))
                 next()
             })

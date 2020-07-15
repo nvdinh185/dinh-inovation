@@ -59,10 +59,9 @@ class ListHandler {
     // lấy các đường dẫn file đính kèm
     // trường hợp các ý tưởng hoặc comment có truyền lên file
     async getIdeasAttachs(req, res, next) {
-        let listString = '';
         try {
             let ids = (req.paramS.id_list ? JSON.parse(req.paramS.id_list) : 0);
-            listString = ids.toString();
+            let listString = ids.toString();
             let images = await db.getRsts(`select id, file_name, file_type from ideas_attachs 
                                 where id in (${listString})
                                 and file_type like 'image%'
