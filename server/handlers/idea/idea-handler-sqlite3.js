@@ -50,10 +50,7 @@ const saveAttachFiles = (files, userId) => {
 
 class IdeaHandler {
 
-    // 1. lấy danh sách ý tưởng hiển thị, sắp xếp ý tưởng có tác động sửa, tạo mới nhất
-    // và chỉ hiển thị những ý tưởng còn hiệu lực thôi
-    // trường hợp người dùng chỉ lọc những ý tưởng liên quan thì truyền lên bộ lọc
-    // Chỉ những ý tưởng của mình quan tâm (tức là các ý tưởng của mình,...)
+    // 1. lấy danh sách ý tưởng hiển thị
     getIdeas(req, res, next) {
 
         let { order_by, filter_category, filter_status, page_size, page } = req.paramS;
@@ -158,7 +155,6 @@ class IdeaHandler {
             changed_username: req.user.username,
             changed_time: Date.now()
         }
-        // console.log(arrObj.convertSqlFromJson("ideas", ideaInfo, ['id']));
 
         // xóa cột đếm file nếu có
         delete ideaInfo["count_file"];
@@ -184,10 +180,7 @@ class IdeaHandler {
         // lấy ý tưởng chi tiết ra
         let ideaId = req.paramS.id || req.ideaId || 0;
         try {
-            let idea = await db.getRst(`with 
-                            ideas_selected as
-                            (select * from ideas where id = ${ideaId})
-                            select 
+            let idea = await db.getRst(`select 
                             d.fullname || '(' || d.nickname || ')' as username
                             , d.avatar
                             , c.name as status_name
@@ -195,53 +188,45 @@ class IdeaHandler {
                             , c.status_type
                             , b.background
                             , a.*  
-                            from ideas_selected a
+                            from ideas a
                             left join ideas_categories b
                             on a.category_id = b.id
                             left join ideas_statuses c
                             on a.status = c.id
                             left join users d
                             on a.user_id = d.id
+                            where a.id = ${ideaId}
                             `);
 
-            let likes = await db.getRsts(`with 
-                                likes_idea as
-                                (select * from ideas_interactives
-                                where idea_id  = ${ideaId}
-                                order by created_time desc)
-                                select 
+            let likes = await db.getRsts(`select 
                                 b.fullname || '(' || b.nickname || ')' as username
                                 , b.avatar
                                 , a.* 
-                                from likes_idea a
+                                from ideas_interactives a
                                 left join users b
-                                on a.user_id = b.id`);
+                                on a.user_id = b.id
+                                where a.idea_id = ${ideaId}
+                                `);
 
-            let comments = await db.getRsts(`with 
-                                comments_ideas as
-                                (select * from ideas_comments
-                                where idea_id = ${ideaId}
-                                order by created_time desc)
-                                select 
+            let comments = await db.getRsts(`select 
                                 b.fullname || '(' || b.nickname || ')' as username
                                 , b.avatar
                                 , a.* 
-                                from comments_ideas a
+                                from ideas_comments a
                                 left join users b
-                                on a.user_id = b.id`);
+                                on a.user_id = b.id
+                                where a.idea_id = ${ideaId}
+                                `);
 
-            let marks = await db.getRsts(`with 
-                                marks_ideas as
-                                (select * from ideas_marks
-                                where idea_id = ${ideaId}
-                                order by created_time desc)
-                                select 
+            let marks = await db.getRsts(`select 
                                 b.fullname || '(' || b.nickname || ')' as username
                                 , b.avatar
                                 , a.* 
-                                from marks_ideas a
+                                from ideas_marks a
                                 left join users b
-                                on a.user_id = b.id`);
+                                on a.user_id = b.id
+                                where a.idea_id = ${ideaId}
+                                `);
 
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(arrObj.getJsonStringify({
@@ -437,8 +422,8 @@ class IdeaHandler {
     // lấy user chấm điểm ý tưởng
     getUserMarkIdea(req, res, next) {
         db.getRsts(`select * from ideas_marks
-                        where user_id = ${req.user.id}
-                        and idea_id = ${req.paramS.id}
+                    where user_id = ${req.user.id}
+                    and idea_id = ${req.paramS.id}
                     `)
             .then(data => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });

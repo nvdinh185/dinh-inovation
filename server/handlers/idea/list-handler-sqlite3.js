@@ -1,10 +1,5 @@
 "use strict"
 
-/**
- * Bộ tương tác lấy các danh mục dùng chung cho văn phòng ý tưởng
- * Các danh mục trả về dưới dạng đối tượng
- */
-
 // Kết nối csdl theo pool
 const db = require('../../db/sqlite3/db-pool');
 const arrObj = require('../../utils/array-object');

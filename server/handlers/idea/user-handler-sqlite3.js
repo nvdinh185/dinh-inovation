@@ -33,12 +33,11 @@ class UserHandler {
     // lấy id của user phục vụ insert/update các bảng khác
     getUserId(req, res, next) {
         if (req.user)
-            db.getRst(`select id, role from users where username='${req.user.username}'`)
+            db.getRst(`select id from users where username='${req.user.username}'`)
                 .then(result => {
                     // console.log(req.user, result);
                     if (result && result.id) {
                         req.user.id = result.id;
-                        req.user.role = result.role;
                         next()
                     } else
                         res.status(401).json({
@@ -58,9 +57,7 @@ class UserHandler {
     }
 
     /**
-     * 1. Tạo user mới từ người dùng
-     * Các thông tin cơ bản của user, không đẩy hình
-     * Trường hợp đẩy hình thì upload hình ảnh trước rồi mới update user này sau
+     * Tạo user mới từ người dùng
      */
     createNewUser(req, res, next) {
 
@@ -87,9 +84,7 @@ class UserHandler {
     }
 
     /**
-     * 3. Sửa thông tin người dùng
-     * Các thông tin cơ bản của user, không đẩy hình
-     * Trường hợp đẩy hình thì upload hình ảnh trước rồi mới update user này sau
+     * Sửa thông tin người dùng
      */
     editUser(req, res, next) {
 

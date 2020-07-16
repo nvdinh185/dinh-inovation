@@ -1,3 +1,0 @@
-git config --local credential.helper ""
-
-git clone https://nvdinh09thxd:Dinhnv09thxd@github.com/nvdinh09thxd/jspd4.git

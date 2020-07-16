@@ -114,7 +114,6 @@ router.get('/get-attach-files'
 
 // đọc dữ liệu 1 file trả kết quả về client mở file ra
 router.get('/get-file-id'
-    // , jwtTokenVerify                      // xác thực token, sẽ trả về req.user.username (hoặc username - nếu khai báo trong hàm sign)
     , listHandler.getFileAttach              // trả về dữ liệu file thực tế
 )
 

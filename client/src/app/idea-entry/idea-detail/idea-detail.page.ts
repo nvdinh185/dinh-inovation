@@ -49,7 +49,7 @@ export class IdeaDetailPage implements OnInit {
       .then(ideaDetail => {
         this.ideaInfo = ideaDetail
         this.refreshUserAction()
-        console.log(this.ideaInfo);
+        // console.log(this.ideaInfo);
       })
       .catch(err => console.log('Lỗi lấy chi tiết', err))
   }
@@ -243,6 +243,7 @@ export class IdeaDetailPage implements OnInit {
   likeIdea(item) {
     this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/like-idea', { id: item.id }, true)
       .then(idea => {
+        // console.log(idea);
         this.ideaInfo = idea; // lấy lại nội dung này
         this.refreshUserAction()
       })
@@ -322,7 +323,7 @@ export class IdeaDetailPage implements OnInit {
       userMarkIdea = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/user-mark-idea?id=' + idea.id, true)
     } catch{ }
 
-    // Chuyển json trả về thành dạng mảng chứa phần tử của dynamic form
+    // Lấy lại điểm đã chấm trước đó
     let arrayTestDemo = [];
     for (let ques of questions) {
       let oldMarkQues = userMarkIdea.find(x => x.question_id === ques.id);
@@ -350,25 +351,25 @@ export class IdeaDetailPage implements OnInit {
         , {
           type: 'button'
           , options: [
-            {
-              name: 'Gửi chấm điểm'    // button name
-              , next: 'CALLBACK'      // callback get result or json
+            { name: "Reset", next: "RESET" }
+            , {
+              name: 'Gửi chấm điểm'
+              , next: 'CALLBACK'
               , id: idea.id
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/mark-idea'
-              , token: true           // token login before interceptor or token string
-              , command: 'MARK'       // extra parameter for callback process
+              , token: true
+              , command: 'MARK'
             }
           ]
         }
       ]
     }
 
-    // call popup window for form login
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
-        parent: this,  // for dismiss child component
-        callback: this.callbackProcess, //function for callback process result of form
-        form: form    // form dynamic 
+        parent: this,
+        callback: this.callbackProcess,
+        form: form
       }
     );
 
@@ -406,7 +407,7 @@ export class IdeaDetailPage implements OnInit {
           , options: [
             { name: "Reset", next: "RESET" }
             , {
-              name: 'Gửi sửa ý tưởng'    // button name
+              name: 'Gửi sửa ý tưởng'
               , id: idea.id              // trả lại id của ý tưởng này
               , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
@@ -450,23 +451,22 @@ export class IdeaDetailPage implements OnInit {
           type: 'button'
           , options: [
             {
-              name: 'Chuyển trạng thái ý tưởng này'    // button name
+              name: 'Chuyển trạng thái ý tưởng này'
               , id: idea.id              // trả lại id của ý tưởng này
-              , next: 'CALLBACK'         // callback get resulte or json
+              , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
-              , command: 'EDIT'          // extra parameter for callback process
+              , command: 'EDIT'
             }
           ]
         }
       ]
     }
 
-    // call popup window for form login
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
-        parent: this,  // for dismiss child component
-        callback: this.callbackProcess, //function for callback process result of form
-        form: form    // form dynamic 
+        parent: this,
+        callback: this.callbackProcess,
+        form: form
       }
     );
   }
@@ -488,23 +488,22 @@ export class IdeaDetailPage implements OnInit {
           type: 'button'
           , options: [
             {
-              name: 'Dừng ý tưởng này'    // button name
-              , id: idea.id              // trả lại id của ý tưởng này
-              , next: 'CALLBACK'         // callback get resulte or json
+              name: 'Dừng ý tưởng này'
+              , id: idea.id
+              , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
-              , command: 'EDIT'          // extra parameter for callback process
+              , command: 'EDIT'
             }
           ]
         }
       ]
     }
 
-    // call popup window for form login
     this.apiCommons.openModal(DynamicFormMobilePage,
       {
-        parent: this,  // for dismiss child component
-        callback: this.callbackProcess, //function for callback process result of form
-        form: form    // form dynamic 
+        parent: this,
+        callback: this.callbackProcess,
+        form: form
       }
     );
   }
