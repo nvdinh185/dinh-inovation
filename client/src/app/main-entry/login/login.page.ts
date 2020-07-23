@@ -261,8 +261,6 @@ export class LoginPage implements OnInit {
     return new Promise(resolve => {
       console.log(res);
       if (res.error) {
-        console.log('res.message', res.message)
-        console.log('res.error', res.error)
         this.apiCommons.presentAlert('Error:<br>' + (res.error.message != undefined ? res.error.message : res.message ? res.message : ("Error Unknow: " + JSON.stringify(res.error, null, 2))));
       } else if (res.response_data) {
         if (res.button.command === "LOGIN") {

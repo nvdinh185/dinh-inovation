@@ -1,0 +1,27 @@
+{
+  "name": "dinh-inovation",
+  "version": "1.0.0",
+  "description": "An Ionic project",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "NVDinh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "formidable": "^1.2.1",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "ldapjs": "^1.0.2",
+    "nodemon": "^2.0.4",
+    "path": "^0.12.7",
+    "ramda": "^0.27.0",
+    "sqlite3": "^4.2.0",
+    "xlsx-to-json-lc": "^0.5.0"
+  },
+  "engines": {
+    "node": "11.11.0",
+    "npm": "6.7.0"
+  }
+}

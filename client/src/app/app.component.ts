@@ -6,6 +6,7 @@ import { AuthService, CommonsService } from 'ngxi4-dynamic-service';
 import { MainService } from './services/main.service';
 
 import { environment } from './../environments/environment'
+import { environment_web } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-root',
@@ -46,18 +47,17 @@ export class AppComponent {
     private apiAuth: AuthService,
     private apiCommons: CommonsService,
     private mainService: MainService
-  ) { this.initializeApp(); }
-
-  initializeApp() {
-    this.init();
-  }
+  ) { this.init(); }
 
   /**
    * Khởi tạo các biến đầu tiên
    */
   init() {
-    this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER;
-    this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER;
+    // this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER;
+    // this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER;
+
+    this.apiAuth.serviceUrls.AUTH_SERVER = environment_web.AUTH_SERVER;
+    this.apiAuth.serviceUrls.RESOURCE_SERVER = environment_web.RESOURCE_SERVER;
 
     this.apiCommons.subscribe('event-login-ok', userInfo => {
       this.userInfo = userInfo

@@ -19,4 +19,4 @@ import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
   ],
   declarations: [LoginPage]
 })
-export class LoginPageModule {}
+export class LoginPageModule { }
