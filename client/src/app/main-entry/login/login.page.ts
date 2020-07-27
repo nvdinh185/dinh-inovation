@@ -299,9 +299,13 @@ export class LoginPage implements OnInit {
             this.apiCommons.showToast('Login thành công', 3000);
             this.saveToken(resData.token, result.data);
           } else {
-            // Chưa có user cần khai báo
-            this.createNewUser(resData.username, resData.token);
+            this.apiCommons.showToast('Login thất bại', 3000);
+            //Gọi lại form login
+            this.login()
           }
+        } else {
+          // Chưa có user cần khai báo
+          this.createNewUser(resData.username, resData.token);
         }
       })
       .catch(err => {

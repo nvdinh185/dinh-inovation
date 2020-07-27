@@ -6,28 +6,28 @@ const arrObj = require('../../utils/array-object');
 class UserHandler {
 
     // lấy thông tin user
-    // ưu tiên lấy user của tham số gửi vào
-    // nếu không có thì lấy user của token
-    getUserInfo(req, res, next) {
-        let sqlWhere = req.paramS.id ? `where id='${req.paramS.id}'` : `where username='${(req.user ? req.user.username : ``)}'`
-        // console.log('sqlWhere: ', sqlWhere);
-        db.getRst(`select * from users ${sqlWhere}`)
-            .then(result => {
-                if (result && result.status === 0) {
-                    res.status(401).json({
-                        message: 'User đã bị khóa, vui lòng liên hệ Quản trị hệ thống'
-                    })
-                } else {
-                    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                    res.end(arrObj.getJsonStringify({ status: 'OK', data: result }));
-                }
-            })
-            .catch(err => {
-                console.log('Lỗi: ', err);
-                res.status(401).json({
-                    message: 'Lỗi truy vấn csdl users'
-                })
-            });
+    // dựa vào user của token
+    async getUserInfo(req, res, next) {
+        // console.log(req.json_data);
+        let sqlWhereUser = `where username='${(req.user ? req.user.username : ``)}'`
+        // kiểm tra username đã có trong csdl chưa?
+        let checkUsername = await db.getRst(`select * from users ${sqlWhereUser}`);
+        if (checkUsername) {
+            let sqlWhere = `where username='${(req.user ? req.user.username : ``)}' and password='${(req.user ? req.user.password : ``)}'`
+            let info = await db.getRst(`select * from users ${sqlWhere}`);
+            // console.log(info);
+
+            if (!info) {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify({ status: 'OK' }));
+            } else {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify({ status: 'OK', data: info }));
+            }
+        } else {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(arrObj.getJsonStringify({ status: 'NOK' }));
+        }
     }
 
     // lấy id của user phục vụ insert/update các bảng khác
@@ -65,6 +65,7 @@ class UserHandler {
             ...req.json_data,
             // các trường thông tin thêm vào
             username: req.user.username,
+            password: req.user.password,
             status: 1,
             created_time: Date.now()
         }

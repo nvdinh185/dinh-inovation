@@ -1,12 +1,12 @@
 const router = require('express').Router();
 
-const ldapHandler = require('../../handlers/admin/ldap-handler');
+const LoginHandler = require('../../handlers/admin/login-handler');
 
 const postHandler = require('../../utils/post-handler');
 
 router.post('/login'
     , postHandler.jsonProcess
-    , ldapHandler.login
+    , LoginHandler.login
 )
 
 module.exports = router;

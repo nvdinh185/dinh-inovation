@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, CommonsService, PopoverCardComponent } from 'ngxi4-dynamic-service';
-import { MainService } from 'src/app/services/main.service';
+import { MainService } from '../../services/main.service';
 import { Router } from '@angular/router';
 
 // các tùy chọn sắp xếp ý tưởng
