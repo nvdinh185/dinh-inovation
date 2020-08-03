@@ -89,8 +89,8 @@ export class IdeaPage implements OnInit {
       ,
       items: [
         // Danh sách các trường nhập liệu
-        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 1, max: 200 }] }
-        , { type: "text_area", key: "description", hint: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ (words)", name: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 1 }] }
+        { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 1-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 1, max: 200 }] }
+        , { type: "text_area", key: "description", hint: "Mô tả nội dung ý tưởng của bạn từ 1 đến 1000 từ (words)", name: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 1 }] }
         , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: this.categoryOptions }
         , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: this.statusOptions }
         , {
@@ -131,7 +131,7 @@ export class IdeaPage implements OnInit {
         + '&page=' + (nextPage ? nextPage : 0)
         , true)
       // console.log(ideas);
-      // reset mảng khi thêm mới dữ liệu
+      // reset mảng khi thêm mới dữ liệu, thay đổi bộ lọc, sắp xếp
       if (isReset) this.formIdea.ideas = []
 
       if (Array.isArray(ideas)) {
@@ -230,7 +230,7 @@ export class IdeaPage implements OnInit {
       });
   }
 
-  // hiện thì các tùy chọn sắp xếp
+  // hiện thị các tùy chọn sắp xếp
   onClickOrder() {
     // console.log(this.orderBy, orderList[this.orderBy]);
 
@@ -449,10 +449,7 @@ export class IdeaPage implements OnInit {
     if (searchTxt.length > 0) {
       if (this.searchOption === searchOptions.SEARCH_BY_TITLE) {
         this.myIdeaFilterList = this.formIdea.ideas.filter(
-          x => x.title.toLowerCase().indexOf(searchTxt.toLowerCase()) >= 0
-            || ("" + x.id).indexOf(searchTxt) >= 0
-            || (x.full_name && x.full_name.toLowerCase().indexOf(searchTxt.toLowerCase()) >= 0)
-        );
+          x => x.title.toLowerCase().indexOf(searchTxt.toLowerCase()) >= 0);
       } else if (this.searchOption === searchOptions.SEARCH_BY_ID) {
         this.myIdeaFilterList = this.formIdea.ideas.filter(x => ("" + x.id).indexOf(searchTxt) >= 0);
       }

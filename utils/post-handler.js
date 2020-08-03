@@ -30,11 +30,8 @@ const fs = require('fs');
 const systempath = require('path');
 const mime = require('mime-types');
 const formidable = require('formidable');
-const arrObj = require('./array-object');
 
 if (!fs.existsSync(dirUpload)) fs.mkdirSync(dirUpload);
-
-
 
 /**
  * Lưu file xuống đĩa, trả về thành công hoặc thất bại
@@ -62,8 +59,6 @@ var saveToDish = (filename, data, options) => {
 
   })
 }
-
-
 
 /**
  * body formdata => req.form_data (file save in dirUpload )
@@ -184,7 +179,6 @@ var formProcess = (req, res, next) => {
     }
   });
 }
-
 
 /**
  * body json => req.json_data

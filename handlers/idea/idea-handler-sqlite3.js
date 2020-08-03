@@ -74,21 +74,16 @@ class IdeaHandler {
         let sqlCategory = filterCategory.length > 0 ? `and a.category_id in (${filterCategory.toString()})` : ``
         let sqlStatus = filterStatus.length > 0 ? `and a.status in (${filterStatus.toString()})` : ``
         // console.log(sqlCategory, sqlStatus, orderBy);
-        db.getRsts(`select 
-                    d.fullname || '(' || d.nickname || ')' as full_name
-                    , c.name as status_name
-                    , b.name as category_name
-                    , c.status_type
+        db.getRsts(`select
+                    c.status_type
                     , b.background
-                    , a.* 
+                    , a.*
                     from ideas a
-                    left join ideas_categories b
+                    join ideas_categories b
                     on a.category_id = b.id
-                    left join ideas_statuses c
+                    join ideas_statuses c
                     on a.status = c.id
-                    left join users d
-                    on a.user_id = d.id
-                    where c.status_type >=0 -- chỉ lọc lấy các ý tưởng còn hiệu lực
+                    where c.status_type >= 0 -- chỉ lọc lấy các ý tưởng còn hiệu lực
                     ${sqlCategory}
                     ${sqlStatus}
                     ${orderBy}
@@ -178,23 +173,14 @@ class IdeaHandler {
     async getIdea(req, res, next) {
 
         // lấy ý tưởng chi tiết ra
-        let ideaId = req.paramS.id || req.ideaId || 0;
+        let ideaId = req.ideaId;
         try {
             let idea = await db.getRst(`select 
-                            d.fullname || '(' || d.nickname || ')' as username
-                            , d.avatar
-                            , c.name as status_name
-                            , b.name as category_name
-                            , c.status_type
-                            , b.background
+                            b.background
                             , a.*  
                             from ideas a
-                            left join ideas_categories b
+                            join ideas_categories b
                             on a.category_id = b.id
-                            left join ideas_statuses c
-                            on a.status = c.id
-                            left join users d
-                            on a.user_id = d.id
                             where a.id = ${ideaId}
                             `);
 
@@ -268,12 +254,13 @@ class IdeaHandler {
                     // chèn thêm một dòng like vào bảng ideas_interactives
                     await db.insert(db.convertSqlFromJson('ideas_interactives', jsonLike))
                 }
-                // update số lượng like cho bảng gốc
-                let votedUsers = await db.getRsts(`select distinct user_id as user_id
+                //Mảng những user đã voted cho ý tưởng này
+                let votedUsers = await db.getRsts(`select user_id as user_id
                                                     from ideas_interactives
                                                     where idea_id = ${req.ideaId}
-                                                    and activities_type>0`);//[ { user_id: 1 }, { user_id: 2 } ]
+                                                    and activities_type > 0`); //[ { user_id: 1 }, { user_id: 2 } ]
                 votedUsers = votedUsers.map(o => o["user_id"]);//[ 1, 2 ]
+                // update số lượng like cho bảng gốc
                 await db.update(db.convertSqlFromJson("ideas", { id: req.ideaId, voted_count: votedUsers.length, voted_users: JSON.stringify(votedUsers) }, ["id"]))
                 next()
             })
