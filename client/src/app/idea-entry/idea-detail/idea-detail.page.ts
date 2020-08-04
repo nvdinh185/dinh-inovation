@@ -55,7 +55,7 @@ export class IdeaDetailPage implements OnInit {
   }
 
   // Lấy file cho ý tưởng và comment
-  // Kiểm tra userInfo này đã like, comment hoặc chấm điểm chưa?
+  // Kiểm tra userInfo này đã like, comment chưa?
   refreshUserAction() {
     if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
 
@@ -84,8 +84,7 @@ export class IdeaDetailPage implements OnInit {
       this.ideaInfo.isUserVoted = this.ideaInfo.likes.findIndex(x => x.user_id === this.userInfo.id && x.activities_type > 0) >= 0
       // Kiểm tra this.userInfo này đã comment ý tưởng này chưa?
       this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
-      //Kiểm tra this.userInfo này đã chấm điểm ý tưởng này chưa?
-      this.ideaInfo.isUserMarked = this.ideaInfo.marks.findIndex(x => x.user_id === this.userInfo.id) >= 0
+
       //Lấy các file cho các bình luận
       this.ideaInfo.comments.forEach(el => {
         if (el.attach_id_list) {
@@ -121,12 +120,12 @@ export class IdeaDetailPage implements OnInit {
 
     /* kiểm tra quyền của userInfo mà hiển thị menu khác nhau
     + nếu user không thuộc ý tưởng, thì có quyền chấm điểm cho ý tưởng này
-    + nếu là ý tưởng thuộc user thì cho phép sửa nội dung, chuyển trạng thái */
+    + nếu là ý tưởng thuộc user thì cho phép sửa nội dung */
 
     // cụ thể như sau: Nếu role là
     /*
-      1	User thường	User  -- hiển thị mỗi một menu chấm điểm (nếu không phải ý tưởng của mình)
-                          -- Hoặc menu sửa ý tưởng, chuyển trạng thái (nếu là ý tưởng của mình)
+      1	User thường  -- hiển thị menu chấm điểm (nếu không phải ý tưởng của mình)
+                     -- Hoặc menu sửa ý tưởng (nếu là ý tưởng của mình)
       
       99	Developper	Người phát triển -- hiển thị hết menu
      */
@@ -135,7 +134,6 @@ export class IdeaDetailPage implements OnInit {
     // menu đầy đủ
     // trường hợp nào thì sẽ xóa bỏ menu tương ứng
     const allMenu = [
-      // Cho tất cả mọi người trừ userInfo==idea
       {
         id: 1
         , name: "Chấm điểm ý tưởng này"
@@ -146,7 +144,6 @@ export class IdeaDetailPage implements OnInit {
         }
       }
       ,
-      //Chỉnh sửa ý tưởng (cho user_id của ý tưởng đó)
       {
         id: 2
         , name: "Sửa ý tưởng này"
@@ -157,20 +154,8 @@ export class IdeaDetailPage implements OnInit {
         }
       }
       ,
-      // chỉ cho admin 99, và user_id của ý tưởng trùng với nó
       {
         id: 3
-        , name: "Chuyển trạng thái"
-        , value: "CHANGE"
-        , icon: {
-          name: "hourglass"
-          , color: "primary"
-        }
-      }
-      ,
-      // chỉ cho admin 99
-      {
-        id: 4
         , name: "Xóa ý tưởng này"
         , value: "TRASH"
         , icon: {
@@ -183,10 +168,10 @@ export class IdeaDetailPage implements OnInit {
     if (this.userInfo && this.ideaInfo && this.ideaInfo.idea) {
       //user_id của ý tưởng trùng với id của userInfo
       if (this.ideaInfo.idea.user_id === this.userInfo.id) {
-        // cho phép sửa hoặc chuyển trạng thái
-        settingsMenu = allMenu.filter(x => x.id === 2 || x.id === 3)
+        // cho phép sửa
+        settingsMenu = allMenu.filter(x => x.id === 2)
       } else {
-        // chỉ cho phép chấm điểm
+        // ho phép chấm điểm
         settingsMenu = allMenu.filter(x => x.id === 1)
       }
 
@@ -229,9 +214,6 @@ export class IdeaDetailPage implements OnInit {
       } else if (cmd === 'EDIT') {
         //  sửa ý tưởng này
         this.editIdea(this.ideaInfo.idea)
-      } else if (cmd === 'CHANGE') {
-        //  thay đổi trạng thái ý tưởng
-        this.changeStatusIdea(this.ideaInfo.idea)
       } else if (cmd === 'TRASH') {
         //  loại bỏ ý tưởng này
         this.trashIdea(this.ideaInfo.idea)
@@ -338,8 +320,9 @@ export class IdeaDetailPage implements OnInit {
       }
       arrayTestDemo.push(obj);
     }
+    // console.log(arrayTestDemo);
 
-    // Chấm điểm ý tưởng - popup cửa sổ chấm điểm
+    // popup cửa sổ chấm điểm
     let form: any = {
       title: 'Chấm điểm ý tưởng'
       , buttons: [
@@ -377,7 +360,6 @@ export class IdeaDetailPage implements OnInit {
 
   // sửa lại ý tưởng này
   async editIdea(idea) {
-    // popup cửa sổ này lên và cho phép chỉnh sửa ý tưởng này
     let parameters;
     try {
       parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
@@ -387,7 +369,6 @@ export class IdeaDetailPage implements OnInit {
 
     let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
 
-    // Chỉnh sửa ý tưởng - popup cửa sổ chỉnh sửa
     let form: any = {
       title: 'Sửa ý tưởng'
       , buttons: [
@@ -397,8 +378,8 @@ export class IdeaDetailPage implements OnInit {
       items: [
         // Danh sách các trường nhập liệu
         { type: "hidden", key: "id", value: idea.id }
-        , { type: "text", key: "title", value: idea.title, name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự", input_type: "text", icon: "md-help", validators: [{ required: true, min: 1, max: 200 }] }
-        , { type: "text_area", key: "description", value: idea.description, name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 1 }] }
+        , { type: "text", key: "title", value: idea.title, name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 1-200 ký tự", input_type: "text", icon: "md-help", validators: [{ required: true, min: 1, max: 200 }] }
+        , { type: "text_area", key: "description", value: idea.description, name: "Mô tả nội dung ý tưởng của bạn từ 1 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 1 }] }
         , { type: "select", key: "category_id", value: "" + idea.category_id, name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
         , { type: "select", key: "status", value: "" + idea.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
         ,
@@ -408,50 +389,6 @@ export class IdeaDetailPage implements OnInit {
             { name: "Reset", next: "RESET" }
             , {
               name: 'Gửi sửa ý tưởng'
-              , id: idea.id              // trả lại id của ý tưởng này
-              , next: 'CALLBACK'
-              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
-              , command: 'EDIT'
-            }
-          ]
-        }
-      ]
-    }
-
-    this.apiCommons.openModal(DynamicFormMobilePage,
-      {
-        parent: this,
-        callback: this.callbackProcess,
-        form: form
-      }
-    );
-  }
-
-  // Chuyển trạng thái của ý tưởng
-  async changeStatusIdea(idea) {
-    let parameters;
-    try {
-      parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
-    } catch{ }
-
-    let statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
-
-    let form: any = {
-      title: 'Thay đổi trạng thái'
-      , buttons: [
-        { color: 'danger', icon: 'close', next: 'CLOSE' }
-      ]
-      ,
-      items: [
-        // Danh sách các trường nhập liệu
-        { type: "hidden", key: "id", value: idea.id }
-        , { type: "select", key: "status", value: "" + idea.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "warning" }
-        ,
-        {
-          type: 'button'
-          , options: [
-            {
-              name: 'Chuyển trạng thái ý tưởng này'
               , id: idea.id              // trả lại id của ý tưởng này
               , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
@@ -510,20 +447,14 @@ export class IdeaDetailPage implements OnInit {
 
   // hàm gọi lại xử lý form popup
   callbackProcess = function (res) {
-    return new Promise<any>((resolve, reject) => {
+    return new Promise<any>(resolve => {
 
       // console.log(res);
 
       if (res.error) {
         this.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
       } else if (res.response_data) {
-        if (res.button.command === "MARK") {
-          this.refresh(res.button.id);
-        }
-        if (res.button.command === "EDIT") {
-          this.refresh(res.button.id)
-        }
-
+        this.refresh(res.button.id)
       }
 
       resolve({ next: "CLOSE" });

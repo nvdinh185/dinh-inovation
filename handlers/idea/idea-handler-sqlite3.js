@@ -166,53 +166,50 @@ class IdeaHandler {
                     error: err
                 })
             });
-
     }
 
-    // lấy thông tin của 1 ý tưởng trả về khi người dùng like, comment
+    // lấy thông tin của 1 ý tưởng
     async getIdea(req, res, next) {
 
         // lấy ý tưởng chi tiết ra
-        let ideaId = req.ideaId;
+        let ideaId = req.paramS.id || req.ideaId;
         try {
             let idea = await db.getRst(`select 
-                            b.background
-                            , a.*  
-                            from ideas a
-                            join ideas_categories b
-                            on a.category_id = b.id
-                            where a.id = ${ideaId}
-                            `);
+                                        b.background
+                                        , b.name as category_name
+                                        , c.name as status_name
+                                        , d.fullname || '(' || d.nickname || ')' as username
+                                        ,  d.avatar
+                                        , a.*  
+                                        from ideas a
+                                        join ideas_categories b
+                                        on a.category_id = b.id
+                                        join ideas_statuses c
+                                        on a.status = c.id
+                                        join users d
+                                        on a.user_id = d.id
+                                        where a.id = ${ideaId}
+                                        `);
 
-            let likes = await db.getRsts(`select 
-                                b.fullname || '(' || b.nickname || ')' as username
-                                , b.avatar
-                                , a.* 
-                                from ideas_interactives a
-                                left join users b
-                                on a.user_id = b.id
-                                where a.idea_id = ${ideaId}
+            let likes = await db.getRsts(`select * 
+                                from ideas_interactives
+                                where idea_id = ${ideaId}
                                 `);
 
-            let comments = await db.getRsts(`select 
-                                b.fullname || '(' || b.nickname || ')' as username
-                                , b.avatar
-                                , a.* 
-                                from ideas_comments a
-                                left join users b
-                                on a.user_id = b.id
-                                where a.idea_id = ${ideaId}
-                                `);
+            let comments = await db.getRsts(`select
+                                            b.fullname || '(' || b.nickname || ')' as username
+                                            , b.avatar
+                                            , a.* 
+                                            from ideas_comments a
+                                            join users b
+                                            on a.user_id = b.id
+                                            where idea_id = ${ideaId}
+                                            `);
 
-            let marks = await db.getRsts(`select 
-                                b.fullname || '(' || b.nickname || ')' as username
-                                , b.avatar
-                                , a.* 
-                                from ideas_marks a
-                                left join users b
-                                on a.user_id = b.id
-                                where a.idea_id = ${ideaId}
-                                `);
+            let marks = await db.getRsts(`select * 
+                                        from ideas_marks
+                                        where idea_id = ${ideaId}
+                                        `);
 
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(arrObj.getJsonStringify({
@@ -311,7 +308,7 @@ class IdeaHandler {
             });
     }
 
-    // đánh giá ý tưởng
+    // chấm điểm ý tưởng
     async markIdea(req, res, next) {
         if (req.json_data && req.json_data.id && req.user.id) {
             let arrMarks = [];
@@ -406,7 +403,7 @@ class IdeaHandler {
         }
     }
 
-    // lấy user chấm điểm ý tưởng
+    // lấy thông tin chấm điểm ý tưởng
     getUserMarkIdea(req, res, next) {
         db.getRsts(`select * from ideas_marks
                     where user_id = ${req.user.id}
