@@ -1429,6 +1429,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var time_ago_pipe__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! time-ago-pipe */
     "./node_modules/time-ago-pipe/esm2015/time-ago-pipe.js");
+    /* harmony import */
+
+
+    var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! @ionic/angular */
+    "./node_modules/@ionic/angular/dist/fesm5.js");
+    /* harmony import */
+
+
+    var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    /*! @angular/common */
+    "./node_modules/@angular/common/fesm2015/common.js");
+    /* harmony import */
+
+
+    var _angular_forms__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    /*! @angular/forms */
+    "./node_modules/@angular/forms/fesm2015/forms.js");
+    /* harmony import */
+
+
+    var ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! ngxi4-dynamic-service */
+    "./node_modules/ngxi4-dynamic-service/fesm2015/ngxi4-dynamic-service.js");
 
     var SharedModule = function SharedModule() {
       _classCallCheck(this, SharedModule);
@@ -1437,7 +1461,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     SharedModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
       imports: [],
       declarations: [time_ago_pipe__WEBPACK_IMPORTED_MODULE_2__["TimeAgoPipe"]],
-      exports: [time_ago_pipe__WEBPACK_IMPORTED_MODULE_2__["TimeAgoPipe"]]
+      exports: [time_ago_pipe__WEBPACK_IMPORTED_MODULE_2__["TimeAgoPipe"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["IonicModule"], _angular_common__WEBPACK_IMPORTED_MODULE_4__["CommonModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"], ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_6__["Ngxi4DynamicServiceModule"]]
     })], SharedModule);
     /***/
   }

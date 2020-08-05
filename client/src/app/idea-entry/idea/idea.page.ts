@@ -91,8 +91,8 @@ export class IdeaPage implements OnInit {
         // Danh sách các trường nhập liệu
         { type: "text", key: "title", name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 1-200 ký tự (letters)", input_type: "text", icon: "help", validators: [{ required: true, min: 1, max: 200 }] }
         , { type: "text_area", key: "description", hint: "Mô tả nội dung ý tưởng của bạn từ 1 đến 1000 từ (words)", name: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "information-circle", validators: [{ required: true, min: 1 }] }
-        , { type: "select", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: this.categoryOptions }
-        , { type: "select", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: this.statusOptions }
+        , { type: "select-origin", key: "category_id", name: "Phân loại ý tưởng?", icon: "contrast", options: this.categoryOptions }
+        , { type: "select-origin", key: "status", name: "Trạng thái của ý tưởng?", icon: "clock", options: this.statusOptions }
         , {
           type: "upload-files", name: "Files đính kèm"
           , multiple: "multiple"

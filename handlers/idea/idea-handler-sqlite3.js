@@ -1,10 +1,5 @@
 "use strict"
 
-/**
- * Bộ tương tác csdl để xử lý tài nguyên ý tưởng
- */
-
-// Kết nối csdl theo pool
 const db = require('../../db/sqlite3/db-pool');
 const arrObj = require('../../utils/array-object');
 
@@ -75,15 +70,12 @@ class IdeaHandler {
         let sqlStatus = filterStatus.length > 0 ? `and a.status in (${filterStatus.toString()})` : ``
         // console.log(sqlCategory, sqlStatus, orderBy);
         db.getRsts(`select
-                    c.status_type
-                    , b.background
+                    b.background
                     , a.*
                     from ideas a
                     join ideas_categories b
                     on a.category_id = b.id
-                    join ideas_statuses c
-                    on a.status = c.id
-                    where c.status_type >= 0 -- chỉ lọc lấy các ý tưởng còn hiệu lực
+                    where a.status != 0 -- chỉ lấy những ý tưởng còn hiệu lực
                     ${sqlCategory}
                     ${sqlStatus}
                     ${orderBy}
@@ -144,8 +136,9 @@ class IdeaHandler {
      * 3. sửa thông tin ý tưởng, không xử lý sửa file đính kèm
      */
     async editIdea(req, res, next) {
+        // console.log(req.json_data);
         const ideaInfo = {
-            ...req.form_data.params,
+            ...req.json_data,
             // thêm trường
             changed_username: req.user.username,
             changed_time: Date.now()
@@ -168,19 +161,42 @@ class IdeaHandler {
             });
     }
 
+    async delIdea(req, res, next) {
+        // console.log(req.json_data);
+        let idIdea = req.json_data.id;
+        // Lấy danh sách file (nếu có)
+        let attach_list = await db.getRst(`select attach_id_list from ideas where id = ${idIdea}`)
+        let list_id = attach_list.attach_id_list ? attach_list.attach_id_list.toString() : '()'
+        list_id = list_id.replace('[', '(').replace(']', ')')
+        try {
+            await db.getRsts(`delete from ideas_attachs where id in ${list_id}`);
+            await db.getRsts(`delete from ideas_comments where idea_id = ${idIdea}`);
+            await db.getRsts(`delete from ideas_interactives where idea_id = ${idIdea}`);
+            await db.getRsts(`delete from ideas_marks where idea_id = ${idIdea}`);
+            await db.getRsts(`delete from ideas where id = ${idIdea}`);
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(arrObj.getJsonStringify({ status: "OK", message: "Xóa thành công" }));
+        } catch (err) {
+            res.status(401).json({
+                message: 'Lỗi update idea, liên hệ quản trị hệ thống',
+                error: err
+            })
+        }
+    }
+
     // lấy thông tin của 1 ý tưởng
     async getIdea(req, res, next) {
 
         // lấy ý tưởng chi tiết ra
         let ideaId = req.paramS.id || req.ideaId;
         try {
-            let idea = await db.getRst(`select 
+            let idea = await db.getRst(`select
                                         b.background
                                         , b.name as category_name
                                         , c.name as status_name
                                         , d.fullname || '(' || d.nickname || ')' as username
                                         ,  d.avatar
-                                        , a.*  
+                                        , a.*
                                         from ideas a
                                         join ideas_categories b
                                         on a.category_id = b.id
@@ -206,17 +222,11 @@ class IdeaHandler {
                                             where idea_id = ${ideaId}
                                             `);
 
-            let marks = await db.getRsts(`select * 
-                                        from ideas_marks
-                                        where idea_id = ${ideaId}
-                                        `);
-
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(arrObj.getJsonStringify({
                 idea,
                 likes,
-                comments,
-                marks
+                comments
             }));
 
         } catch (err) {
@@ -230,7 +240,7 @@ class IdeaHandler {
 
     // like ý tưởng
     likeIdea(req, res, next) {
-        // thông tin đầu vào là req.user.id 
+        // thông tin đầu vào là req.user.id
         // và req.json_data.id chứa mã ý tưởng
         req.ideaId = req.json_data.id;
         let jsonLike = {
@@ -252,7 +262,7 @@ class IdeaHandler {
                     await db.insert(db.convertSqlFromJson('ideas_interactives', jsonLike))
                 }
                 //Mảng những user đã voted cho ý tưởng này
-                let votedUsers = await db.getRsts(`select user_id as user_id
+                let votedUsers = await db.getRsts(`select user_id
                                                     from ideas_interactives
                                                     where idea_id = ${req.ideaId}
                                                     and activities_type > 0`); //[ { user_id: 1 }, { user_id: 2 } ]

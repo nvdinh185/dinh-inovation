@@ -22,22 +22,6 @@ class ListHandler {
         }
     }
 
-    // lấy danh sách câu hỏi
-    getQuestions(req, res, next) {
-        db.getRsts(`SELECT * FROM ideas_questions
-                    order by order_1`)
-            .then(result => {
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(arrObj.getJsonStringify(result));
-            })
-            .catch(err => {
-                // console.log(err);
-                res.status(401).json({
-                    message: 'Lỗi truy vấn getQuestions'
-                })
-            });
-    }
-
     // lấy các đường dẫn file đính kèm
     // trường hợp các ý tưởng hoặc comment có truyền lên file
     async getIdeasAttachs(req, res, next) {
@@ -88,6 +72,22 @@ class ListHandler {
             })
         }
 
+    }
+
+    // lấy danh sách câu hỏi
+    getQuestions(req, res, next) {
+        db.getRsts(`SELECT * FROM ideas_questions
+                    order by order_1`)
+            .then(result => {
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(arrObj.getJsonStringify(result));
+            })
+            .catch(err => {
+                // console.log(err);
+                res.status(401).json({
+                    message: 'Lỗi truy vấn getQuestions'
+                })
+            });
     }
 
 }

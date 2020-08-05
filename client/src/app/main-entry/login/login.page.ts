@@ -299,7 +299,7 @@ export class LoginPage implements OnInit {
             this.apiCommons.showToast('Login thành công', 3000);
             this.saveToken(resData.token, result.data);
           } else {
-            this.apiCommons.showToast('Login thất bại', 3000);
+            this.apiCommons.showToast('Login thất bại', 2000);
             //Gọi lại form login
             this.login()
           }

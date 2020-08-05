@@ -1,3 +1,0 @@
-git config --local credential.helper ""
-
-git clone https://username:password@github.com/username/repository.git

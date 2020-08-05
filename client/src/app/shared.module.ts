@@ -7,10 +7,6 @@ import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
 
 @NgModule({
     imports: [
-        IonicModule,
-        CommonModule,
-        FormsModule,
-        Ngxi4DynamicServiceModule
     ],
     declarations: [TimeAgoPipe],
     exports: [

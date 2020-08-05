@@ -4,7 +4,7 @@ import { AuthService, CommonsService, PopoverCardComponent, DynamicFormMobilePag
 import { MainService } from 'src/app/services/main.service';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { IonTextarea } from '@ionic/angular';
+import { IonTextarea, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-idea-detail',
@@ -28,6 +28,7 @@ export class IdeaDetailPage implements OnInit {
     , private apiAuth: AuthService
     , private mainService: MainService
     , private iab: InAppBrowser
+    , private navCtrl: NavController
   ) { this.init() }
 
   ngOnInit() {
@@ -380,8 +381,8 @@ export class IdeaDetailPage implements OnInit {
         { type: "hidden", key: "id", value: idea.id }
         , { type: "text", key: "title", value: idea.title, name: "Chủ đề là gì? ", hint: "Nhập chủ đề của ý tưởng này từ 1-200 ký tự", input_type: "text", icon: "md-help", validators: [{ required: true, min: 1, max: 200 }] }
         , { type: "text_area", key: "description", value: idea.description, name: "Mô tả nội dung ý tưởng của bạn từ 1 đến 1000 từ", hint: "Nhập mô tả ý tưởng của bạn", input_type: "text", icon: "md-information-circle", validators: [{ required: true, min: 1 }] }
-        , { type: "select", key: "category_id", value: "" + idea.category_id, name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
-        , { type: "select", key: "status", value: "" + idea.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
+        , { type: "select-origin", key: "category_id", value: "" + idea.category_id, name: "Phân loại ý tưởng?", icon: "contrast", options: categoryOptions, color: "warning" }
+        , { type: "select-origin", key: "status", value: "" + idea.status, name: "Trạng thái của ý tưởng?", icon: "clock", options: statusOptions, color: "secondary" }
         ,
         {
           type: 'button'
@@ -391,7 +392,8 @@ export class IdeaDetailPage implements OnInit {
               name: 'Gửi sửa ý tưởng'
               , id: idea.id              // trả lại id của ý tưởng này
               , next: 'CALLBACK'
-              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
+              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea'
+              , token: true
               , command: 'EDIT'
             }
           ]
@@ -410,39 +412,20 @@ export class IdeaDetailPage implements OnInit {
 
   // loại bỏ ý tưởng này
   trashIdea(idea) {
-    let form: any = {
-      title: 'Dừng ý tưởng'
-      , buttons: [
-        { color: 'danger', icon: 'close', next: 'CLOSE' }
-      ]
-      ,
-      items: [
-        // Danh sách các trường nhập liệu
-        { type: "hidden", key: "id", value: idea.id }
-        , { type: "select", key: "status", value: "0", name: "Trạng thái của ý tưởng?", icon: "clock", options: [{ value: "0", name: "Triển khai sau" }], color: "secondary" }
-        ,
-        {
-          type: 'button'
-          , options: [
-            {
-              name: 'Dừng ý tưởng này'
-              , id: idea.id
-              , next: 'CALLBACK'
-              , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea', type: "FORM-DATA", token: true
-              , command: 'EDIT'
-            }
-          ]
+    this.apiCommons.presentConfirm('Bạn có chắc muốn xóa ý tưởng này không?'
+      , "Đồng ý"
+      , "Bỏ qua")
+      .then(async res => {
+        if (res === "OK") {
+          this.apiCommons.showLoader("Đang xử lý dữ liệu trên máy chủ...")
+          await this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/delete-idea'
+            , { id: idea.id }, true)
+          this.apiCommons.hideLoader();
+          this.apiCommons.showToast("Đã xóa thành công!", 3000);
+          this.navCtrl.navigateBack('/idea');
         }
-      ]
-    }
+      })
 
-    this.apiCommons.openModal(DynamicFormMobilePage,
-      {
-        parent: this,
-        callback: this.callbackProcess,
-        form: form
-      }
-    );
   }
 
   // hàm gọi lại xử lý form popup

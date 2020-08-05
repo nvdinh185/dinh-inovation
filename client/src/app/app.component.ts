@@ -15,26 +15,6 @@ import { environment_web } from 'src/environments/environment.prod';
 })
 export class AppComponent {
 
-  // menu chưa login
-  defaultMenu: any = [
-    {
-      id: 1,
-      name: 'Văn phòng sáng tạo',
-      size: '1.1em',
-      type: 'route',     // chuyển trang theo routing
-      url: '/home',      // chuyển trang theo routing
-      icon: 'home'
-    }
-    ,
-    {
-      id: 2,
-      name: 'Login/Logout',
-      type: 'route',     // bấm chuyển trang theo routing
-      url: '/login',     // bấm chuyển trang khai phần tử quản lý
-      icon: 'log-in'
-    }
-  ];
-
   //cây này sẽ nhúng vào component tree-menu để hiển thị menu
   treeMenu: any = [];
 
@@ -47,7 +27,7 @@ export class AppComponent {
     private apiAuth: AuthService,
     private apiCommons: CommonsService,
     private mainService: MainService
-  ) { this.init(); }
+  ) { this.init() }
 
   /**
    * Khởi tạo các biến đầu tiên
@@ -67,8 +47,7 @@ export class AppComponent {
 
     this.apiCommons.subscribe('event-logout-ok', () => {
       this.userInfo = null
-      // Gán lại menu mặc định
-      this.treeMenu = this.defaultMenu;
+      this.refresh();
     })
 
     this.mainService.getTokenInfo()

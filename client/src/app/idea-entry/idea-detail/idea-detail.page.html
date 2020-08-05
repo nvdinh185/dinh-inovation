@@ -82,21 +82,21 @@
   <ion-item lines="none">
 
     <!-- Hiện nút cho phép like ý tưởng -->
-    <ion-button slot="start" color="{{(ideaInfo?.isUserVoted?'secondary':'light')}}" (click)="likeIdea(ideaInfo?.idea)"
+    <ion-button slot="start" color="{{ideaInfo?.isUserVoted?'secondary':'light'}}" (click)="likeIdea(ideaInfo?.idea)"
       shape="round" size="small">
       <ion-icon slot="start" name="thumbs-up"></ion-icon>
       {{ideaInfo?.idea?.voted_count}} <span *ngIf="!isMobile">&nbsp;like(s)</span>
     </ion-button>
 
     <!-- Hiện nút để kích vào bình luận -->
-    <ion-button slot="start" color="{{(ideaInfo?.isUserCommented?'success':'light')}}" (click)="focusCommentIdea()"
+    <ion-button slot="start" color="{{ideaInfo?.isUserCommented?'success':'light'}}" (click)="focusCommentIdea()"
       shape="round" size="small">
       <ion-icon slot="start" name="chatbubbles"></ion-icon>
       {{ideaInfo?.comments?.length}} <span *ngIf="!isMobile">&nbsp;comment(s)</span>
     </ion-button>
 
     <!-- ý tưởng của mình thì hiện nút màu medium, của người khác thì hiện nút màu tertiary -->
-    <ion-button tappable slot="start" color="{{(ideaInfo?.idea.user_id === this.userInfo.id?'medium':'tertiary')}}"
+    <ion-button slot="start" color="{{ideaInfo?.idea.user_id === this.userInfo.id?'medium':'tertiary'}}"
       (click)="markIdea(ideaInfo?.idea)" shape="round" size="small">
       <ion-icon slot="start" name="switch"></ion-icon>
       {{ideaInfo?.idea?.total_point}} <span *ngIf="!isMobile">&nbsp;điểm</span>
@@ -187,13 +187,13 @@
           </ion-label>
         </ion-label>
       </ion-item>
-      <ion-note [style.padding-left]="comment.parent_id?'100px':'80px'"> {{comment.created_time | timeAgo}} </ion-note>
+      <ion-note [style.padding-left]="'80px'"> {{comment.created_time | timeAgo}} </ion-note>
       <br>
-      <div [style.padding-left]="comment.parent_id?'80px':'60px'">
+      <div [style.padding-left]="'60px'">
         <img tappable *ngFor="let image of comment.images;" src="{{image.src}}" (click)="onClickViewItem(image.id)"
           class="image-comment-size">
       </div>
-      <ion-item [style.padding-left]="comment.parent_id?'80px':'60px'" *ngIf="comment.attachs?.length>0" lines="none">
+      <ion-item [style.padding-left]="'60px'" *ngIf="comment.attachs?.length>0" lines="none">
         <ion-label class="ion-text-wrap">
           <span *ngFor="let file of comment.attachs">
             <ion-button color="dark" (click)="onClickViewItem(file.id)" fill="outline" shape="round"

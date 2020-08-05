@@ -4,11 +4,11 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["idea-entry-idea-detail-idea-detail-module"], {
   /***/
@@ -212,7 +212,88 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony default export */
 
 
-    __webpack_exports__["default"] = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button></ion-menu-button>\r\n      <ion-back-button></ion-back-button>\r\n    </ion-buttons>\r\n\r\n    <ion-title>Chi tiết ý tưởng</ion-title>\r\n\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n\r\n  <!-- Hiển thị avatar -->\r\n  <ion-item lines=\"none\" class=\"idea-created\">\r\n    <ion-avatar slot=\"start\">\r\n      <img src=\"{{ideaInfo?.idea?.avatar}}\">\r\n    </ion-avatar>\r\n    <ion-label>\r\n      <strong>\r\n        {{ideaInfo?.idea?.username}}\r\n      </strong>\r\n      <br>\r\n      <ion-note>{{ideaInfo?.idea?.created_time | timeAgo}}</ion-note>\r\n    </ion-label>\r\n    <ion-button (click)=\"onClickMore($event)\" slot=\"end\" shape=\"round\" fill=\"clear\" size=\"small\">\r\n      <ion-icon slot=\"icon-only\" name=\"more\"></ion-icon>\r\n    </ion-button>\r\n  </ion-item>\r\n\r\n  <!-- Hiển thị thông tin chi tiết của ý tưởng -->\r\n  <ion-list>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Chủ đề:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Chủ đề:<br>\r\n        </strong>\r\n        <strong>#{{ideaInfo?.idea?.id}}</strong> {{ideaInfo?.idea?.title}}\r\n      </ion-label>\r\n    </ion-item>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Nội dung:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Nội dung:<br>\r\n        </strong>\r\n        <div [innerHTML]=\"ideaInfo?.idea?.description | linkUrl | newline\"></div>\r\n      </ion-label>\r\n    </ion-item>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Lĩnh vực:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Lĩnh vực:<br>\r\n        </strong>\r\n        {{ideaInfo?.idea?.category_name}}\r\n      </ion-label>\r\n    </ion-item>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Giai đoạn:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Giai đoạn:<br>\r\n        </strong>\r\n        {{ideaInfo?.idea?.status_name}}\r\n      </ion-label>\r\n    </ion-item>\r\n  </ion-list>\r\n\r\n\r\n  <ion-item lines=\"none\">\r\n\r\n    <!-- Hiện nút cho phép like ý tưởng -->\r\n    <ion-button slot=\"start\" color=\"{{(ideaInfo?.isUserVoted?'secondary':'light')}}\" (click)=\"likeIdea(ideaInfo?.idea)\"\r\n      shape=\"round\" size=\"small\">\r\n      <ion-icon slot=\"start\" name=\"thumbs-up\"></ion-icon>\r\n      {{ideaInfo?.idea?.voted_count}} <span *ngIf=\"!isMobile\">&nbsp;like(s)</span>\r\n    </ion-button>\r\n\r\n    <!-- Hiện nút để kích vào bình luận -->\r\n    <ion-button slot=\"start\" color=\"{{(ideaInfo?.isUserCommented?'success':'light')}}\" (click)=\"focusCommentIdea()\"\r\n      shape=\"round\" size=\"small\">\r\n      <ion-icon slot=\"start\" name=\"chatbubbles\"></ion-icon>\r\n      {{ideaInfo?.comments?.length}} <span *ngIf=\"!isMobile\">&nbsp;comment(s)</span>\r\n    </ion-button>\r\n\r\n    <!-- ý tưởng của mình thì hiện nút màu medium, của người khác thì hiện nút màu tertiary -->\r\n    <ion-button tappable slot=\"start\" color=\"{{(ideaInfo?.idea.user_id === this.userInfo.id?'medium':'tertiary')}}\"\r\n      (click)=\"markIdea(ideaInfo?.idea)\" shape=\"round\" size=\"small\">\r\n      <ion-icon slot=\"start\" name=\"switch\"></ion-icon>\r\n      {{ideaInfo?.idea?.total_point}} <span *ngIf=\"!isMobile\">&nbsp;điểm</span>\r\n    </ion-button>\r\n\r\n    <!-- Hiện số file đính kèm -->\r\n    <ion-label *ngIf=\"ideaInfo?.idea?.attach_id_list?.length>0\" class=\"ion-text-wrap\">\r\n      <ion-icon slot=\"start\" name=\"attach\"></ion-icon>\r\n      {{ideaInfo.idea.attach_id_list.length}}<span *ngIf=\"!isMobile\">&nbsp;File(s) đính kèm</span>\r\n    </ion-label>\r\n\r\n  </ion-item>\r\n\r\n  <!-- Hiển thị nội dung file và image đính kèm của ý tưởng -->\r\n  <div [style.padding-left]=\"'20px'\">\r\n    <img tappable *ngFor=\"let image of ideaInfo?.idea?.images;\" src=\"{{image.src}}\" (click)=\"onClickViewItem(image.id)\"\r\n      class=\"image-comment-size\">\r\n  </div>\r\n  <ion-item [style.padding-left]=\"'20px'\" *ngIf=\"ideaInfo?.idea?.attachs?.length>0\" lines=\"none\">\r\n    <ion-label class=\"ion-text-wrap\">\r\n      <span *ngFor=\"let file of ideaInfo?.idea?.attachs;\">\r\n        <ion-button color=\"primary\" (click)=\"onClickViewItem(file.id)\" fill=\"outline\" shape=\"round\"\r\n          style=\"text-transform:none\">\r\n          {{file.file_name}}\r\n          <ion-icon slot=\"end\" name=\"eye\"></ion-icon>\r\n        </ion-button>\r\n      </span>\r\n    </ion-label>\r\n  </ion-item>\r\n\r\n\r\n  <!-- Nhập nội dung comment để góp ý ở ô này -->\r\n  <ion-card class=\"input-comment\">\r\n    <!-- Hiện thị form để comment -->\r\n    <ion-item lines=\"none\">\r\n      <ion-avatar slot=\"start\">\r\n        <img src=\"{{userInfo?.avatar}}\">\r\n      </ion-avatar>\r\n      <ion-textarea #textComment autosize type=\"text\" placeholder=\"Đóng góp ý kiến ... \" [(ngModel)]=\"message\">\r\n      </ion-textarea>\r\n      <ion-button color=\"medium\" fill=\"clear\" shape=\"round\">\r\n        <input class=\"file-over\" type=\"file\" multiple=\"multiple\" (change)=\"uploadFilesEvent($event)\" accept=\"image/gif, image/jpeg, image/png\r\n                  , application/pdf\r\n                  , .txt, .md\r\n                  , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel\r\n                  , application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document\" />\r\n        <ion-icon slot=\"icon-only\" name=\"attach\"></ion-icon>\r\n      </ion-button>\r\n      <ion-button color=\"{{(message||uploadingFiles.length>0?'secondary':'light')}}\" (click)=\"onClickSend()\"\r\n        fill=\"clear\" shape=\"round\">\r\n        <ion-icon slot=\"icon-only\" name=\"send\"></ion-icon>\r\n      </ion-button>\r\n    </ion-item>\r\n    <!-- Hiển thị những file, hình ảnh kèm theo trong commment -->\r\n    <ion-item *ngIf=\"uploadingFiles?.length>0\" lines=\"none\">\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <span *ngFor=\"let file of uploadingFiles; let idx=index;\">\r\n          <ion-button *ngIf=\"!file.isImage\" color=\"secondary\" (click)=\"onClickRemoveFile(idx)\" fill=\"outline\"\r\n            shape=\"round\" style=\"text-transform:none\">\r\n            {{file.name}}\r\n            <ion-icon slot=\"end\" name=\"close\"></ion-icon>\r\n          </ion-button>\r\n          <div *ngIf=\"file.isImage\" class=\"image-upload-size\">\r\n            <img src=\"{{file.image}}\">\r\n            <div class='close-button' tappable>\r\n              <ion-icon slot=\"icon-only\" name=\"close\" color=\"medium\" (click)=\"onClickRemoveFile(idx)\"></ion-icon>\r\n            </div>\r\n          </div>\r\n        </span>\r\n      </ion-label>\r\n    </ion-item>\r\n  </ion-card>\r\n\r\n  <!-- Lịch sử góp ý hiển thị theo hình cây ở dưới đây -->\r\n  <ion-list class=\"comment-list\">\r\n    <div *ngFor=\"let comment of ideaInfo?.comments\" [style.padding-left]=\"comment.parent_id?'20px':'0px'\">\r\n      <ion-item lines=\"none\">\r\n        <ion-avatar slot=\"start\" tappable (click)=\"onViewUserPage(comment)\">\r\n          <img src=\"{{comment.avatar}}\">\r\n        </ion-avatar>\r\n        <ion-label class=\"ion-text-wrap comment-backgound\">\r\n          <strong slot=\"start\">\r\n            {{comment.username}}\r\n          </strong>\r\n          <br>\r\n          <ion-label class=\"ion-text-wrap\">\r\n            <div [innerHTML]=\"comment.content| linkUrl | newline | safe\"></div>\r\n          </ion-label>\r\n        </ion-label>\r\n      </ion-item>\r\n      <ion-note [style.padding-left]=\"comment.parent_id?'100px':'80px'\"> {{comment.created_time | timeAgo}} </ion-note>\r\n      <br>\r\n      <div [style.padding-left]=\"comment.parent_id?'80px':'60px'\">\r\n        <img tappable *ngFor=\"let image of comment.images;\" src=\"{{image.src}}\" (click)=\"onClickViewImage(image.id)\"\r\n          class=\"image-comment-size\">\r\n      </div>\r\n      <ion-item [style.padding-left]=\"comment.parent_id?'80px':'60px'\" *ngIf=\"comment.attachs?.length>0\" lines=\"none\">\r\n        <ion-label class=\"ion-text-wrap\">\r\n          <span *ngFor=\"let file of comment.attachs; let idx=index;\">\r\n            <ion-button color=\"dark\" (click)=\"onClickViewFile(file.id)\" fill=\"outline\" shape=\"round\"\r\n              style=\"text-transform:none\">\r\n              {{file.file_name}}\r\n              <ion-icon slot=\"end\" name=\"eye\"></ion-icon>\r\n            </ion-button>\r\n          </span>\r\n        </ion-label>\r\n      </ion-item>\r\n    </div>\r\n  </ion-list>\r\n\r\n</ion-content>";
+    __webpack_exports__["default"] = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n\r\n    <ion-buttons slot=\"start\">\r\n      <ion-menu-button></ion-menu-button>\r\n      <ion-back-button></ion-back-button>\r\n    </ion-buttons>\r\n\r\n    <ion-title>Chi tiết ý tưởng</ion-title>\r\n\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n\r\n  <!-- Hiển thị avatar -->\r\n  <ion-item lines=\"none\" class=\"idea-created\">\r\n    <ion-avatar slot=\"start\">\r\n      <img src=\"{{ideaInfo?.idea?.avatar}}\">\r\n    </ion-avatar>\r\n    <ion-label>\r\n      <strong>\r\n        {{ideaInfo?.idea?.username}}\r\n      </strong>\r\n      <br>\r\n      <ion-note>{{ideaInfo?.idea?.created_time | timeAgo}}</ion-note>\r\n    </ion-label>\r\n    <ion-button (click)=\"onClickMore($event)\" slot=\"end\" shape=\"round\" fill=\"clear\" size=\"small\">\r\n      <ion-icon slot=\"icon-only\" name=\"more\"></ion-icon>\r\n    </ion-button>\r\n  </ion-item>\r\n\r\n  <!-- Hiển thị thông tin chi tiết của ý tưởng -->\r\n  <ion-list>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Chủ đề:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Chủ đề:<br>\r\n        </strong>\r\n        <strong>#{{ideaInfo?.idea?.id}}</strong> {{ideaInfo?.idea?.title}}\r\n      </ion-label>\r\n    </ion-item>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Nội dung:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Nội dung:<br>\r\n        </strong>\r\n        <div [innerHTML]=\"ideaInfo?.idea?.description | linkUrl | newline\"></div>\r\n      </ion-label>\r\n    </ion-item>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Lĩnh vực:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Lĩnh vực:<br>\r\n        </strong>\r\n        {{ideaInfo?.idea?.category_name}}\r\n      </ion-label>\r\n    </ion-item>\r\n    <ion-item>\r\n      <strong slot=\"start\" *ngIf=\"!isMobile\">\r\n        Giai đoạn:\r\n      </strong>\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <strong slot=\"start\" *ngIf=\"isMobile\">\r\n          Giai đoạn:<br>\r\n        </strong>\r\n        {{ideaInfo?.idea?.status_name}}\r\n      </ion-label>\r\n    </ion-item>\r\n  </ion-list>\r\n\r\n\r\n  <ion-item lines=\"none\">\r\n\r\n    <!-- Hiện nút cho phép like ý tưởng -->\r\n    <ion-button slot=\"start\" color=\"{{ideaInfo?.isUserVoted?'secondary':'light'}}\" (click)=\"likeIdea(ideaInfo?.idea)\"\r\n      shape=\"round\" size=\"small\">\r\n      <ion-icon slot=\"start\" name=\"thumbs-up\"></ion-icon>\r\n      {{ideaInfo?.idea?.voted_count}} <span *ngIf=\"!isMobile\">&nbsp;like(s)</span>\r\n    </ion-button>\r\n\r\n    <!-- Hiện nút để kích vào bình luận -->\r\n    <ion-button slot=\"start\" color=\"{{ideaInfo?.isUserCommented?'success':'light'}}\" (click)=\"focusCommentIdea()\"\r\n      shape=\"round\" size=\"small\">\r\n      <ion-icon slot=\"start\" name=\"chatbubbles\"></ion-icon>\r\n      {{ideaInfo?.comments?.length}} <span *ngIf=\"!isMobile\">&nbsp;comment(s)</span>\r\n    </ion-button>\r\n\r\n    <!-- ý tưởng của mình thì hiện nút màu medium, của người khác thì hiện nút màu tertiary -->\r\n    <ion-button slot=\"start\" color=\"{{ideaInfo?.idea.user_id === this.userInfo.id?'medium':'tertiary'}}\"\r\n      (click)=\"markIdea(ideaInfo?.idea)\" shape=\"round\" size=\"small\">\r\n      <ion-icon slot=\"start\" name=\"switch\"></ion-icon>\r\n      {{ideaInfo?.idea?.total_point}} <span *ngIf=\"!isMobile\">&nbsp;điểm</span>\r\n    </ion-button>\r\n\r\n    <!-- Hiện số file đính kèm -->\r\n    <ion-label *ngIf=\"ideaInfo?.idea?.attach_id_list?.length>0\" class=\"ion-text-wrap\">\r\n      <ion-icon slot=\"start\" name=\"attach\"></ion-icon>\r\n      {{ideaInfo.idea.attach_id_list.length}}<span *ngIf=\"!isMobile\">&nbsp;File(s) đính kèm</span>\r\n    </ion-label>\r\n\r\n  </ion-item>\r\n\r\n  <!-- Hiển thị nội dung file và image đính kèm của ý tưởng -->\r\n  <div [style.padding-left]=\"'20px'\">\r\n    <img tappable *ngFor=\"let image of ideaInfo?.idea?.images;\" src=\"{{image.src}}\" (click)=\"onClickViewItem(image.id)\"\r\n      class=\"image-comment-size\">\r\n  </div>\r\n  <ion-item [style.padding-left]=\"'20px'\" *ngIf=\"ideaInfo?.idea?.attachs?.length>0\" lines=\"none\">\r\n    <ion-label class=\"ion-text-wrap\">\r\n      <span *ngFor=\"let file of ideaInfo?.idea?.attachs;\">\r\n        <ion-button color=\"primary\" (click)=\"onClickViewItem(file.id)\" fill=\"outline\" shape=\"round\"\r\n          style=\"text-transform:none\">\r\n          {{file.file_name}}\r\n          <ion-icon slot=\"end\" name=\"eye\"></ion-icon>\r\n        </ion-button>\r\n      </span>\r\n    </ion-label>\r\n  </ion-item>\r\n\r\n\r\n  <!-- Nhập nội dung comment để góp ý ở ô này -->\r\n  <ion-card class=\"input-comment\">\r\n    <!-- Hiện thị form để comment -->\r\n    <ion-item lines=\"none\">\r\n      <ion-avatar slot=\"start\">\r\n        <img src=\"{{userInfo?.avatar}}\">\r\n      </ion-avatar>\r\n      <ion-textarea #textComment autosize type=\"text\" placeholder=\"Đóng góp ý kiến ... \" [(ngModel)]=\"message\">\r\n      </ion-textarea>\r\n      <ion-button color=\"medium\" fill=\"clear\" shape=\"round\">\r\n        <input class=\"file-over\" type=\"file\" multiple (change)=\"uploadFilesEvent($event)\" accept=\"image/gif, image/jpeg, image/png\r\n                  , application/pdf\r\n                  , .txt, .md\r\n                  , .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel\r\n                  , application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document\" />\r\n        <ion-icon slot=\"icon-only\" name=\"attach\"></ion-icon>\r\n      </ion-button>\r\n      <ion-button color=\"{{(message || uploadingFiles.length>0?'secondary':'light')}}\" (click)=\"onClickSend()\"\r\n        fill=\"clear\" shape=\"round\">\r\n        <ion-icon slot=\"icon-only\" name=\"send\"></ion-icon>\r\n      </ion-button>\r\n    </ion-item>\r\n    <!-- Hiển thị những file, hình ảnh kèm theo trong commment -->\r\n    <ion-item *ngIf=\"uploadingFiles?.length>0\" lines=\"none\">\r\n      <ion-label class=\"ion-text-wrap\">\r\n        <span *ngFor=\"let file of uploadingFiles; let idx=index;\">\r\n          <ion-button *ngIf=\"!file.isImage\" color=\"secondary\" (click)=\"onClickRemoveFile(idx)\" fill=\"outline\"\r\n            shape=\"round\" style=\"text-transform:none\">\r\n            {{file.name}}\r\n            <ion-icon slot=\"end\" name=\"close\"></ion-icon>\r\n          </ion-button>\r\n          <div *ngIf=\"file.isImage\" class=\"image-upload-size\">\r\n            <img src=\"{{file.image}}\">\r\n            <div class='close-button' tappable>\r\n              <ion-icon slot=\"icon-only\" name=\"close\" color=\"medium\" (click)=\"onClickRemoveFile(idx)\"></ion-icon>\r\n            </div>\r\n          </div>\r\n        </span>\r\n      </ion-label>\r\n    </ion-item>\r\n  </ion-card>\r\n\r\n  <!-- Lịch sử góp ý hiển thị theo hình cây ở dưới đây -->\r\n  <ion-list class=\"comment-list\">\r\n    <div *ngFor=\"let comment of ideaInfo?.comments\" [style.padding-left]=\"comment.parent_id?'20px':'0px'\">\r\n      <ion-item lines=\"none\">\r\n        <ion-avatar slot=\"start\">\r\n          <img src=\"{{comment.avatar}}\">\r\n        </ion-avatar>\r\n        <ion-label class=\"ion-text-wrap comment-backgound\">\r\n          <strong slot=\"start\">\r\n            {{comment.username}}\r\n          </strong>\r\n          <br>\r\n          <ion-label class=\"ion-text-wrap\">\r\n            <div [innerHTML]=\"comment.content| linkUrl | newline\"></div>\r\n          </ion-label>\r\n        </ion-label>\r\n      </ion-item>\r\n      <ion-note [style.padding-left]=\"'80px'\"> {{comment.created_time | timeAgo}} </ion-note>\r\n      <br>\r\n      <div [style.padding-left]=\"'60px'\">\r\n        <img tappable *ngFor=\"let image of comment.images;\" src=\"{{image.src}}\" (click)=\"onClickViewItem(image.id)\"\r\n          class=\"image-comment-size\">\r\n      </div>\r\n      <ion-item [style.padding-left]=\"'60px'\" *ngIf=\"comment.attachs?.length>0\" lines=\"none\">\r\n        <ion-label class=\"ion-text-wrap\">\r\n          <span *ngFor=\"let file of comment.attachs\">\r\n            <ion-button color=\"dark\" (click)=\"onClickViewItem(file.id)\" fill=\"outline\" shape=\"round\"\r\n              style=\"text-transform:none\">\r\n              {{file.file_name}}\r\n              <ion-icon slot=\"end\" name=\"eye\"></ion-icon>\r\n            </ion-button>\r\n          </span>\r\n        </ion-label>\r\n      </ion-item>\r\n    </div>\r\n  </ion-list>\r\n\r\n</ion-content>";
+    /***/
+  },
+
+  /***/
+  "./src/app/components/autosize.ts":
+  /*!****************************************!*\
+    !*** ./src/app/components/autosize.ts ***!
+    \****************************************/
+
+  /*! exports provided: Autosize */
+
+  /***/
+  function srcAppComponentsAutosizeTs(module, __webpack_exports__, __webpack_require__) {
+    "use strict";
+
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "Autosize", function () {
+      return Autosize;
+    });
+    /* harmony import */
+
+
+    var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+    /*! tslib */
+    "./node_modules/tslib/tslib.es6.js");
+    /* harmony import */
+
+
+    var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+    /*! @angular/core */
+    "./node_modules/@angular/core/fesm2015/core.js");
+    /**
+     * tu dong mo rong textarea khi go
+     */
+
+
+    var Autosize = /*#__PURE__*/function () {
+      function Autosize(element) {
+        _classCallCheck(this, Autosize);
+
+        this.element = element;
+      }
+
+      _createClass(Autosize, [{
+        key: "onInput",
+        value: function onInput(textArea) {
+          this.adjust();
+        }
+      }, {
+        key: "ngOnInit",
+        value: function ngOnInit() {
+          var _this2 = this;
+
+          setTimeout(function () {
+            return _this2.adjust();
+          }, 0);
+        }
+      }, {
+        key: "adjust",
+        value: function adjust() {
+          var textArea = this.element.nativeElement.getElementsByTagName('textarea')[0];
+          textArea ? textArea.style.height = textArea.scrollHeight + 'px' : '';
+        }
+      }]);
+
+      return Autosize;
+    }();
+
+    Autosize.ctorParameters = function () {
+      return [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"]
+      }];
+    };
+
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["HostListener"])('input', ['$event.target']), tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Function), tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [HTMLTextAreaElement]), tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:returntype", void 0)], Autosize.prototype, "onInput", null);
+    Autosize = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Directive"])({
+      selector: 'ion-textarea[autosize]'
+    }), tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"]])], Autosize);
     /***/
   },
 
@@ -310,66 +391,48 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-    /*! @angular/common */
-    "./node_modules/@angular/common/fesm2015/common.js");
-    /* harmony import */
-
-
-    var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-    /*! @angular/forms */
-    "./node_modules/@angular/forms/fesm2015/forms.js");
-    /* harmony import */
-
-
-    var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
-    /*! @ionic/angular */
-    "./node_modules/@ionic/angular/dist/fesm5.js");
-    /* harmony import */
-
-
-    var _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    var _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! @ionic-native/in-app-browser/ngx */
     "./node_modules/@ionic-native/in-app-browser/ngx/index.js");
     /* harmony import */
 
 
-    var _idea_detail_routing_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    var _idea_detail_routing_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
     /*! ./idea-detail-routing.module */
     "./src/app/idea-entry/idea-detail/idea-detail-routing.module.ts");
     /* harmony import */
 
 
-    var _idea_detail_page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    var _idea_detail_page__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! ./idea-detail.page */
     "./src/app/idea-entry/idea-detail/idea-detail.page.ts");
     /* harmony import */
 
 
-    var src_app_shared_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+    var src_app_shared_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
     /*! src/app/shared.module */
     "./src/app/shared.module.ts");
     /* harmony import */
 
 
-    var ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
-    /*! ngxi4-dynamic-service */
-    "./node_modules/ngxi4-dynamic-service/fesm2015/ngxi4-dynamic-service.js");
+    var _link_url_pipe__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! ./link.url.pipe */
+    "./src/app/idea-entry/idea-detail/link.url.pipe.ts");
     /* harmony import */
 
 
-    var _link_url_pipe__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(
-    /*! ./link.url.pipe */
-    "./src/app/idea-entry/idea-detail/link.url.pipe.ts");
+    var src_app_components_autosize__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    /*! src/app/components/autosize */
+    "./src/app/components/autosize.ts");
 
     var IdeaDetailPageModule = function IdeaDetailPageModule() {
       _classCallCheck(this, IdeaDetailPageModule);
     };
 
     IdeaDetailPageModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-      imports: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"], ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_9__["Ngxi4DynamicServiceModule"], src_app_shared_module__WEBPACK_IMPORTED_MODULE_8__["SharedModule"], _idea_detail_routing_module__WEBPACK_IMPORTED_MODULE_6__["IdeaDetailPageRoutingModule"]],
-      declarations: [_idea_detail_page__WEBPACK_IMPORTED_MODULE_7__["IdeaDetailPage"], _link_url_pipe__WEBPACK_IMPORTED_MODULE_10__["LinkUrlPipe"]],
-      providers: [_ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_5__["InAppBrowser"]]
+      imports: [src_app_shared_module__WEBPACK_IMPORTED_MODULE_5__["SharedModule"], _idea_detail_routing_module__WEBPACK_IMPORTED_MODULE_3__["IdeaDetailPageRoutingModule"]],
+      declarations: [_idea_detail_page__WEBPACK_IMPORTED_MODULE_4__["IdeaDetailPage"], _link_url_pipe__WEBPACK_IMPORTED_MODULE_6__["LinkUrlPipe"], src_app_components_autosize__WEBPACK_IMPORTED_MODULE_7__["Autosize"]],
+      providers: [_ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_2__["InAppBrowser"]]
     })], IdeaDetailPageModule);
     /***/
   },
@@ -390,7 +453,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony default export */
 
 
-    __webpack_exports__["default"] = ".file-over {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n  opacity: 0;\n  cursor: pointer;\n}\n\n.idea-created {\n  border-radius: 2em;\n  opacity: 0.9;\n  margin: 5px;\n  border-style: solid;\n  border-color: gray;\n  border-width: 1px;\n}\n\n.input-comment {\n  border-radius: 2em;\n  opacity: 0.9;\n  margin: 15px;\n  border-style: solid;\n  border-color: green;\n  border-width: 1px;\n  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);\n}\n\n.comment-backgound {\n  position: relative;\n  border-radius: 1em;\n  opacity: 0.9;\n  padding: 8px;\n  background: whitesmoke;\n}\n\n.comment-list {\n  margin: 15px;\n}\n\n.image-comment-size {\n  max-width: 200px;\n  margin: 2px;\n  border-radius: 0.5em;\n  border-style: solid;\n  border-color: black;\n  border-width: 1px;\n}\n\n.image-upload-size {\n  position: relative;\n  max-width: 200px;\n  margin: 2px;\n  padding: 3px;\n  border-radius: 0.5em;\n  border-style: solid;\n  border-color: black;\n  border-width: 1px;\n}\n\n.image-upload-size .close-button {\n  position: absolute;\n  top: 2%;\n  left: 80%;\n  font-size: 30px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaWRlYS1lbnRyeS9pZGVhLWRldGFpbC9EOlxcRElOSE5WXFxNeURhdGFcXExBUFRSSU5IXFxOT0RFNFxcbm9kZTQtaW5vdmF0aW9uXFxjbGllbnQvc3JjXFxhcHBcXGlkZWEtZW50cnlcXGlkZWEtZGV0YWlsXFxpZGVhLWRldGFpbC5wYWdlLnNjc3MiLCJzcmMvYXBwL2lkZWEtZW50cnkvaWRlYS1kZXRhaWwvaWRlYS1kZXRhaWwucGFnZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksa0JBQUE7RUFDQSxNQUFBO0VBQ0EsT0FBQTtFQUNBLFVBQUE7RUFDQSxXQUFBO0VBQ0EsWUFBQTtFQUNBLFVBQUE7RUFDQSxlQUFBO0FDQ0o7O0FERUE7RUFDSSxrQkFBQTtFQUNBLFlBQUE7RUFDQSxXQUFBO0VBQ0EsbUJBQUE7RUFDQSxrQkFBQTtFQUNBLGlCQUFBO0FDQ0o7O0FEQ0E7RUFFSSxrQkFBQTtFQUNBLFlBQUE7RUFDQSxZQUFBO0VBQ0EsbUJBQUE7RUFDQSxtQkFBQTtFQUNBLGlCQUFBO0VBQ0EsMkNBQUE7QUNDSjs7QURDQTtFQUNJLGtCQUFBO0VBQ0Esa0JBQUE7RUFDQSxZQUFBO0VBQ0EsWUFBQTtFQUNBLHNCQUFBO0FDRUo7O0FEQ0E7RUFDSSxZQUFBO0FDRUo7O0FEQ0E7RUFDSSxnQkFBQTtFQUNBLFdBQUE7RUFDQSxvQkFBQTtFQUNBLG1CQUFBO0VBQ0EsbUJBQUE7RUFDQSxpQkFBQTtBQ0VKOztBRENBO0VBQ0ksa0JBQUE7RUFDQSxnQkFBQTtFQUNBLFdBQUE7RUFDQSxZQUFBO0VBQ0Esb0JBQUE7RUFDQSxtQkFBQTtFQUNBLG1CQUFBO0VBQ0EsaUJBQUE7QUNFSjs7QURDQTtFQUNJLGtCQUFBO0VBQ0EsT0FBQTtFQUNBLFNBQUE7RUFDQSxlQUFBO0FDRUoiLCJmaWxlIjoic3JjL2FwcC9pZGVhLWVudHJ5L2lkZWEtZGV0YWlsL2lkZWEtZGV0YWlsLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5maWxlLW92ZXIge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgdG9wOiAwO1xyXG4gICAgbGVmdDogMDtcclxuICAgIHotaW5kZXg6IDI7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIGhlaWdodDogMTAwJTtcclxuICAgIG9wYWNpdHk6IDA7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuXHJcbi5pZGVhLWNyZWF0ZWR7XHJcbiAgICBib3JkZXItcmFkaXVzOiAyZW07XHJcbiAgICBvcGFjaXR5OiAwLjk7XHJcbiAgICBtYXJnaW46IDVweDtcclxuICAgIGJvcmRlci1zdHlsZTogc29saWQ7XHJcbiAgICBib3JkZXItY29sb3I6IGdyYXk7XHJcbiAgICBib3JkZXItd2lkdGg6IDFweDtcclxufVxyXG4uaW5wdXQtY29tbWVudHtcclxuICAgIC8vIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDJlbTtcclxuICAgIG9wYWNpdHk6IDAuOTtcclxuICAgIG1hcmdpbjogMTVweDtcclxuICAgIGJvcmRlci1zdHlsZTogc29saWQ7XHJcbiAgICBib3JkZXItY29sb3I6IGdyZWVuO1xyXG4gICAgYm9yZGVyLXdpZHRoOiAxcHg7XHJcbiAgICBib3gtc2hhZG93OiAwcHggM3B4IDEwcHggcmdiYSgwLCAwLCAwLCAwLjUpO1xyXG59XHJcbi5jb21tZW50LWJhY2tnb3VuZHtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDFlbTtcclxuICAgIG9wYWNpdHk6IDAuOTtcclxuICAgIHBhZGRpbmc6IDhweDtcclxuICAgIGJhY2tncm91bmQ6IHdoaXRlc21va2U7XHJcbn1cclxuXHJcbi5jb21tZW50LWxpc3R7XHJcbiAgICBtYXJnaW46IDE1cHg7XHJcbn1cclxuXHJcbi5pbWFnZS1jb21tZW50LXNpemV7XHJcbiAgICBtYXgtd2lkdGg6IDIwMHB4O1xyXG4gICAgbWFyZ2luOiAycHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAwLjVlbTtcclxuICAgIGJvcmRlci1zdHlsZTogc29saWQ7XHJcbiAgICBib3JkZXItY29sb3I6YmxhY2s7XHJcbiAgICBib3JkZXItd2lkdGg6IDFweDtcclxufVxyXG5cclxuLmltYWdlLXVwbG9hZC1zaXple1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgbWF4LXdpZHRoOiAyMDBweDtcclxuICAgIG1hcmdpbjogMnB4O1xyXG4gICAgcGFkZGluZzogM3B4O1xyXG4gICAgYm9yZGVyLXJhZGl1czogMC41ZW07XHJcbiAgICBib3JkZXItc3R5bGU6IHNvbGlkO1xyXG4gICAgYm9yZGVyLWNvbG9yOiBibGFjaztcclxuICAgIGJvcmRlci13aWR0aDogMXB4O1xyXG59XHJcblxyXG4uaW1hZ2UtdXBsb2FkLXNpemUgLmNsb3NlLWJ1dHRvbiB7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgICB0b3A6IDIlO1xyXG4gICAgbGVmdDogODAlO1xyXG4gICAgZm9udC1zaXplOiAzMHB4O1xyXG59IiwiLmZpbGUtb3ZlciB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgdG9wOiAwO1xuICBsZWZ0OiAwO1xuICB6LWluZGV4OiAyO1xuICB3aWR0aDogMTAwJTtcbiAgaGVpZ2h0OiAxMDAlO1xuICBvcGFjaXR5OiAwO1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbi5pZGVhLWNyZWF0ZWQge1xuICBib3JkZXItcmFkaXVzOiAyZW07XG4gIG9wYWNpdHk6IDAuOTtcbiAgbWFyZ2luOiA1cHg7XG4gIGJvcmRlci1zdHlsZTogc29saWQ7XG4gIGJvcmRlci1jb2xvcjogZ3JheTtcbiAgYm9yZGVyLXdpZHRoOiAxcHg7XG59XG5cbi5pbnB1dC1jb21tZW50IHtcbiAgYm9yZGVyLXJhZGl1czogMmVtO1xuICBvcGFjaXR5OiAwLjk7XG4gIG1hcmdpbjogMTVweDtcbiAgYm9yZGVyLXN0eWxlOiBzb2xpZDtcbiAgYm9yZGVyLWNvbG9yOiBncmVlbjtcbiAgYm9yZGVyLXdpZHRoOiAxcHg7XG4gIGJveC1zaGFkb3c6IDBweCAzcHggMTBweCByZ2JhKDAsIDAsIDAsIDAuNSk7XG59XG5cbi5jb21tZW50LWJhY2tnb3VuZCB7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgYm9yZGVyLXJhZGl1czogMWVtO1xuICBvcGFjaXR5OiAwLjk7XG4gIHBhZGRpbmc6IDhweDtcbiAgYmFja2dyb3VuZDogd2hpdGVzbW9rZTtcbn1cblxuLmNvbW1lbnQtbGlzdCB7XG4gIG1hcmdpbjogMTVweDtcbn1cblxuLmltYWdlLWNvbW1lbnQtc2l6ZSB7XG4gIG1heC13aWR0aDogMjAwcHg7XG4gIG1hcmdpbjogMnB4O1xuICBib3JkZXItcmFkaXVzOiAwLjVlbTtcbiAgYm9yZGVyLXN0eWxlOiBzb2xpZDtcbiAgYm9yZGVyLWNvbG9yOiBibGFjaztcbiAgYm9yZGVyLXdpZHRoOiAxcHg7XG59XG5cbi5pbWFnZS11cGxvYWQtc2l6ZSB7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgbWF4LXdpZHRoOiAyMDBweDtcbiAgbWFyZ2luOiAycHg7XG4gIHBhZGRpbmc6IDNweDtcbiAgYm9yZGVyLXJhZGl1czogMC41ZW07XG4gIGJvcmRlci1zdHlsZTogc29saWQ7XG4gIGJvcmRlci1jb2xvcjogYmxhY2s7XG4gIGJvcmRlci13aWR0aDogMXB4O1xufVxuXG4uaW1hZ2UtdXBsb2FkLXNpemUgLmNsb3NlLWJ1dHRvbiB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgdG9wOiAyJTtcbiAgbGVmdDogODAlO1xuICBmb250LXNpemU6IDMwcHg7XG59Il19 */";
+    __webpack_exports__["default"] = ".file-over {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n  opacity: 0;\n  cursor: pointer;\n}\n\n.idea-created {\n  border-radius: 2em;\n  opacity: 0.9;\n  margin: 5px;\n  border-style: solid;\n  border-color: gray;\n  border-width: 1px;\n}\n\n.input-comment {\n  border-radius: 2em;\n  opacity: 0.9;\n  margin: 15px;\n  border-style: solid;\n  border-color: green;\n  border-width: 1px;\n  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);\n}\n\n.comment-backgound {\n  position: relative;\n  border-radius: 1em;\n  opacity: 0.9;\n  padding: 8px;\n  background: whitesmoke;\n}\n\n.comment-list {\n  margin: 15px;\n}\n\n.image-comment-size {\n  max-width: 200px;\n  margin: 2px;\n  border-radius: 0.5em;\n  border-style: solid;\n  border-color: black;\n  border-width: 1px;\n}\n\n.image-upload-size {\n  position: relative;\n  max-width: 200px;\n  margin: 2px;\n  padding: 3px;\n  border-radius: 0.5em;\n  border-style: solid;\n  border-color: black;\n  border-width: 1px;\n}\n\n.image-upload-size .close-button {\n  position: absolute;\n  top: 2%;\n  left: 80%;\n  font-size: 30px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaWRlYS1lbnRyeS9pZGVhLWRldGFpbC9EOlxcTVlEQVRBXFxMYXBUcmluaERpRG9uZ1xcTk9ERTRcXG5vZGU0LWlub3ZhdGlvblxcY2xpZW50L3NyY1xcYXBwXFxpZGVhLWVudHJ5XFxpZGVhLWRldGFpbFxcaWRlYS1kZXRhaWwucGFnZS5zY3NzIiwic3JjL2FwcC9pZGVhLWVudHJ5L2lkZWEtZGV0YWlsL2lkZWEtZGV0YWlsLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFBO0VBQ0EsTUFBQTtFQUNBLE9BQUE7RUFDQSxVQUFBO0VBQ0EsV0FBQTtFQUNBLFlBQUE7RUFDQSxVQUFBO0VBQ0EsZUFBQTtBQ0NKOztBREVBO0VBQ0ksa0JBQUE7RUFDQSxZQUFBO0VBQ0EsV0FBQTtFQUNBLG1CQUFBO0VBQ0Esa0JBQUE7RUFDQSxpQkFBQTtBQ0NKOztBRENBO0VBRUksa0JBQUE7RUFDQSxZQUFBO0VBQ0EsWUFBQTtFQUNBLG1CQUFBO0VBQ0EsbUJBQUE7RUFDQSxpQkFBQTtFQUNBLDJDQUFBO0FDQ0o7O0FEQ0E7RUFDSSxrQkFBQTtFQUNBLGtCQUFBO0VBQ0EsWUFBQTtFQUNBLFlBQUE7RUFDQSxzQkFBQTtBQ0VKOztBRENBO0VBQ0ksWUFBQTtBQ0VKOztBRENBO0VBQ0ksZ0JBQUE7RUFDQSxXQUFBO0VBQ0Esb0JBQUE7RUFDQSxtQkFBQTtFQUNBLG1CQUFBO0VBQ0EsaUJBQUE7QUNFSjs7QURDQTtFQUNJLGtCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxXQUFBO0VBQ0EsWUFBQTtFQUNBLG9CQUFBO0VBQ0EsbUJBQUE7RUFDQSxtQkFBQTtFQUNBLGlCQUFBO0FDRUo7O0FEQ0E7RUFDSSxrQkFBQTtFQUNBLE9BQUE7RUFDQSxTQUFBO0VBQ0EsZUFBQTtBQ0VKIiwiZmlsZSI6InNyYy9hcHAvaWRlYS1lbnRyeS9pZGVhLWRldGFpbC9pZGVhLWRldGFpbC5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZmlsZS1vdmVyIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIHRvcDogMDtcclxuICAgIGxlZnQ6IDA7XHJcbiAgICB6LWluZGV4OiAyO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBoZWlnaHQ6IDEwMCU7XHJcbiAgICBvcGFjaXR5OiAwO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcblxyXG4uaWRlYS1jcmVhdGVke1xyXG4gICAgYm9yZGVyLXJhZGl1czogMmVtO1xyXG4gICAgb3BhY2l0eTogMC45O1xyXG4gICAgbWFyZ2luOiA1cHg7XHJcbiAgICBib3JkZXItc3R5bGU6IHNvbGlkO1xyXG4gICAgYm9yZGVyLWNvbG9yOiBncmF5O1xyXG4gICAgYm9yZGVyLXdpZHRoOiAxcHg7XHJcbn1cclxuLmlucHV0LWNvbW1lbnR7XHJcbiAgICAvLyBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBib3JkZXItcmFkaXVzOiAyZW07XHJcbiAgICBvcGFjaXR5OiAwLjk7XHJcbiAgICBtYXJnaW46IDE1cHg7XHJcbiAgICBib3JkZXItc3R5bGU6IHNvbGlkO1xyXG4gICAgYm9yZGVyLWNvbG9yOiBncmVlbjtcclxuICAgIGJvcmRlci13aWR0aDogMXB4O1xyXG4gICAgYm94LXNoYWRvdzogMHB4IDNweCAxMHB4IHJnYmEoMCwgMCwgMCwgMC41KTtcclxufVxyXG4uY29tbWVudC1iYWNrZ291bmR7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBib3JkZXItcmFkaXVzOiAxZW07XHJcbiAgICBvcGFjaXR5OiAwLjk7XHJcbiAgICBwYWRkaW5nOiA4cHg7XHJcbiAgICBiYWNrZ3JvdW5kOiB3aGl0ZXNtb2tlO1xyXG59XHJcblxyXG4uY29tbWVudC1saXN0e1xyXG4gICAgbWFyZ2luOiAxNXB4O1xyXG59XHJcblxyXG4uaW1hZ2UtY29tbWVudC1zaXple1xyXG4gICAgbWF4LXdpZHRoOiAyMDBweDtcclxuICAgIG1hcmdpbjogMnB4O1xyXG4gICAgYm9yZGVyLXJhZGl1czogMC41ZW07XHJcbiAgICBib3JkZXItc3R5bGU6IHNvbGlkO1xyXG4gICAgYm9yZGVyLWNvbG9yOmJsYWNrO1xyXG4gICAgYm9yZGVyLXdpZHRoOiAxcHg7XHJcbn1cclxuXHJcbi5pbWFnZS11cGxvYWQtc2l6ZXtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIG1heC13aWR0aDogMjAwcHg7XHJcbiAgICBtYXJnaW46IDJweDtcclxuICAgIHBhZGRpbmc6IDNweDtcclxuICAgIGJvcmRlci1yYWRpdXM6IDAuNWVtO1xyXG4gICAgYm9yZGVyLXN0eWxlOiBzb2xpZDtcclxuICAgIGJvcmRlci1jb2xvcjogYmxhY2s7XHJcbiAgICBib3JkZXItd2lkdGg6IDFweDtcclxufVxyXG5cclxuLmltYWdlLXVwbG9hZC1zaXplIC5jbG9zZS1idXR0b24ge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgdG9wOiAyJTtcclxuICAgIGxlZnQ6IDgwJTtcclxuICAgIGZvbnQtc2l6ZTogMzBweDtcclxufSIsIi5maWxlLW92ZXIge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHRvcDogMDtcbiAgbGVmdDogMDtcbiAgei1pbmRleDogMjtcbiAgd2lkdGg6IDEwMCU7XG4gIGhlaWdodDogMTAwJTtcbiAgb3BhY2l0eTogMDtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uaWRlYS1jcmVhdGVkIHtcbiAgYm9yZGVyLXJhZGl1czogMmVtO1xuICBvcGFjaXR5OiAwLjk7XG4gIG1hcmdpbjogNXB4O1xuICBib3JkZXItc3R5bGU6IHNvbGlkO1xuICBib3JkZXItY29sb3I6IGdyYXk7XG4gIGJvcmRlci13aWR0aDogMXB4O1xufVxuXG4uaW5wdXQtY29tbWVudCB7XG4gIGJvcmRlci1yYWRpdXM6IDJlbTtcbiAgb3BhY2l0eTogMC45O1xuICBtYXJnaW46IDE1cHg7XG4gIGJvcmRlci1zdHlsZTogc29saWQ7XG4gIGJvcmRlci1jb2xvcjogZ3JlZW47XG4gIGJvcmRlci13aWR0aDogMXB4O1xuICBib3gtc2hhZG93OiAwcHggM3B4IDEwcHggcmdiYSgwLCAwLCAwLCAwLjUpO1xufVxuXG4uY29tbWVudC1iYWNrZ291bmQge1xuICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gIGJvcmRlci1yYWRpdXM6IDFlbTtcbiAgb3BhY2l0eTogMC45O1xuICBwYWRkaW5nOiA4cHg7XG4gIGJhY2tncm91bmQ6IHdoaXRlc21va2U7XG59XG5cbi5jb21tZW50LWxpc3Qge1xuICBtYXJnaW46IDE1cHg7XG59XG5cbi5pbWFnZS1jb21tZW50LXNpemUge1xuICBtYXgtd2lkdGg6IDIwMHB4O1xuICBtYXJnaW46IDJweDtcbiAgYm9yZGVyLXJhZGl1czogMC41ZW07XG4gIGJvcmRlci1zdHlsZTogc29saWQ7XG4gIGJvcmRlci1jb2xvcjogYmxhY2s7XG4gIGJvcmRlci13aWR0aDogMXB4O1xufVxuXG4uaW1hZ2UtdXBsb2FkLXNpemUge1xuICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gIG1heC13aWR0aDogMjAwcHg7XG4gIG1hcmdpbjogMnB4O1xuICBwYWRkaW5nOiAzcHg7XG4gIGJvcmRlci1yYWRpdXM6IDAuNWVtO1xuICBib3JkZXItc3R5bGU6IHNvbGlkO1xuICBib3JkZXItY29sb3I6IGJsYWNrO1xuICBib3JkZXItd2lkdGg6IDFweDtcbn1cblxuLmltYWdlLXVwbG9hZC1zaXplIC5jbG9zZS1idXR0b24ge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHRvcDogMiU7XG4gIGxlZnQ6IDgwJTtcbiAgZm9udC1zaXplOiAzMHB4O1xufSJdfQ== */";
     /***/
   },
 
@@ -457,7 +520,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     "./node_modules/@ionic/angular/dist/fesm5.js");
 
     var IdeaDetailPage = /*#__PURE__*/function () {
-      function IdeaDetailPage(route, apiCommons, apiAuth, mainService, iab) {
+      function IdeaDetailPage(route, apiCommons, apiAuth, mainService, iab, navCtrl) {
         _classCallCheck(this, IdeaDetailPage);
 
         this.route = route;
@@ -465,24 +528,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.apiAuth = apiAuth;
         this.mainService = mainService;
         this.iab = iab;
+        this.navCtrl = navCtrl;
         this.uploadingFiles = [];
         this.isMobile = false; // hàm gọi lại xử lý form popup
 
         this.callbackProcess = function (res) {
-          var _this2 = this;
+          var _this3 = this;
 
-          return new Promise(function (resolve, reject) {
+          return new Promise(function (resolve) {
             // console.log(res);
             if (res.error) {
-              _this2.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
+              _this3.apiCommons.presentAlert('Error:<br>' + (res.message ? res.message : "Error Unknow: " + JSON.stringify(res.error, null, 2)));
             } else if (res.response_data) {
-              if (res.button.command === "MARK") {
-                _this2.refresh(res.button.id);
-              }
-
-              if (res.button.command === "EDIT") {
-                _this2.refresh(res.button.id);
-              }
+              _this3.refresh(res.button.id);
             }
 
             resolve({
@@ -497,12 +555,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(IdeaDetailPage, [{
         key: "ngOnInit",
         value: function ngOnInit() {
-          var _this3 = this;
+          var _this4 = this;
 
           this.route.queryParams.subscribe(function (item) {
             // console.log('item', item);
             // đọc chi tiết để hiển thị nội dung chi tiết ra
-            _this3.refresh(item.id);
+            _this4.refresh(item.id);
           });
         }
       }, {
@@ -515,23 +573,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "refresh",
         value: function refresh(id) {
-          var _this4 = this;
+          var _this5 = this;
 
           this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea?id=' + id, true).then(function (ideaDetail) {
-            _this4.ideaInfo = ideaDetail;
+            _this5.ideaInfo = ideaDetail;
 
-            _this4.refreshUserAction(); // console.log(this.ideaInfo);
+            _this5.refreshUserAction(); // console.log(this.ideaInfo);
 
           })["catch"](function (err) {
             return console.log('Lỗi lấy chi tiết', err);
           });
         } // Lấy file cho ý tưởng và comment
-        // Kiểm tra userInfo này đã like, comment hoặc chấm điểm chưa?
+        // Kiểm tra userInfo này đã like, comment chưa?
 
       }, {
         key: "refreshUserAction",
         value: function refreshUserAction() {
-          var _this5 = this;
+          var _this6 = this;
 
           if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
             //Lấy các file cho ý tưởng
@@ -539,15 +597,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               // thực hiện truy vấn lấy danh sách file đính kèm
               this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(this.ideaInfo.idea.attach_id_list), true).then(function (list) {
                 if (list && Array.isArray(list.images)) {
-                  _this5.ideaInfo.idea.images = list.images;
+                  _this6.ideaInfo.idea.images = list.images;
 
-                  _this5.ideaInfo.idea.images.forEach(function (file) {
-                    return file.src = _this5.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id;
+                  _this6.ideaInfo.idea.images.forEach(function (file) {
+                    return file.src = _this6.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id;
                   });
                 }
 
                 if (list && Array.isArray(list.files)) {
-                  _this5.ideaInfo.idea.attachs = list.files;
+                  _this6.ideaInfo.idea.attachs = list.files;
                 }
               })["catch"](function (err) {
                 console.log('Lỗi lấy file: ', err);
@@ -556,25 +614,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
             this.ideaInfo.isUserVoted = this.ideaInfo.likes.findIndex(function (x) {
-              return x.user_id === _this5.userInfo.id && x.activities_type > 0;
+              return x.user_id === _this6.userInfo.id && x.activities_type > 0;
             }) >= 0; // Kiểm tra this.userInfo này đã comment ý tưởng này chưa?
 
             this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(function (x) {
-              return x.user_id === _this5.userInfo.id;
-            }) >= 0; //Kiểm tra this.userInfo này đã chấm điểm ý tưởng này chưa?
-
-            this.ideaInfo.isUserMarked = this.ideaInfo.marks.findIndex(function (x) {
-              return x.user_id === _this5.userInfo.id;
+              return x.user_id === _this6.userInfo.id;
             }) >= 0; //Lấy các file cho các bình luận
 
             this.ideaInfo.comments.forEach(function (el) {
               if (el.attach_id_list) {
                 // thực hiện truy vấn lấy danh sách file đính kèm - tên file, kiểu file, id để hiển thị ra
-                _this5.apiAuth.getDynamicUrl(_this5.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(el.attach_id_list), true).then(function (list) {
+                _this6.apiAuth.getDynamicUrl(_this6.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-attach-files?id_list=' + JSON.stringify(el.attach_id_list), true).then(function (list) {
                   if (list && Array.isArray(list.images)) {
                     el.images = list.images;
                     el.images.forEach(function (file) {
-                      return file.src = _this5.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id;
+                      return file.src = _this6.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id;
                     });
                   }
 
@@ -598,24 +652,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "onClickMore",
         value: function onClickMore(ev) {
-          var _this6 = this;
+          var _this7 = this;
 
           /* kiểm tra quyền của userInfo mà hiển thị menu khác nhau
           + nếu user không thuộc ý tưởng, thì có quyền chấm điểm cho ý tưởng này
-          + nếu là ý tưởng thuộc user thì cho phép sửa nội dung, chuyển trạng thái */
+          + nếu là ý tưởng thuộc user thì cho phép sửa nội dung */
           // cụ thể như sau: Nếu role là
 
           /*
-            1	User thường	User  -- hiển thị mỗi một menu chấm điểm (nếu không phải ý tưởng của mình)
-                                -- Hoặc menu sửa ý tưởng, chuyển trạng thái (nếu là ý tưởng của mình)
+            1	User thường  -- hiển thị menu chấm điểm (nếu không phải ý tưởng của mình)
+                           -- Hoặc menu sửa ý tưởng (nếu là ý tưởng của mình)
             
             99	Developper	Người phát triển -- hiển thị hết menu
            */
           var settingsMenu = []; // menu đầy đủ
           // trường hợp nào thì sẽ xóa bỏ menu tương ứng
 
-          var allMenu = [// Cho tất cả mọi người trừ userInfo==idea
-          {
+          var allMenu = [{
             id: 1,
             name: "Chấm điểm ý tưởng này",
             value: "MARK",
@@ -623,8 +676,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               name: "microphone",
               color: "warning"
             }
-          }, //Chỉnh sửa ý tưởng (cho user_id của ý tưởng đó)
-          {
+          }, {
             id: 2,
             name: "Sửa ý tưởng này",
             value: "EDIT",
@@ -632,18 +684,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               name: "create",
               color: "primary"
             }
-          }, // chỉ cho admin 99, và user_id của ý tưởng trùng với nó
-          {
+          }, {
             id: 3,
-            name: "Chuyển trạng thái",
-            value: "CHANGE",
-            icon: {
-              name: "hourglass",
-              color: "primary"
-            }
-          }, // chỉ cho admin 99
-          {
-            id: 4,
             name: "Xóa ý tưởng này",
             value: "TRASH",
             icon: {
@@ -655,12 +697,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (this.userInfo && this.ideaInfo && this.ideaInfo.idea) {
             //user_id của ý tưởng trùng với id của userInfo
             if (this.ideaInfo.idea.user_id === this.userInfo.id) {
-              // cho phép sửa hoặc chuyển trạng thái
+              // cho phép sửa
               settingsMenu = allMenu.filter(function (x) {
-                return x.id === 2 || x.id === 3;
+                return x.id === 2;
               });
             } else {
-              // chỉ cho phép chấm điểm
+              // ho phép chấm điểm
               settingsMenu = allMenu.filter(function (x) {
                 return x.id === 1;
               });
@@ -686,7 +728,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             color: "primary",
             menu: settingsMenu
           }).then(function (data) {
-            _this6.processDetails(data);
+            _this7.processDetails(data);
           })["catch"](function (err) {
             console.log('err: ', err);
           });
@@ -704,9 +746,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             } else if (cmd === 'EDIT') {
               //  sửa ý tưởng này
               this.editIdea(this.ideaInfo.idea);
-            } else if (cmd === 'CHANGE') {
-              //  thay đổi trạng thái ý tưởng
-              this.changeStatusIdea(this.ideaInfo.idea);
             } else if (cmd === 'TRASH') {
               //  loại bỏ ý tưởng này
               this.trashIdea(this.ideaInfo.idea);
@@ -717,15 +756,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "likeIdea",
         value: function likeIdea(item) {
-          var _this7 = this;
+          var _this8 = this;
 
           this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/like-idea', {
             id: item.id
           }, true).then(function (idea) {
             // console.log(idea);
-            _this7.ideaInfo = idea; // lấy lại nội dung này
+            _this8.ideaInfo = idea; // lấy lại nội dung này
 
-            _this7.refreshUserAction();
+            _this8.refreshUserAction();
           })["catch"](function (err) {
             return console.log(err);
           });
@@ -734,7 +773,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "uploadFilesEvent",
         value: function uploadFilesEvent(evt) {
-          var _this8 = this;
+          var _this9 = this;
 
           if (!evt.target || !evt.target.files || !evt.target.files.length) return;
 
@@ -756,9 +795,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 fr.readAsDataURL(file);
               }
 
-              if (!_this8.uploadingFiles.find(function (x) {
+              if (!_this9.uploadingFiles.find(function (x) {
                 return x.name === file.name;
-              })) _this8.uploadingFiles.push(file);
+              })) _this9.uploadingFiles.push(file);
             };
 
             for (_iterator.s(); !(_step = _iterator.n()).done;) {
@@ -787,7 +826,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "onClickSend",
         value: function onClickSend() {
-          var _this9 = this;
+          var _this10 = this;
 
           if (this.message || this.uploadingFiles.length > 0) {
             this.apiCommons.showLoader('Đang xử lý dữ liệu trên máy chủ...');
@@ -811,13 +850,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             this.apiAuth.postDynamicFormData(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/comment-idea', form_data, true).then(function (idea) {
-              _this9.apiCommons.hideLoader();
+              _this10.apiCommons.hideLoader();
 
-              _this9.ideaInfo = idea; // lấy lại nội dung này
+              _this10.ideaInfo = idea; // lấy lại nội dung này
 
-              _this9.refreshUserAction();
+              _this10.refreshUserAction();
             })["catch"](function (err) {
-              _this9.apiCommons.hideLoader(); // console.log('Lỗi: ', err);
+              _this10.apiCommons.hideLoader(); // console.log('Lỗi: ', err);
 
             });
             this.message = '';
@@ -888,7 +927,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                       for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
                         _loop2();
-                      } // Chấm điểm ý tưởng - popup cửa sổ chấm điểm
+                      } // console.log(arrayTestDemo);
+                      // popup cửa sổ chấm điểm
 
                     } catch (err) {
                       _iterator3.e(err);
@@ -963,8 +1003,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                   case 8:
                     categoryOptions = parameters && parameters.ideas_categories ? parameters.ideas_categories : [];
-                    statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : []; // Chỉnh sửa ý tưởng - popup cửa sổ chỉnh sửa
-
+                    statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
                     form = {
                       title: 'Sửa ý tưởng',
                       buttons: [{
@@ -982,7 +1021,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         key: "title",
                         value: idea.title,
                         name: "Chủ đề là gì? ",
-                        hint: "Nhập chủ đề của ý tưởng này từ 5-200 ký tự",
+                        hint: "Nhập chủ đề của ý tưởng này từ 1-200 ký tự",
                         input_type: "text",
                         icon: "md-help",
                         validators: [{
@@ -994,7 +1033,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         type: "text_area",
                         key: "description",
                         value: idea.description,
-                        name: "Mô tả nội dung ý tưởng của bạn từ 50 đến 1000 từ",
+                        name: "Mô tả nội dung ý tưởng của bạn từ 1 đến 1000 từ",
                         hint: "Nhập mô tả ý tưởng của bạn",
                         input_type: "text",
                         icon: "md-information-circle",
@@ -1003,7 +1042,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                           min: 1
                         }]
                       }, {
-                        type: "select",
+                        type: "select-origin",
                         key: "category_id",
                         value: "" + idea.category_id,
                         name: "Phân loại ý tưởng?",
@@ -1011,7 +1050,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         options: categoryOptions,
                         color: "warning"
                       }, {
-                        type: "select",
+                        type: "select-origin",
                         key: "status",
                         value: "" + idea.status,
                         name: "Trạng thái của ý tưởng?",
@@ -1029,7 +1068,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                           ,
                           next: 'CALLBACK',
                           url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea',
-                          type: "FORM-DATA",
                           token: true,
                           command: 'EDIT'
                         }]
@@ -1048,124 +1086,42 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               }
             }, _callee2, this, [[0, 6]]);
           }));
-        } // Chuyển trạng thái của ý tưởng
-
-      }, {
-        key: "changeStatusIdea",
-        value: function changeStatusIdea(idea) {
-          return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-            var parameters, statusOptions, form;
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
-              while (1) {
-                switch (_context3.prev = _context3.next) {
-                  case 0:
-                    _context3.prev = 0;
-                    _context3.next = 3;
-                    return this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true);
-
-                  case 3:
-                    parameters = _context3.sent;
-                    _context3.next = 8;
-                    break;
-
-                  case 6:
-                    _context3.prev = 6;
-                    _context3.t0 = _context3["catch"](0);
-
-                  case 8:
-                    statusOptions = parameters && parameters.ideas_statuses ? parameters.ideas_statuses : [];
-                    form = {
-                      title: 'Thay đổi trạng thái',
-                      buttons: [{
-                        color: 'danger',
-                        icon: 'close',
-                        next: 'CLOSE'
-                      }],
-                      items: [// Danh sách các trường nhập liệu
-                      {
-                        type: "hidden",
-                        key: "id",
-                        value: idea.id
-                      }, {
-                        type: "select",
-                        key: "status",
-                        value: "" + idea.status,
-                        name: "Trạng thái của ý tưởng?",
-                        icon: "clock",
-                        options: statusOptions,
-                        color: "warning"
-                      }, {
-                        type: 'button',
-                        options: [{
-                          name: 'Chuyển trạng thái ý tưởng này',
-                          id: idea.id // trả lại id của ý tưởng này
-                          ,
-                          next: 'CALLBACK',
-                          url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea',
-                          type: "FORM-DATA",
-                          token: true,
-                          command: 'EDIT'
-                        }]
-                      }]
-                    };
-                    this.apiCommons.openModal(ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_3__["DynamicFormMobilePage"], {
-                      parent: this,
-                      callback: this.callbackProcess,
-                      form: form
-                    });
-
-                  case 11:
-                  case "end":
-                    return _context3.stop();
-                }
-              }
-            }, _callee3, this, [[0, 6]]);
-          }));
         } // loại bỏ ý tưởng này
 
       }, {
         key: "trashIdea",
         value: function trashIdea(idea) {
-          var form = {
-            title: 'Dừng ý tưởng',
-            buttons: [{
-              color: 'danger',
-              icon: 'close',
-              next: 'CLOSE'
-            }],
-            items: [// Danh sách các trường nhập liệu
-            {
-              type: "hidden",
-              key: "id",
-              value: idea.id
-            }, {
-              type: "select",
-              key: "status",
-              value: "0",
-              name: "Trạng thái của ý tưởng?",
-              icon: "clock",
-              options: [{
-                value: "0",
-                name: "Triển khai sau"
-              }],
-              color: "secondary"
-            }, {
-              type: 'button',
-              options: [{
-                name: 'Dừng ý tưởng này',
-                id: idea.id,
-                next: 'CALLBACK',
-                url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea',
-                type: "FORM-DATA",
-                token: true,
-                command: 'EDIT'
-              }]
-            }]
-          };
-          this.apiCommons.openModal(ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_3__["DynamicFormMobilePage"], {
-            parent: this,
-            callback: this.callbackProcess,
-            form: form
+          var _this11 = this;
+
+          this.apiCommons.presentConfirm('Bạn có chắc muốn xóa ý tưởng này không?', "Đồng ý", "Bỏ qua").then(function (res) {
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this11, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                  switch (_context3.prev = _context3.next) {
+                    case 0:
+                      if (!(res === "OK")) {
+                        _context3.next = 7;
+                        break;
+                      }
+
+                      this.apiCommons.showLoader("Đang xử lý dữ liệu trên máy chủ...");
+                      _context3.next = 4;
+                      return this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/delete-idea', {
+                        id: idea.id
+                      }, true);
+
+                    case 4:
+                      this.apiCommons.hideLoader();
+                      this.apiCommons.showToast("Đã xóa thành công!", 3000);
+                      this.navCtrl.navigateBack('/idea');
+
+                    case 7:
+                    case "end":
+                      return _context3.stop();
+                  }
+                }
+              }, _callee3, this);
+            }));
           });
         }
       }]);
@@ -1184,6 +1140,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         type: src_app_services_main_service__WEBPACK_IMPORTED_MODULE_4__["MainService"]
       }, {
         type: _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_5__["InAppBrowser"]
+      }, {
+        type: _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["NavController"]
       }];
     };
 
@@ -1198,7 +1156,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       styles: [tslib__WEBPACK_IMPORTED_MODULE_0__["__importDefault"](__webpack_require__(
       /*! ./idea-detail.page.scss */
       "./src/app/idea-entry/idea-detail/idea-detail.page.scss"))["default"]]
-    }), tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_3__["CommonsService"], ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"], src_app_services_main_service__WEBPACK_IMPORTED_MODULE_4__["MainService"], _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_5__["InAppBrowser"]])], IdeaDetailPage);
+    }), tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_3__["CommonsService"], ngxi4_dynamic_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"], src_app_services_main_service__WEBPACK_IMPORTED_MODULE_4__["MainService"], _ionic_native_in_app_browser_ngx__WEBPACK_IMPORTED_MODULE_5__["InAppBrowser"], _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["NavController"]])], IdeaDetailPage);
     /***/
   },
 

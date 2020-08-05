@@ -51,8 +51,14 @@ router.post('/create-idea'
 
 router.post('/edit-idea'
     , jwtTokenVerify
-    , postHandler.formProcess
+    , postHandler.jsonProcess
     , ideaHandler.editIdea
+)
+
+router.post('/delete-idea'
+    , jwtTokenVerify
+    , postHandler.jsonProcess
+    , ideaHandler.delIdea
 )
 
 router.get('/get-idea'
@@ -76,6 +82,15 @@ router.post('/comment-idea'
     , ideaHandler.getIdea
 )
 
+router.get('/get-attach-files'
+    , jwtTokenVerify
+    , listHandler.getIdeasAttachs
+)
+
+router.get('/get-file-id'
+    , listHandler.getFileAttach
+)
+
 router.get('/get-questions'
     , jwtTokenVerify
     , listHandler.getQuestions
@@ -92,15 +107,6 @@ router.post('/mark-idea'
     , userHandler.getUserId
     , postHandler.jsonProcess
     , ideaHandler.markIdea
-)
-
-router.get('/get-attach-files'
-    , jwtTokenVerify
-    , listHandler.getIdeasAttachs
-)
-
-router.get('/get-file-id'
-    , listHandler.getFileAttach
 )
 
 module.exports = router;
