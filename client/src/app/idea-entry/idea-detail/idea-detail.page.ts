@@ -172,7 +172,7 @@ export class IdeaDetailPage implements OnInit {
         // cho phép sửa
         settingsMenu = allMenu.filter(x => x.id === 2)
       } else {
-        // ho phép chấm điểm
+        // cho phép chấm điểm
         settingsMenu = allMenu.filter(x => x.id === 1)
       }
 

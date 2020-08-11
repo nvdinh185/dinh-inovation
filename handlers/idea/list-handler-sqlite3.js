@@ -56,7 +56,7 @@ class ListHandler {
         try {
             let file = await db.getRst(`select file_path, file_type from ideas_attachs where id=${id}`);
             // console.log('Data: ', file);
-            fs.readFile(file.file_path, { flag: 'r' }, function (error, data) {
+            fs.readFile(file.file_path, { flag: 'r' }, (error, data) => {
                 if (!error) {
                     res.writeHead(200, { 'Content-Type': file.file_type });
                     res.end(data);

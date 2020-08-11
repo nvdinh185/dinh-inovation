@@ -15,7 +15,7 @@ const orderList = {
  * @param {*} files 
  * @param {*} userId 
  */
-const saveAttachFiles = (files, userId) => {
+const saveAttachFiles = (files) => {
     return new Promise(async resolve => {
         let fileIds;
         // so luong file > 0
@@ -28,7 +28,6 @@ const saveAttachFiles = (files, userId) => {
                 , file_size: files[key].file_size
                 , file_path: files[key].path_name
                 , created_time: Date.now()
-                , user_id: userId
             }
             try {
                 await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach))
@@ -75,7 +74,7 @@ class IdeaHandler {
                     from ideas a
                     join ideas_categories b
                     on a.category_id = b.id
-                    where a.status != 0 -- chỉ lấy những ý tưởng còn hiệu lực
+                    where a.status > 0 -- chỉ lấy những ý tưởng còn hiệu lực
                     ${sqlCategory}
                     ${sqlStatus}
                     ${orderBy}
@@ -102,7 +101,7 @@ class IdeaHandler {
 
         let fileIds;
         if (req.form_data.params.count_file > 0) {
-            fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
+            fileIds = await saveAttachFiles(req.form_data.files)
         }
 
         const ideaInfo = {
@@ -166,10 +165,16 @@ class IdeaHandler {
         let idIdea = req.json_data.id;
         // Lấy danh sách file (nếu có)
         let attach_list = await db.getRst(`select attach_id_list from ideas where id = ${idIdea}`)
-        let list_id = attach_list.attach_id_list ? attach_list.attach_id_list.toString() : '()'
-        list_id = list_id.replace('[', '(').replace(']', ')')
+        let list_id = attach_list.attach_id_list ? JSON.parse(attach_list.attach_id_list) : []
+
+        //Lấy danh sách file cho comment
+        attach_list = await db.getRsts(`select attach_id_list from ideas_comments where idea_id = ${idIdea}`)
+        attach_list.forEach(el => {
+            list_id = list_id.concat(JSON.parse(el.attach_id_list))
+        });
+        // console.log(list_id);
         try {
-            await db.getRsts(`delete from ideas_attachs where id in ${list_id}`);
+            await db.getRsts(`delete from ideas_attachs where id in (${list_id.toString()})`);
             await db.getRsts(`delete from ideas_comments where idea_id = ${idIdea}`);
             await db.getRsts(`delete from ideas_interactives where idea_id = ${idIdea}`);
             await db.getRsts(`delete from ideas_marks where idea_id = ${idIdea}`);
@@ -178,7 +183,7 @@ class IdeaHandler {
             res.end(arrObj.getJsonStringify({ status: "OK", message: "Xóa thành công" }));
         } catch (err) {
             res.status(401).json({
-                message: 'Lỗi update idea, liên hệ quản trị hệ thống',
+                message: 'Lỗi delete idea, liên hệ quản trị hệ thống',
                 error: err
             })
         }
@@ -281,13 +286,13 @@ class IdeaHandler {
 
     // comment ý tưởng
     async commentIdea(req, res, next) {
-        // thông tin đầu vào là req.user.id 
+        // thông tin đầu vào là req.user.id
         // và req.form_data.params.id chứa mã ý tưởng
         // console.log('form', req.form_data);
 
         let fileIds;
         if (req.form_data.params.count_file > 0) {
-            fileIds = await saveAttachFiles(req.form_data.files, req.user.id)
+            fileIds = await saveAttachFiles(req.form_data.files)
         }
 
         req.ideaId = req.form_data.params.id;

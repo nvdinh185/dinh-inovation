@@ -12,7 +12,7 @@ main = (isHttp) => {
 
   app.use('/m-inovation/api', require('./routes/idea/idea-route-sqlite3'));
 
-  app.get('/*', function (req, res) {
+  app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/www', 'index.html'));
   });
 
