@@ -135,7 +135,7 @@
       <ion-avatar slot="start">
         <img src="{{userInfo?.avatar}}">
       </ion-avatar>
-      <ion-textarea #textComment autosize type="text" placeholder="Đóng góp ý kiến ... " (keyup.enter)="onClickSend()" [(ngModel)]="message">
+      <ion-textarea #textComment autosize type="text" placeholder="Đóng góp ý kiến ... " [(ngModel)]="message">
       </ion-textarea>
       <ion-button color="medium" fill="clear" shape="round">
         <input class="file-over" type="file" multiple (change)="uploadFilesEvent($event)" accept="image/gif, image/jpeg, image/png

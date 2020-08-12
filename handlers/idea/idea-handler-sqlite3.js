@@ -160,6 +160,12 @@ class IdeaHandler {
             });
     }
 
+    /**
+     * Xóa ý tưởng và các dữ liệu liên quan đến ý tưởng đó
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async delIdea(req, res, next) {
         // console.log(req.json_data);
         let idIdea = req.json_data.id;
@@ -167,10 +173,10 @@ class IdeaHandler {
         let attach_list = await db.getRst(`select attach_id_list from ideas where id = ${idIdea}`)
         let list_id = attach_list.attach_id_list ? JSON.parse(attach_list.attach_id_list) : []
 
-        //Lấy danh sách file cho comment
+        // Lấy danh sách file cho comment
         attach_list = await db.getRsts(`select attach_id_list from ideas_comments where idea_id = ${idIdea}`)
         attach_list.forEach(el => {
-            list_id = list_id.concat(JSON.parse(el.attach_id_list))
+            if(el.attach_id_list) list_id = list_id.concat(JSON.parse(el.attach_id_list))
         });
         // console.log(list_id);
         try {
@@ -182,6 +188,7 @@ class IdeaHandler {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(arrObj.getJsonStringify({ status: "OK", message: "Xóa thành công" }));
         } catch (err) {
+            console.log(err);
             res.status(401).json({
                 message: 'Lỗi delete idea, liên hệ quản trị hệ thống',
                 error: err
@@ -212,11 +219,6 @@ class IdeaHandler {
                                         where a.id = ${ideaId}
                                         `);
 
-            let likes = await db.getRsts(`select * 
-                                from ideas_interactives
-                                where idea_id = ${ideaId}
-                                `);
-
             let comments = await db.getRsts(`select
                                             b.fullname || '(' || b.nickname || ')' as username
                                             , b.avatar
@@ -230,7 +232,6 @@ class IdeaHandler {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
             res.end(arrObj.getJsonStringify({
                 idea,
-                likes,
                 comments
             }));
 
@@ -260,7 +261,7 @@ class IdeaHandler {
                 if (result) {
                     // có tồn tại 1 bản ghi của user này rồi
                     // nếu đã like thì unlike
-                    if (result.activities_type !== 0) jsonLike.activities_type = 0;
+                    if (result.activities_type > 0) jsonLike.activities_type = 0;
                     await db.update(db.convertSqlFromJson('ideas_interactives', jsonLike, ['user_id', 'idea_id']))
                 } else {
                     // chèn thêm một dòng like vào bảng ideas_interactives

@@ -58,7 +58,7 @@ export class IdeaDetailPage implements OnInit {
   // Lấy file cho ý tưởng và comment
   // Kiểm tra userInfo này đã like, comment chưa?
   refreshUserAction() {
-    if (this.ideaInfo && this.ideaInfo.likes && this.ideaInfo.comments) {
+    if (this.ideaInfo && this.ideaInfo.comments) {
 
       //Lấy các file cho ý tưởng
       if (this.ideaInfo.idea && this.ideaInfo.idea.attach_id_list) {
@@ -82,7 +82,7 @@ export class IdeaDetailPage implements OnInit {
 
       }
       // Kiểm tra this.userInfo này đã like ý tưởng này chưa?
-      this.ideaInfo.isUserVoted = this.ideaInfo.likes.findIndex(x => x.user_id === this.userInfo.id && x.activities_type > 0) >= 0
+      this.ideaInfo.isUserVoted = this.ideaInfo.idea.voted_users ? this.ideaInfo.idea.voted_users.findIndex(x => x === this.userInfo.id) >= 0 : false
       // Kiểm tra this.userInfo này đã comment ý tưởng này chưa?
       this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
 
@@ -342,7 +342,6 @@ export class IdeaDetailPage implements OnInit {
               , id: idea.id
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/mark-idea'
               , token: true
-              , command: 'MARK'
             }
           ]
         }
@@ -394,7 +393,6 @@ export class IdeaDetailPage implements OnInit {
               , next: 'CALLBACK'
               , url: this.apiAuth.serviceUrls.RESOURCE_SERVER + '/edit-idea'
               , token: true
-              , command: 'EDIT'
             }
           ]
         }
