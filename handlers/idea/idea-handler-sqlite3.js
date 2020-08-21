@@ -15,31 +15,28 @@ const orderList = {
  * @param {*} files 
  * @param {*} userId 
  */
-const saveAttachFiles = (files) => {
-    return new Promise(async resolve => {
-        let fileIds;
-        // so luong file > 0
-        let filePaths = [];
-        for (let key in files) {
-            filePaths.push(files[key].path_name);
-            let jsonFileAttach = {
-                file_name: files[key].file_name
-                , file_type: files[key].file_type
-                , file_size: files[key].file_size
-                , file_path: files[key].path_name
-                , created_time: Date.now()
-            }
-            try {
-                await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach))
-            } catch{ }
+const saveAttachFiles = async (files) => {
+    let fileIds;
+    let filePaths = [];
+    for (let key in files) {
+        filePaths.push(files[key].path_name);
+        let jsonFileAttach = {
+            file_name: files[key].file_name
+            , file_type: files[key].file_type
+            , file_size: files[key].file_size
+            , file_path: files[key].path_name
+            , created_time: Date.now()
         }
         try {
-            // lấy tất cả các id của các file chèn vào csdl rồi
-            let fileRows = await db.getRsts(`select id from ideas_attachs where file_path in ('${filePaths.join("', '")}')`)
-            fileIds = fileRows.map(o => o["id"])
+            await db.insert(db.convertSqlFromJson('ideas_attachs', jsonFileAttach))
         } catch{ }
-        resolve(fileIds)
-    })
+    }
+    try {
+        // lấy tất cả các id của các file chèn vào csdl rồi
+        let fileRows = await db.getRsts(`select id from ideas_attachs where file_path in ('${filePaths.join("', '")}')`)
+        fileIds = fileRows.map(o => o["id"])
+    } catch{ }
+    return fileIds
 }
 
 class IdeaHandler {
@@ -176,7 +173,7 @@ class IdeaHandler {
         // Lấy danh sách file cho comment
         attach_list = await db.getRsts(`select attach_id_list from ideas_comments where idea_id = ${idIdea}`)
         attach_list.forEach(el => {
-            if(el.attach_id_list) list_id = list_id.concat(JSON.parse(el.attach_id_list))
+            if (el.attach_id_list) list_id = list_id.concat(JSON.parse(el.attach_id_list))
         });
         // console.log(list_id);
         try {

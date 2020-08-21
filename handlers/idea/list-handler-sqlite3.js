@@ -7,7 +7,7 @@ const fs = require('fs');
 
 class ListHandler {
 
-    // lấy thông tin danh mục phân loại ý tưởng, và danh mục giai đoạn ý tưởng
+    // lấy thông tin phân loại ý tưởng, và trạng thái ý tưởng
     async getListParameters(req, res, next) {
         let Parameters = {}
         try {
