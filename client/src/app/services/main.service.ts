@@ -25,7 +25,6 @@ export class MainService {
       if (this.token && this.userInfo) {
         resolve(this.userInfo);
       } else {
-        // this.apiStorage.delete("TOKEN");
         let token = this.apiStorage.read("TOKEN");
         // console.log(token);
         if (token) {
@@ -57,13 +56,13 @@ export class MainService {
 
   /**
    * Lưu token xuống đĩa
-   * @param token 
+   * @param token
    */
   saveToken(token: string, userInfo: any) {
     this.apiStorage.save("TOKEN", token);
     this.userInfo = userInfo;
     this.token = token;
-    // Lưu token trong interceptor để sử dụng post, request tự động chèn token 
+    // Lưu token trong interceptor để sử dụng post, request tự động chèn token
     this.apiAuth.token = token;
     this.apiCommons.publish('event-login-ok', this.userInfo);
   }
