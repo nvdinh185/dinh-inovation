@@ -148,8 +148,7 @@ export class IdeaPage implements OnInit {
               this.formIdea.ideas.splice(findIndex, 1, el)
           }
         } else {
-          for (let idx = 0; idx < countIdeaReturn; idx++) {
-            let el = ideas[idx];
+          for (let el of ideas) {
             if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
             if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
             let findIndex = this.formIdea.ideas.findIndex(x => x.id === el.id)
@@ -187,14 +186,12 @@ export class IdeaPage implements OnInit {
         , value: el.id
       })
     })
-    this.apiCommons.presentPopover(
-      undefined, PopoverCardComponent
-      , {
-        type: 'multi-choice',
-        title: "LỌC THEO LĨNH VỰC",
-        color: "tertiary",
-        menu: settingsMenu
-      })
+    this.apiCommons.presentPopover(undefined, PopoverCardComponent, {
+      type: 'multi-choice',
+      title: "LỌC THEO LĨNH VỰC",
+      color: "tertiary",
+      menu: settingsMenu
+    })
       .then(data => {
         this.processCategoryFilters(data);
       })
@@ -214,14 +211,12 @@ export class IdeaPage implements OnInit {
         , value: el.id
       })
     })
-    this.apiCommons.presentPopover(
-      undefined, PopoverCardComponent
-      , {
-        type: 'multi-choice',
-        title: "LỌC THEO TRẠNG THÁI",
-        color: "danger",
-        menu: settingsMenu
-      })
+    this.apiCommons.presentPopover(undefined, PopoverCardComponent, {
+      type: 'multi-choice',
+      title: "LỌC THEO TRẠNG THÁI",
+      color: "danger",
+      menu: settingsMenu
+    })
       .then(data => {
         this.processStatusFilters(data);
       })
@@ -264,14 +259,12 @@ export class IdeaPage implements OnInit {
       }
     ]
 
-    this.apiCommons.presentPopover(
-      undefined, PopoverCardComponent
-      , {
-        type: 'single-choice',
-        title: "SẮP XẾP",
-        color: "success",
-        menu: settingsMenu
-      })
+    this.apiCommons.presentPopover(undefined, PopoverCardComponent, {
+      type: 'single-choice',
+      title: "SẮP XẾP",
+      color: "success",
+      menu: settingsMenu
+    })
       .then(data => {
         this.processOrderBys(data);
       })
@@ -319,31 +312,27 @@ export class IdeaPage implements OnInit {
 
   // Hàm thực hiện khi kéo xuống hoặc refresh trang
   doRefresh(evt, direction) {
-    if (this.isSearch) {
+    if (this.isSearch || this.isCardNewShow) {
       evt.target.complete();
       return
     }
     if (direction === 'UP') {
-      if (!this.isCardNewShow) {
-        // đọc dữ liệu mới nhất 
-        this.refresh(false, 0, direction)
-          .then(data => {
-            evt.target.complete();
-          })
-      } else evt.target.complete();
+      // đọc dữ liệu mới nhất 
+      this.refresh(false, 0, direction)
+        .then(data => {
+          evt.target.complete();
+        })
     }
 
     if (direction === 'DOWN') {
-      if (!this.isCardNewShow) {
-        // lấy trang tiếp theo
-        this.refresh(false, ++this.currentPage)
-          .then(count => {
-            evt.target.complete();
-            if (count < this.pageSize) {
-              this.apiCommons.showToast('Hết ý tưởng rồi', 1000, 'success', 'bottom')
-            }
-          })
-      } else evt.target.complete();
+      // lấy trang tiếp theo
+      this.refresh(false, ++this.currentPage)
+        .then(count => {
+          evt.target.complete();
+          if (count < this.pageSize) {
+            this.apiCommons.showToast('Hết ý tưởng rồi', 1000, 'success', 'bottom')
+          }
+        })
     }
 
   }
@@ -377,7 +366,6 @@ export class IdeaPage implements OnInit {
         // console.log(data);
         let el = data.idea;
         if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
-        if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
         let index = this.formIdea.ideas.findIndex(x => x.id === el.id)
         this.formIdea.ideas.splice(index, 1, el)
         //tự động thay đổi trong this.myIdeaFilterList để hiển thị
@@ -408,14 +396,12 @@ export class IdeaPage implements OnInit {
       }
     ]
 
-    this.apiCommons.presentPopover(
-      undefined, PopoverCardComponent
-      , {
-        type: 'single-choice',
-        title: "TÙY CHỌN TÌM KIẾM",
-        color: "warning",
-        menu: settingsMenu
-      })
+    this.apiCommons.presentPopover(undefined, PopoverCardComponent, {
+      type: 'single-choice',
+      title: "TÙY CHỌN TÌM KIẾM",
+      color: "warning",
+      menu: settingsMenu
+    })
       .then(data => {
         this.processSearchOptions(data);
       })
@@ -451,7 +437,8 @@ export class IdeaPage implements OnInit {
         this.myIdeaFilterList = this.formIdea.ideas.filter(
           x => x.title.toLowerCase().indexOf(searchTxt.toLowerCase()) >= 0);
       } else if (this.searchOption === searchOptions.SEARCH_BY_ID) {
-        this.myIdeaFilterList = this.formIdea.ideas.filter(x => ("" + x.id).indexOf(searchTxt) >= 0);
+        this.myIdeaFilterList = this.formIdea.ideas.filter(
+          x => ("" + x.id).indexOf(searchTxt) >= 0);
       }
     } else {
       this.myIdeaFilterList = this.formIdea.ideas

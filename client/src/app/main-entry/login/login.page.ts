@@ -94,13 +94,11 @@ export class LoginPage implements OnInit {
       ]
     }
 
-    this.apiCommons.openModal(DynamicFormMobilePage,
-      {
-        parent: this,
-        callback: this.callbackLogin,
-        form: form
-      }
-    );
+    this.apiCommons.openModal(DynamicFormMobilePage, {
+      parent: this,
+      callback: this.callbackLogin,
+      form: form
+    });
 
   }
 
@@ -110,7 +108,7 @@ export class LoginPage implements OnInit {
    */
   showUserInfo() {
 
-    if (this.userInfo)
+    if (this.userInfo) {
       this.formLogin = {
         title: "ĐÃ ĐĂNG NHẬP"
         , color: 'primary'
@@ -162,8 +160,9 @@ export class LoginPage implements OnInit {
           }
         ]
       }
-    else
+    } else {
       this.login()
+    }
   }
 
   /**
@@ -207,13 +206,11 @@ export class LoginPage implements OnInit {
       ]
     }
 
-    this.apiCommons.openModal(DynamicFormMobilePage,
-      {
-        parent: this,
-        callback: this.callbackLogin,
-        form: form
-      }
-    );
+    this.apiCommons.openModal(DynamicFormMobilePage, {
+      parent: this,
+      callback: this.callbackLogin,
+      form: form
+    });
   }
 
   /**
@@ -245,13 +242,11 @@ export class LoginPage implements OnInit {
       ]
     }
 
-    this.apiCommons.openModal(DynamicFormMobilePage,
-      {
-        parent: this,
-        callback: this.callbackLogin,
-        form: form
-      }
-    );
+    this.apiCommons.openModal(DynamicFormMobilePage, {
+      parent: this,
+      callback: this.callbackLogin,
+      form: form
+    });
   }
 
   /**

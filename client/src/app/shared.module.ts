@@ -6,8 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Ngxi4DynamicServiceModule } from 'ngxi4-dynamic-service';
 
 @NgModule({
-    imports: [
-    ],
+    imports: [],
     declarations: [TimeAgoPipe],
     exports: [
         TimeAgoPipe,
