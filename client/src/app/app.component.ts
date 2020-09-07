@@ -32,7 +32,7 @@ export class AppComponent {
   /**
    * Khởi tạo các biến đầu tiên
    */
-  init() {
+  async init() {
     this.apiAuth.serviceUrls.AUTH_SERVER = environment.AUTH_SERVER;
     this.apiAuth.serviceUrls.RESOURCE_SERVER = environment.RESOURCE_SERVER;
 
@@ -50,16 +50,13 @@ export class AppComponent {
       this.refresh();
     })
 
-    this.mainService.getTokenInfo()
-      .then(userInfo => {
-        this.userInfo = userInfo;
-        // console.log(this.userInfo);
-        this.refresh();
-      })
-      .catch(err => {
-        this.refresh();
-      })
-
+    try {
+      this.userInfo = await this.mainService.getTokenInfo();
+      // console.log(this.userInfo);
+      this.refresh();
+    } catch (e) {
+      this.refresh();
+    }
   }
 
   /**

@@ -300,9 +300,9 @@ export class IdeaPage implements OnInit {
 
   // hàm trả kết quả của form nhập mới ý tưởng
   onSelectedFinish(evt) {
+    this.isCardNewShow = false;
     // console.log('ghi xong du lieu', evt);
     if (evt) this.refresh(true); // làm mới ý tưởng mới
-    this.isCardNewShow = false;
   }
 
   // thêm mới ý tưởng

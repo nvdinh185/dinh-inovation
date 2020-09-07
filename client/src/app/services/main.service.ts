@@ -20,33 +20,31 @@ export class MainService {
    * Đọc token từ đĩa, nếu có thì đẩy lên server để xác thực
    * Nếu xác thực thành công thì trả về userInfo
    */
-  getTokenInfo() {
-    return new Promise(async (resolve, reject) => {
-      if (this.token && this.userInfo) {
-        resolve(this.userInfo);
-      } else {
-        let token = this.apiStorage.read("TOKEN");
-        // console.log(token);
-        if (token) {
-          try {
-            let result = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', token)
-            // console.log(result);
-            if (result && result.status === 'OK' && result.data) {
-              this.userInfo = result.data;
-              this.token = token;
-              this.apiAuth.token = token;
-              resolve(this.userInfo);
-            } else {
-              reject()
-            }
-          } catch (e) {
-            reject()
+  async getTokenInfo() {
+    if (this.token && this.userInfo) {
+      return Promise.resolve(this.userInfo);
+    } else {
+      let token = this.apiStorage.read("TOKEN");
+      // console.log(token);
+      if (token) {
+        try {
+          let result = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', token)
+          // console.log(result);
+          if (result && result.status === 'OK' && result.data) {
+            this.userInfo = result.data;
+            this.token = token;
+            this.apiAuth.token = token;
+            return Promise.resolve(this.userInfo);
+          } else {
+            return Promise.reject()
           }
-        } else {
-          reject()
+        } catch (e) {
+          return Promise.reject()
         }
+      } else {
+        return Promise.reject()
       }
-    })
+    }
   }
 
   saveUserInfo(userInfo: any) {
