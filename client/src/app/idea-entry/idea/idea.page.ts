@@ -50,7 +50,7 @@ export class IdeaPage implements OnInit {
 
   isSearch: boolean = false;
   searchString: string;
-  searchHint: string = 'Tìm theo chủ đề...'
+  searchHint: string = 'Tìm theo chủ đề...';
 
   searchOption: string = searchOptions.SEARCH_BY_TITLE;
 
@@ -64,7 +64,7 @@ export class IdeaPage implements OnInit {
   ) { this.init() }
 
   ngOnInit() {
-    this.refresh()
+    this.refresh();
   }
 
   async init() {
@@ -72,7 +72,7 @@ export class IdeaPage implements OnInit {
     this.userInfo = this.mainService.getUserInfo();
 
     try {
-      this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
+      this.parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true);
     } catch (err) {
       console.log(err);
     }
@@ -129,33 +129,29 @@ export class IdeaPage implements OnInit {
         + '&filter_status=' + this.filterStatusSelected.toString()
         + '&page_size=' + this.pageSize
         + '&page=' + (nextPage ? nextPage : 0)
-        , true)
+        , true);
       // console.log(ideas);
       // reset mảng khi thêm mới dữ liệu, thay đổi bộ lọc, sắp xếp
-      if (isReset) this.formIdea.ideas = []
+      if (isReset) this.formIdea.ideas = [];
 
       if (Array.isArray(ideas)) {
-        countIdeaReturn = ideas.length
+        countIdeaReturn = ideas.length;
         if (direction === 'UP') {
           for (let idx = countIdeaReturn - 1; idx >= 0; idx--) {
             let el = ideas[idx]
             if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
             if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
-            let findIndex = this.formIdea.ideas.findIndex(x => x.id === el.id)
-            if (findIndex < 0)
-              this.formIdea.ideas.unshift(el)
-            else
-              this.formIdea.ideas.splice(findIndex, 1, el)
+            let findIndex = this.formIdea.ideas.findIndex(x => x.id === el.id);
+            if (findIndex < 0) this.formIdea.ideas.unshift(el);
+            else this.formIdea.ideas.splice(findIndex, 1, el);
           }
         } else {
           for (let el of ideas) {
             if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
             if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
-            let findIndex = this.formIdea.ideas.findIndex(x => x.id === el.id)
-            if (findIndex < 0)
-              this.formIdea.ideas.push(el)
-            else
-              this.formIdea.ideas.splice(findIndex, 1, el)
+            let findIndex = this.formIdea.ideas.findIndex(x => x.id === el.id);
+            if (findIndex < 0) this.formIdea.ideas.push(el);
+            else this.formIdea.ideas.splice(findIndex, 1, el);
           }
         }
 
@@ -165,7 +161,7 @@ export class IdeaPage implements OnInit {
       // console.log(this.myIdeaFilterList);
 
       if (countIdeaReturn === 0 && this.currentPage === 0) {
-        this.apiCommons.showToast('Không tìm thấy ý tưởng nào', 3000, 'danger')
+        this.apiCommons.showToast('Không tìm thấy ý tưởng nào', 3000, 'danger');
       }
     } catch (err) {
       console.log(err);
@@ -366,6 +362,7 @@ export class IdeaPage implements OnInit {
         // console.log(data);
         let el = data.idea;
         if (el.voted_users && el.voted_users.find(x => x === this.userInfo.id)) el.isUserVoted = true;
+        if (el.commented_users && el.commented_users.find(x => x === this.userInfo.id)) el.isUserCommented = true;
         let index = this.formIdea.ideas.findIndex(x => x.id === el.id)
         this.formIdea.ideas.splice(index, 1, el)
         //tự động thay đổi trong this.myIdeaFilterList để hiển thị

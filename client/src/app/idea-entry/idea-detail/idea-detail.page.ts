@@ -48,11 +48,11 @@ export class IdeaDetailPage implements OnInit {
   refresh(id) {
     this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea?id=' + id, true)
       .then(ideaDetail => {
-        this.ideaInfo = ideaDetail
-        this.refreshUserAction()
+        this.ideaInfo = ideaDetail;
+        this.refreshUserAction();
         // console.log(this.ideaInfo);
       })
-      .catch(err => console.log('Lỗi lấy chi tiết', err))
+      .catch(err => console.log('Lỗi lấy chi tiết', err));
   }
 
   // Lấy file cho ý tưởng và comment
@@ -82,9 +82,9 @@ export class IdeaDetailPage implements OnInit {
 
       }
       // Kiểm tra this.userInfo này đã like ý tưởng này chưa?
-      this.ideaInfo.isUserVoted = this.ideaInfo.idea.voted_users ? this.ideaInfo.idea.voted_users.findIndex(x => x === this.userInfo.id) >= 0 : false
+      this.ideaInfo.isUserVoted = this.ideaInfo.idea.voted_users ? this.ideaInfo.idea.voted_users.findIndex(x => x === this.userInfo.id) >= 0 : false;
       // Kiểm tra this.userInfo này đã comment ý tưởng này chưa?
-      this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0
+      this.ideaInfo.isUserCommented = this.ideaInfo.comments.findIndex(x => x.user_id === this.userInfo.id) >= 0;
 
       //Lấy các file cho các bình luận
       this.ideaInfo.comments.forEach(el => {
@@ -95,7 +95,7 @@ export class IdeaDetailPage implements OnInit {
 
               if (list && Array.isArray(list.images)) {
                 el.images = list.images;
-                el.images.forEach(file => file.src = this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id)
+                el.images.forEach(file => file.src = this.apiAuth.serviceUrls.RESOURCE_SERVER + "/get-file-id?id=" + file.id);
               }
 
               if (list && Array.isArray(list.files)) {
@@ -170,20 +170,20 @@ export class IdeaDetailPage implements OnInit {
       //user_id của ý tưởng trùng với id của userInfo
       if (this.ideaInfo.idea.user_id === this.userInfo.id) {
         // cho phép sửa
-        settingsMenu = allMenu.filter(x => x.id === 2)
+        settingsMenu = allMenu.filter(x => x.id === 2);
       } else {
         // cho phép chấm điểm
-        settingsMenu = allMenu.filter(x => x.id === 1)
+        settingsMenu = allMenu.filter(x => x.id === 1);
       }
 
       // Nếu là admin thì phân quyền như sau:
       if (this.userInfo.role === 99) {
         // Nếu là ý tưởng của admin thì không có quyền chấm điểm
         if (this.ideaInfo.idea.user_id === this.userInfo.id) {
-          settingsMenu = allMenu.filter(x => x.id !== 1)
+          settingsMenu = allMenu.filter(x => x.id !== 1);
         } else {
           // toàn quyền
-          settingsMenu = allMenu
+          settingsMenu = allMenu;
         }
       }
     }
@@ -211,13 +211,13 @@ export class IdeaDetailPage implements OnInit {
     if (this.ideaInfo && this.ideaInfo.idea) {
       if (cmd === 'MARK') {
         // gọi form chấm điểm
-        this.markIdea(this.ideaInfo.idea)
+        this.markIdea(this.ideaInfo.idea);
       } else if (cmd === 'EDIT') {
         //  sửa ý tưởng này
-        this.editIdea(this.ideaInfo.idea)
+        this.editIdea(this.ideaInfo.idea);
       } else if (cmd === 'TRASH') {
         //  loại bỏ ý tưởng này
-        this.trashIdea(this.ideaInfo.idea)
+        this.trashIdea(this.ideaInfo.idea);
       }
     }
   }
@@ -228,14 +228,14 @@ export class IdeaDetailPage implements OnInit {
       .then(idea => {
         // console.log(idea);
         this.ideaInfo = idea; // lấy lại nội dung này
-        this.refreshUserAction()
+        this.refreshUserAction();
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
   }
 
   // Sự kiện người dùng chọn file để upload khi comment
   uploadFilesEvent(evt) {
-    if (!evt.target || !evt.target.files || !evt.target.files.length) return
+    if (!evt.target || !evt.target.files || !evt.target.files.length) return;
     for (let file of evt.target.files) {
       if (file.type.indexOf('image') >= 0) {
         file.isImage = true;
@@ -246,7 +246,7 @@ export class IdeaDetailPage implements OnInit {
         fr.readAsDataURL(file);
       }
       if (!this.uploadingFiles.find(x => x.name === file.name))
-        this.uploadingFiles.push(file)
+        this.uploadingFiles.push(file);
     }
     // console.log(this.uploadingFiles);
   }
@@ -265,7 +265,7 @@ export class IdeaDetailPage implements OnInit {
   onClickSend() {
     if (this.message || this.uploadingFiles.length > 0) {
 
-      this.apiCommons.showLoader('Đang xử lý dữ liệu trên máy chủ...')
+      this.apiCommons.showLoader('Đang xử lý dữ liệu trên máy chủ...');
 
       let form_data: FormData = new FormData();
       form_data.append("id", this.ideaInfo.idea.id);
@@ -279,7 +279,7 @@ export class IdeaDetailPage implements OnInit {
         .then(idea => {
           this.apiCommons.hideLoader();
           this.ideaInfo = idea; // lấy lại nội dung này
-          this.refreshUserAction()
+          this.refreshUserAction();
         })
         .catch(err => {
           this.apiCommons.hideLoader();
@@ -295,15 +295,15 @@ export class IdeaDetailPage implements OnInit {
   async markIdea(idea) {
 
     if (this.ideaInfo.idea.user_id === this.userInfo.id) {
-      this.apiCommons.showToast('Bạn không tự chấm điểm cho mình được!', 2000, 'warning', 'middle')
-      return
+      this.apiCommons.showToast('Bạn không tự chấm điểm cho mình được!', 2000, 'warning', 'middle');
+      return;
     }
 
     let questions;
     let userMarkIdea;
     try {
-      questions = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-questions', true)
-      userMarkIdea = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/user-mark-idea?id=' + idea.id, true)
+      questions = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-questions', true);
+      userMarkIdea = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/user-mark-idea?id=' + idea.id, true);
     } catch{ }
 
     // Lấy lại điểm đã chấm trước đó
@@ -348,13 +348,11 @@ export class IdeaDetailPage implements OnInit {
       ]
     }
 
-    this.apiCommons.openModal(DynamicFormMobilePage,
-      {
-        parent: this,
-        callback: this.callbackProcess,
-        form: form
-      }
-    );
+    this.apiCommons.openModal(DynamicFormMobilePage, {
+      parent: this,
+      callback: this.callbackProcess,
+      form: form
+    });
 
   }
 
@@ -362,7 +360,7 @@ export class IdeaDetailPage implements OnInit {
   async editIdea(idea) {
     let parameters;
     try {
-      parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true)
+      parameters = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-idea-parameters', true);
     } catch{ }
 
     let categoryOptions = parameters && parameters.ideas_categories ? parameters.ideas_categories : [];
@@ -399,13 +397,11 @@ export class IdeaDetailPage implements OnInit {
       ]
     }
 
-    this.apiCommons.openModal(DynamicFormMobilePage,
-      {
-        parent: this,
-        callback: this.callbackProcess,
-        form: form
-      }
-    );
+    this.apiCommons.openModal(DynamicFormMobilePage, {
+      parent: this,
+      callback: this.callbackProcess,
+      form: form
+    });
   }
 
   // loại bỏ ý tưởng này
@@ -415,15 +411,14 @@ export class IdeaDetailPage implements OnInit {
       , "Bỏ qua")
       .then(async res => {
         if (res === "OK") {
-          this.apiCommons.showLoader("Đang xử lý dữ liệu trên máy chủ...")
+          this.apiCommons.showLoader("Đang xử lý dữ liệu trên máy chủ...");
           await this.apiAuth.postDynamicJson(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/delete-idea'
-            , { id: idea.id }, true)
+            , { id: idea.id }, true);
           this.apiCommons.hideLoader();
           this.apiCommons.showToast("Đã xóa thành công!", 3000);
           this.navCtrl.navigateBack('/idea');
         }
       })
-
   }
 
   // hàm gọi lại xử lý form popup
