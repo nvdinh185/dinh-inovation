@@ -22,7 +22,7 @@ export class MainService {
    */
   async getTokenInfo() {
     if (this.token && this.userInfo) {
-      return Promise.resolve(this.userInfo);
+      return this.userInfo;
     } else {
       let token = this.apiStorage.read("TOKEN");
       // console.log(token);
@@ -34,15 +34,11 @@ export class MainService {
             this.userInfo = result.data;
             this.token = token;
             this.apiAuth.token = token;
-            return Promise.resolve(this.userInfo);
-          } else {
-            return Promise.reject()
+            return this.userInfo;
           }
         } catch (e) {
-          return Promise.reject()
+          console.log("Lỗi get-user-info: ", e);
         }
-      } else {
-        return Promise.reject()
       }
     }
   }

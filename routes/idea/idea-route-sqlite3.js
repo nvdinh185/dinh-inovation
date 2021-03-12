@@ -36,7 +36,6 @@ router.get('/get-idea-parameters'
 )
 
 // các đường dẫn cho ý tưởng
-
 router.get('/get-ideas'
     , jwtTokenVerify
     , ideaHandler.getIdeas

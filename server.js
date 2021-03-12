@@ -8,9 +8,9 @@ main = (isHttp) => {
 
   app.use(express.static(__dirname + '/client/www'));
 
-  app.use('/m-inovation/api/auth', require('./routes/auth/login-auth'));
+  app.use('/inovation/auth', require('./routes/auth/login-auth'));
 
-  app.use('/m-inovation/api', require('./routes/idea/idea-route-sqlite3'));
+  app.use('/inovation/api', require('./routes/idea/idea-route-sqlite3'));
 
   app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/www', 'index.html'));

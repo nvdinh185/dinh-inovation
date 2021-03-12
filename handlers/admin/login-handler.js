@@ -9,7 +9,7 @@ class LoginHandler {
      * @param {*} next 
      */
     login(req, res, next) {
-        const { username, password } = req.json_data
+        const { username, password } = req.json_data;
 
         // cắt lấy username không thôi, không cho nhập @ vào username
         const nameMatch = username.match(/^([^@]*)@/);

@@ -291,8 +291,8 @@ export class LoginPage implements OnInit {
         if (result && result.status === 'OK') {
           if (result.data) {
             // login thanh cong
-            this.apiCommons.showToast('Login thành công', 3000);
             this.saveToken(resData.token, result.data);
+            this.apiCommons.showToast('Login thành công', 3000);
           } else {
             this.apiCommons.showToast('Login thất bại', 2000);
             //Gọi lại form login

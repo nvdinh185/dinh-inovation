@@ -50,13 +50,10 @@ export class AppComponent {
       this.refresh();
     })
 
-    try {
-      this.userInfo = await this.mainService.getTokenInfo();
-      // console.log(this.userInfo);
-      this.refresh();
-    } catch (e) {
-      this.refresh();
-    }
+    this.userInfo = await this.mainService.getTokenInfo();
+    // console.log(this.userInfo);
+    this.refresh();
+
   }
 
   /**

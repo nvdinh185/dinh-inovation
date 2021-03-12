@@ -14,7 +14,7 @@ export class HomePage implements OnInit {
     card: {
       image: 'assets/imgs/background-idea.jpg',
       title: 'Văn phòng sáng tạo cho mọi người',
-      subtitle: 'M.INOVATION',
+      subtitle: 'INOVATION',
       content: `Chương trình hỗ trợ sáng tạo và quản lý ý tưởng.`
     }
     ,

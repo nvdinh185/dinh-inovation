@@ -8,7 +8,7 @@ class UserHandler {
     // lấy thông tin user
     // dựa vào user của token
     async getUserInfo(req, res, next) {
-        // console.log(req.json_data);
+        // console.log("req.user: ", req.user);
         let sqlWhereUser = `where username='${(req.user ? req.user.username : ``)}'`
         // kiểm tra username đã có trong csdl chưa?
         let checkUsername = await db.getRst(`select * from users ${sqlWhereUser}`);
