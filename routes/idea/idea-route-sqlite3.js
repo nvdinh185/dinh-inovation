@@ -1,33 +1,12 @@
 const router = require('express').Router();
-
 const postHandler = require('../../utils/post-handler');
 
-const userHandler = require('../../handlers/idea/user-handler-sqlite3')
-const listHandler = require('../../handlers/idea/list-handler-sqlite3')
-const ideaHandler = require('../../handlers/idea/idea-handler-sqlite3')
+const userHandler = require('../../handlers/idea/user-handler-sqlite3');
+const listHandler = require('../../handlers/idea/list-handler-sqlite3');
+const ideaHandler = require('../../handlers/idea/idea-handler-sqlite3');
 
 // thực hiện xác thực token user đã được cấp
 const jwtTokenVerify = require('../../utils/jwt-token-verify');
-
-// Các đường dẫn tương tác với csdl users
-router.get('/get-user-info'
-    , jwtTokenVerify
-    , userHandler.getUserInfo
-)
-
-router.post('/create-user'
-    , jwtTokenVerify
-    , postHandler.jsonProcess
-    , userHandler.createNewUser
-    , userHandler.getUserInfo
-)
-
-router.post('/edit-user'
-    , jwtTokenVerify
-    , postHandler.jsonProcess
-    , userHandler.editUser
-    , userHandler.getUserInfo
-)
 
 // đường dẫn lấy thông tin likes, comments
 router.get('/get-idea-parameters'

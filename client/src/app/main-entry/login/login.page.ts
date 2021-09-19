@@ -200,7 +200,7 @@ export class LoginPage implements OnInit {
           , options: [
             { name: "Reset", next: "RESET" }
             ,
-            { name: "Cập nhật", command: "EDIT-USER", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/edit-user", token: true, next: "CALLBACK" }
+            { name: "Cập nhật", command: "EDIT-USER", url: this.apiAuth.serviceUrls.AUTH_SERVER + "/edit-user", token: true, next: "CALLBACK" }
           ]
         }
       ]
@@ -236,7 +236,7 @@ export class LoginPage implements OnInit {
         , {
           type: "button"
           , options: [
-            { name: "Tạo mới", command: "CREATE-USER", url: this.apiAuth.serviceUrls.RESOURCE_SERVER + "/create-user", token: token, next: "CALLBACK" }
+            { name: "Tạo mới", command: "CREATE-USER", url: this.apiAuth.serviceUrls.AUTH_SERVER + "/create-user", token: token, next: "CALLBACK" }
           ]
         }
       ]
@@ -285,7 +285,7 @@ export class LoginPage implements OnInit {
    */
   checkRight(resData) {
     // Kiểm tra đã có username trong csdl chưa để xác nhận đăng nhập hoặc đăng ký username mới
-    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', resData.token)
+    this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.AUTH_SERVER + '/get-user-info', resData.token)
       .then(result => {
         // console.log('result: ', result);
         if (result && result.status === 'OK') {

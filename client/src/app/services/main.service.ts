@@ -28,7 +28,7 @@ export class MainService {
       // console.log(token);
       if (token) {
         try {
-          let result = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.RESOURCE_SERVER + '/get-user-info', token)
+          let result = await this.apiAuth.getDynamicUrl(this.apiAuth.serviceUrls.AUTH_SERVER + '/get-user-info', token)
           // console.log(result);
           if (result && result.status === 'OK' && result.data) {
             this.userInfo = result.data;

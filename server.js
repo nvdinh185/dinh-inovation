@@ -8,7 +8,7 @@ main = (isHttp) => {
 
   app.use(express.static(__dirname + '/client/www'));
 
-  app.use('/inovation/auth', require('./routes/auth/login-auth'));
+  app.use('/inovation/auth', require('./routes/auth/authentication'));
 
   app.use('/inovation/api', require('./routes/idea/idea-route-sqlite3'));
 
